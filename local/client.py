@@ -13,3 +13,7 @@ class Client():
     def start_robot(self):
         # initate autonomous sequence
         return
+
+    def stop_robot(self):
+        # clear the GPIO board
+        return
