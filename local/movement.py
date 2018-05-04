@@ -48,6 +48,7 @@ class Movement():
         GPIO.output(self.Motor2E,GPIO.LOW)
 
     def forward(self, t = 0):
+
         GPIO.output(self.Motor1A,GPIO.HIGH)
         GPIO.output(self.Motor1B,GPIO.LOW)
         GPIO.output(self.Motor1E,GPIO.HIGH)
@@ -79,3 +80,4 @@ class Movement():
         # This function will need to interrupt the previous 3 functions
         GPIO.output(self.Motor1E,GPIO.LOW)
         GPIO.output(self.Motor2E,GPIO.LOW)
+        GPIO.cleanup()
