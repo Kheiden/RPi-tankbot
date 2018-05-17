@@ -10,7 +10,7 @@ class TestCamera(unittest.TestCase):
     def tearDown(self):
         self.c.stop_servos()
 
-    @unittest.skip("")
+    @unittest.skip("passing")
     def test_camera_rotation(self):
         for i in range(-90, 91, 10):
             print("Moving camera to {}".format(i))
@@ -21,7 +21,7 @@ class TestCamera(unittest.TestCase):
             time.sleep(0.5)
         self.assertTrue(True)
 
-    @unittest.skip("")
+    @unittest.skip("passing")
     def test_degree(self):
         x_axis_degrees = 0
         y_axis_degrees = 0
@@ -31,6 +31,7 @@ class TestCamera(unittest.TestCase):
             y_axis_degrees))
         self.c.move_camera(x_axis_degrees, y_axis_degrees)
 
+    @unittest.skip("passing")
     def test_smooth_rotate(self):
         for i in range(-90, 91, 2):
             print("Moving camera to {}".format(i))

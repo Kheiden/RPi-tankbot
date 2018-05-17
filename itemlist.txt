@@ -1,0 +1,12 @@
+Below is a list of items used to create this robot.
+
+Tracks (link)
+Universal Plate (link)
+Dual Gearbox (link)
+Raspberry Pi V2 (link)
+Breadboard (link)
+9g Servos x2 (link)
+Jumper pins (Link)
+USB Hub (link)
+Stereo Camera module (link)
+ 
