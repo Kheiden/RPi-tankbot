@@ -23,3 +23,5 @@ Success Factors:
 
 Hardware Stretch Goal:
 - The robot will charge wirelessly and must be able to charge itself when low on power.
+
+testing CI/CD...
