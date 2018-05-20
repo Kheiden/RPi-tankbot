@@ -28,7 +28,7 @@ class TestMovement():
         self.m.rotate(direction="right", movement_time=3)
         self.m.rotate(direction="left", movement_time=3)
 
-
+    @pytest.mark.skip(reason="Passed.")
     def test_infinite_motor_movement(self):
         """Move motors without passing movement_time variable"""
         self.m.forward()
