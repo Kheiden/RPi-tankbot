@@ -46,7 +46,8 @@ class TestCamera():
         """First, center the camera"""
         self.c.move_camera(0, 0)
         """Then, move to a certain coordinate"""
-        x_start, y_start = 0
+        x_start = 0
+        y_start = 0
         x_end = 45
         y_end = 30
         self.c.move_camera_slow(x_start, y_start, x_end, y_end)
