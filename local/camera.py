@@ -25,25 +25,44 @@ class Camera():
         self.pwm_y.stop()
         return
 
-    def move_camera(self, x_axis_degrees, y_axis_degrees):
+    def move_camera(self, x_axis_degrees=None, y_axis_degrees=None):
         """
         # input in degrees, output in DutyCycle
         # pwm_x 0 is neutral, 90 is to the right, -90 is to the left
         # pwm_y 0 is neutral, 90 is up, -90 is down
         """
+        if x_axis_degrees != None:
+            self.pwm_x=GPIO.PWM(self.servo_axis_x_pin,50)
+            self.pwm_x.start(1/18*((x_axis_degrees*-1)+90)+2)
+            #self.pwm_x.ChangeDutyCycle(num1)
+        if y_axis_degrees != None:
+            self.pwm_y=GPIO.PWM(self.servo_axis_y_pin,50)
+            self.pwm_y.start(1/18*(y_axis_degrees+90)+2)
+            #self.pwm_y.ChangeDutyCycle(num2)
 
-        self.pwm_x=GPIO.PWM(self.servo_axis_x_pin,50)
-        self.pwm_x.start(1/18*(x_axis_degrees+90)+2)
-        #self.pwm_x.ChangeDutyCycle(num1)
-
-        self.pwm_y=GPIO.PWM(self.servo_axis_y_pin,50)
-        self.pwm_y.start(1/18*(y_axis_degrees+90)+2)
-        #self.pwm_y.ChangeDutyCycle(num2)
-
+    def move_camera_slow(self, x_start, y_start, x_end, y_end):
         """
-        # after moving, stop the servo acuation
+        First move x_axis, then move y_axis
+        TODO: Refactor this to move both axises at the same time.
         """
-        time.sleep(1)
+        for i in range(x_start, x_end, 2):
+            self.c.move_camera(i, None)
+            time.sleep(0.1)
+            print("Stopping servos...")
+            self.c.stop_servos()
+            time.sleep(0.1)
+
+        for i in range(y_start, y_end, 2):
+            self.c.move_camera(i, None)
+            time.sleep(0.1)
+            print("Stopping servos...")
+            self.c.stop_servos()
+            time.sleep(0.1)
+
+
+
+
+
         self.stop_servos()
 
     def stop_servos(self):

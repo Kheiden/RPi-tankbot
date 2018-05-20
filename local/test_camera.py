@@ -41,16 +41,17 @@ class TestCamera():
             y_axis_degrees))
         self.c.move_camera(x_axis_degrees, y_axis_degrees)
 
-    @pytest.mark.skip(reason="Testing.")
+    #@pytest.mark.skip(reason="Testing.")
     def test_smooth_rotate(self):
-        for i in range(-90, 91, 2):
-            print("Moving camera to {}".format(i))
-            self.c.move_camera(i, i)
-            time.sleep(0.1)
-            print("Stopping servos...")
-            self.c.stop_servos()
-            time.sleep(0.1)
+        """First, center the camera"""
+        self.c.move_camera(0, 0)
+        """Then, move to a certain coordinate"""
+        x_start, y_start = 0
+        x_end = 45
+        y_end = 30
+        self.c.move_camera_slow(x_start, y_start, x_end, y_end)
 
+    @pytest.mark.skip(reason="Passed.")
     def test_zero_camera(self):
         self.c.move_camera(0, 0)
 
