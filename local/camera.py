@@ -33,15 +33,11 @@ class Camera():
         """
 
         self.pwm_x=GPIO.PWM(self.servo_axis_x_pin,50)
-        num1 = (((float(x_axis_degrees) + 90)/18) + 2)
-        print(num1, x_axis_degrees)
-        self.pwm_x.start(num1)
+        self.pwm_x.start(1/18*(x_axis_degrees+90)+2)
         self.pwm_x.ChangeDutyCycle(num1)
 
         self.pwm_y=GPIO.PWM(self.servo_axis_y_pin,50)
-        num2 = (((float(y_axis_degrees) + 90)/18) + 2)
-        print(num2, y_axis_degrees)
-        self.pwm_y.start(num2)
+        self.pwm_y.start(1/18*(y_axis_degrees+90)+2)
         self.pwm_y.ChangeDutyCycle(num2)
 
         """
