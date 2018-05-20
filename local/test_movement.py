@@ -1,5 +1,6 @@
 import pytest
 
+import time
 import movement
 
 class TestMovement():
