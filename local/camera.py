@@ -34,11 +34,11 @@ class Camera():
 
         self.pwm_x=GPIO.PWM(self.servo_axis_x_pin,50)
         self.pwm_x.start(1/18*(x_axis_degrees+90)+2)
-        self.pwm_x.ChangeDutyCycle(num1)
+        #self.pwm_x.ChangeDutyCycle(num1)
 
         self.pwm_y=GPIO.PWM(self.servo_axis_y_pin,50)
         self.pwm_y.start(1/18*(y_axis_degrees+90)+2)
-        self.pwm_y.ChangeDutyCycle(num2)
+        #self.pwm_y.ChangeDutyCycle(num2)
 
         """
         # after moving, stop the servo acuation
