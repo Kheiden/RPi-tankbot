@@ -50,7 +50,14 @@ class TestCamera():
         y_start = 0
         x_end = 45
         y_end = 30
-        self.c.move_camera_slow(x_start, y_start, x_end, y_end)
+        """Testing Slow speed"""
+        speed = "SLOW"
+        self.c.move_camera_smooth(x_start, y_start, x_end, y_end, speed)
+        """Reset Camera to zero"""
+        self.c.move_camera(0, 0)
+        """Testing fast speed"""
+        speed = "FAST"
+        self.c.move_camera_smooth(x_start, y_start, x_end, y_end, speed)
 
     @pytest.mark.skip(reason="Passed.")
     def test_zero_camera(self):

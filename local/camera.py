@@ -41,22 +41,28 @@ class Camera():
         time.sleep(0.75)
         self.stop_servos()
 
-    def move_camera_slow(self, x_start, y_start, x_end, y_end):
+    def move_camera_slow(self, x_start, y_start, x_end, y_end, speed):
         """
         First move x_axis, then move y_axis
         TODO: Refactor this to move both axises at the same time.
         """
+        speed_dict = {
+            "SLOW": 0.1,
+            "FAST": 0.01
+        }
+        timesleep = speed_dict[speed]
+
         for i in range(x_start, x_end, 2):
             self.move_camera(i, None)
-            time.sleep(0.1)
+            time.sleep(timesleep)
             self.stop_servos()
-            time.sleep(0.1)
+            time.sleep(timesleep)
 
         for i in range(y_start, y_end, 2):
             self.move_camera(None, i)
-            time.sleep(0.1)
+            time.sleep(timesleep)
             self.stop_servos()
-            time.sleep(0.1)
+            time.sleep(timesleep)
 
 
 
