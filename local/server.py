@@ -1,5 +1,5 @@
 from flask import Flask
-app = Flask(__name__)
+
 
 class Server():
 
@@ -9,12 +9,12 @@ class Server():
         """
         print("Initializing Server")
 
-
-
     def start_webserver(self):
         # initiate connection with server
-        return
+        app = Flask(__name__)
 
-    @app.route("/")
-    def hello():
-        return "Hello World!"
+        @app.route("/")
+        def hello():
+            return "Hello World!"
+
+        return app
