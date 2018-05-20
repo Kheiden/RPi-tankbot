@@ -41,7 +41,7 @@ class Camera():
         time.sleep(0.75)
         self.stop_servos()
 
-    def move_camera_slow(self, x_start, y_start, x_end, y_end, speed):
+    def move_camera_smooth(self, x_start, y_start, x_end, y_end, speed):
         """
         First move x_axis, then move y_axis
         TODO: Refactor this to move both axises at the same time.
