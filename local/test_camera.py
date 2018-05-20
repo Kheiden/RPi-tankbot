@@ -4,7 +4,7 @@ import time
 class TestCamera():
 
     @classmethod
-    def setup_class(cls):
+    def setup_class(self):
         """ setup any state specific to the execution of the given class (which
         usually contains tests).
         """
@@ -12,7 +12,7 @@ class TestCamera():
         self.c = camera.Camera()
 
     @classmethod
-    def teardown_class(cls):
+    def teardown_class(self):
         """ teardown any state that was previously setup with a call to
         setup_class.
         """
