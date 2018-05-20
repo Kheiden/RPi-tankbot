@@ -1,0 +1,108 @@
+<!doctype html>
+<style>
+table, th, td {
+    border: 1px solid black;
+    text-align: center;
+}
+</style>
+
+
+<title>Tankbot Controller</title>
+<h1>Tankbot Controller</h1>
+<html>
+<head>
+  <table style="width:1280px">
+
+  <tr>
+    <td width="50%" height="480px">Left Camera</td>
+    <td width="50%" height="480px">Right Camera</td>
+  </tr>
+</table>
+</head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("#b_forwards").mousedown(function(){
+        $.get("forwards", function(data, status){
+            console.log("forwards on!")
+            console.log(data)
+        });
+    });
+});
+$(document).ready(function(){
+    $("#b_forwards").mouseup(function(){
+        $.get("stop", function(data, status){
+            console.log("forwards off!")
+        });
+    });
+});
+$(document).ready(function(){
+    $("#b_backwards").mousedown(function(){
+        $.get("backwards", function(data, status){
+            console.log("backwards on!")
+            console.log(data)
+        });
+    });
+});
+$(document).ready(function(){
+    $("#b_backwards").mouseup(function(){
+        $.get("stop", function(data, status){
+            console.log("backwards off!")
+        });
+    });
+});
+$(document).ready(function(){
+    $("#b_right").mousedown(function(){
+        $.get("turn_right", function(data, status){
+            console.log("turning right!")
+            console.log(data)
+        });
+    });
+});
+$(document).ready(function(){
+    $("#b_right").mouseup(function(){
+        $.get("stop", function(data, status){
+            console.log("turning stopped!")
+        });
+    });
+});
+$(document).ready(function(){
+    $("#b_left").mousedown(function(){
+        $.get("turn_left", function(data, status){
+            console.log("turning left!")
+            console.log(data)
+        });
+    });
+});
+$(document).ready(function(){
+    $("#b_left").mouseup(function(){
+        $.get("stop", function(data, status){
+            console.log("turning stopped!")
+        });
+    });
+});
+</script>
+
+<body>
+
+    <table style="width:300px">
+      <tr>
+        <th></th>
+        <th><button id="b_forwards">Forwards</button></th>
+        <th></th>
+      </tr>
+      <tr>
+        <td width="33%"><button id="b_left">Left</button></td>
+        <td width="34%"></td>
+        <td width="33%"><button id="b_right">Right</button></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><button id="b_backwards">Backwards</button></td>
+        <td></td>
+      </tr>
+    </table>
+
+</body>
+</html>
