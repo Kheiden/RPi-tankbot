@@ -46,17 +46,17 @@ class Camera():
         TODO: Refactor this to move both axises at the same time.
         """
         for i in range(x_start, x_end, 2):
-            self.c.move_camera(i, None)
+            self.move_camera(i, None)
             time.sleep(0.1)
             print("Stopping servos...")
-            self.c.stop_servos()
+            self.stop_servos()
             time.sleep(0.1)
 
         for i in range(y_start, y_end, 2):
-            self.c.move_camera(i, None)
+            self.move_camera(i, None)
             time.sleep(0.1)
             print("Stopping servos...")
-            self.c.stop_servos()
+            self.stop_servos()
             time.sleep(0.1)
 
 
