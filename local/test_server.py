@@ -21,4 +21,4 @@ class TestServer():
         """
         res = client.get(url_for('hello'))
         assert res.status_code == 200
-        assert 'Hello World!' in res.json
+        assert res.json == {'hello': 'world!'}
