@@ -1,10 +1,11 @@
 import pytest
 
-from server.Server import start_webserver
+from server import Server
 
 
 @pytest.fixture
 def app():
-    app = start_webserver()
+    s = Server()
+    app = s.start_webserver()
     app.debug = True
     return app
