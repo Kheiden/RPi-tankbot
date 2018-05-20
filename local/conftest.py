@@ -1,6 +1,6 @@
 import pytest
 
-from server import start_webserver
+from server.Server import start_webserver
 
 
 @pytest.fixture
