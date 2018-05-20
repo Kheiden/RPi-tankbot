@@ -18,6 +18,7 @@ class TestCamera():
         """
         self.c.stop_servos()
 
+    @pytest.mark.skip(reason="Skipping to isolate test.")
     def test_camera_rotation(self):
         for i in range(-90, 91, 10):
             print("Moving camera to {}".format(i))
@@ -28,6 +29,7 @@ class TestCamera():
             time.sleep(0.5)
         self.assertTrue(True)
 
+    @pytest.mark.skip(reason="Skipping to isolate test.")
     def test_degree(self):
         x_axis_degrees = 0
         y_axis_degrees = 0
@@ -37,6 +39,7 @@ class TestCamera():
             y_axis_degrees))
         self.c.move_camera(x_axis_degrees, y_axis_degrees)
 
+    #@pytest.mark.skip(reason="Testing.")
     def test_smooth_rotate(self):
         for i in range(-90, 91, 2):
             print("Moving camera to {}".format(i))
