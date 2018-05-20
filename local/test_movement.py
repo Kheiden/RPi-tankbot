@@ -17,7 +17,7 @@ class TestMovement():
         """ teardown any state that was previously setup with a call to
         setup_class.
         """
-        return
+        self.m.clear_gpio_motor_pins()
 
     def test_move_robot(self):
         """move forward, turn, then move forward again."""
