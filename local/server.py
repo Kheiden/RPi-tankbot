@@ -15,6 +15,6 @@ class Server():
 
         @app.route("/")
         def hello():
-            return "Hello World!"
+            return jsonify(hello='world!')
 
         return app
