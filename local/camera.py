@@ -34,11 +34,12 @@ class Camera():
         if x_axis_degrees != None:
             self.pwm_x=GPIO.PWM(self.servo_axis_x_pin,50)
             self.pwm_x.start(1/18*((x_axis_degrees*-1)+90)+2)
-            #self.pwm_x.ChangeDutyCycle(num1)
         if y_axis_degrees != None:
             self.pwm_y=GPIO.PWM(self.servo_axis_y_pin,50)
             self.pwm_y.start(1/18*(y_axis_degrees+90)+2)
-            #self.pwm_y.ChangeDutyCycle(num2)
+        """GPIO movement is not thread-blocking, so we must sleep thread"""
+        time.sleep(0.75)
+        self.stop_servos()
 
     def move_camera_slow(self, x_start, y_start, x_end, y_end):
         """
@@ -53,7 +54,7 @@ class Camera():
             time.sleep(0.1)
 
         for i in range(y_start, y_end, 2):
-            self.move_camera(i, None)
+            self.move_camera(None, i)
             time.sleep(0.1)
             print("Stopping servos...")
             self.stop_servos()
