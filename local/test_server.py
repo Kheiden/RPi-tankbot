@@ -21,4 +21,4 @@ class TestServer():
         """
         res = client.get(url_for('hello'))
         assert res.status_code == 200
-        assert res.html == 'Hello World!'
+        assert b'Hello World!' in res.read()
