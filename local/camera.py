@@ -14,44 +14,106 @@ class Camera():
         GPIO.setup(11,GPIO.OUT)
         self.pwm_x=GPIO.PWM(self.servo_axis_x_pin,50)
         self.pwm_x.start(1/18*(x_axis_degrees+90)+2)
-        #self.pwm_x.ChangeDutyCycle(3.5)
 
         # y_axis
         GPIO.setup(13,GPIO.OUT)
         self.pwm_y=GPIO.PWM(self.servo_axis_y_pin,50)
         self.pwm_y.start(1/18*(y_axis_degrees+90)+2)
-        #self.pwm_y.ChangeDutyCycle(6)
+
         time.sleep(1)
         self.pwm_x.stop()
         self.pwm_y.stop()
         return
 
-    def move_camera(self, x_axis_degrees, y_axis_degrees):
+    def move_camera(self, x_axis_degrees=None, y_axis_degrees=None):
+        """
         # input in degrees, output in DutyCycle
-        # 0 is neutral, 45 is to the right, -45 is to the left
-        self.pwm_x=GPIO.PWM(self.servo_axis_x_pin,50)
-        num1 = (((float(x_axis_degrees) + 90)/18) + 2)
-        print(num1, x_axis_degrees)
-        self.pwm_x.start(num1)
-        self.pwm_x.ChangeDutyCycle(num1)
+        # pwm_x 0 is neutral, 90 is to the right, -90 is to the left
+        # pwm_y 0 is neutral, 90 is up, -90 is down
+        """
+        if x_axis_degrees != None:
+            self.pwm_x=GPIO.PWM(self.servo_axis_x_pin,50)
+            self.pwm_x.start(1/18*((x_axis_degrees*-1)+90)+2)
+        if y_axis_degrees != None:
+            self.pwm_y=GPIO.PWM(self.servo_axis_y_pin,50)
+            self.pwm_y.start(1/18*((y_axis_degrees*-1)+90)+2)
+        """GPIO movement is not thread-blocking, so we must sleep thread"""
+        time.sleep(0.75)
+        self.stop_servos()
 
-        self.pwm_y=GPIO.PWM(self.servo_axis_y_pin,50)
-        num2 = (((float(y_axis_degrees) + 90)/18) + 2)
-        print(num2, y_axis_degrees)
-        self.pwm_y.start(num2)
-        self.pwm_y.ChangeDutyCycle(num2)
-        #self.pwm_x.ChangeDutyCycle(x_axis) # neutral is 3.5
-        # 0 is neutral, 45 is up, -45 is down
-        #self.pwm_y.ChangeDutyCycle(y_axis)
+    def move_camera_smooth(self, x_start, y_start, x_end, y_end, speed):
+        """
+        First move x_axis, then move y_axis
+        TODO: Refactor this to move both axises at the same time.
+        """
+        speed_dict = {
+            "SLOW": 0.1,
+            "FAST": 0.01
+        }
+        timesleep = speed_dict[speed]
 
-        # after moving, stop the servo acuation
-        #time.sleep(1)
-        #self.pwm_x.stop()
-        #self.pwm_y.stop()
-        return
+        for i in range(x_start, x_end, 2):
+            self.move_camera(i, None)
+            time.sleep(timesleep)
+            self.stop_servos()
+            time.sleep(timesleep)
+
+        for i in range(y_start, y_end, 2):
+            self.move_camera(None, i)
+            time.sleep(timesleep)
+            self.stop_servos()
+            time.sleep(timesleep)
+
+
+
+
+
+        self.stop_servos()
 
     def stop_servos(self):
         self.pwm_x.stop()
         self.pwm_y.stop()
-        #self.pwm_x.stop()
-        #self.pwm_y.stop()
+
+
+    def start_cameras(self):
+        """
+        # This method is used to start the cameras and display the video feed
+        # on the GUI.
+
+        Note: Imports are done in the method level because of latency issues with
+        importing large modules on the RPi.
+        """
+
+        import cv2
+
+        CAMERA_WIDTH = 1920
+        CAMERA_HEIGHT = 1080
+
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+        left.set(cv2.CAP_PROP_FPS,1)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+        right.set(cv2.CAP_PROP_FPS,1)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        while(True):
+            if not (left.grab()):
+                print("No more frames")
+                break
+
+            _, leftFrame = left.retrieve()
+            _, rightFrame = right.retrieve()
+
+            cv2.imshow('left', leftFrame)
+            cv2.imshow('right', rightFrame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        left.release()
+        right.release()
+        cv2.destroyAllWindows()
