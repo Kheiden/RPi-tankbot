@@ -23,8 +23,8 @@ class Movement():
         GPIO.setup(self.Motor2B,GPIO.OUT)
         GPIO.setup(self.Motor2E,GPIO.OUT)
 
-    def rotate(self, t = 0):
-        if t > 0:
+    def rotate(self, direction=None, movement_time=None):
+        if direction == "right":
             GPIO.output(self.Motor1A,GPIO.HIGH)
             GPIO.output(self.Motor1B,GPIO.LOW)
             GPIO.output(self.Motor1E,GPIO.HIGH)
@@ -32,7 +32,7 @@ class Movement():
             GPIO.output(self.Motor2A,GPIO.LOW)
             GPIO.output(self.Motor2B,GPIO.HIGH)
             GPIO.output(self.Motor2E,GPIO.HIGH)
-        elif t < 0:
+        elif direction == "left":
             GPIO.output(self.Motor1A,GPIO.LOW)
             GPIO.output(self.Motor1B,GPIO.HIGH)
             GPIO.output(self.Motor1E,GPIO.HIGH)
@@ -43,11 +43,11 @@ class Movement():
 
         else:
             return
-        sleep(abs(t))
-        GPIO.output(self.Motor1E,GPIO.LOW)
-        GPIO.output(self.Motor2E,GPIO.LOW)
+        if movement_time != None:
+            sleep(movement_time)
+            self.stop()
 
-    def forward(self, t = 0):
+    def forward(self, movement_time=None):
 
         GPIO.output(self.Motor1A,GPIO.HIGH)
         GPIO.output(self.Motor1B,GPIO.LOW)
@@ -57,12 +57,15 @@ class Movement():
         GPIO.output(self.Motor2B,GPIO.LOW)
         GPIO.output(self.Motor2E,GPIO.HIGH)
 
-        sleep(t)
+        """
+        If movement_time is specified, then shut down motors after the
+        amount of time, otherwise continue spinning the motors ad infinitum
+        """
+        if movement_time != None:
+            sleep(movement_time)
+            self.stop()
 
-        GPIO.output(self.Motor1E,GPIO.LOW)
-        GPIO.output(self.Motor2E,GPIO.LOW)
-
-    def backward(self, t = 0):
+    def backward(self, movement_time=None):
         GPIO.output(self.Motor1A,GPIO.LOW)
         GPIO.output(self.Motor1B,GPIO.HIGH)
         GPIO.output(self.Motor1E,GPIO.HIGH)
@@ -71,13 +74,18 @@ class Movement():
         GPIO.output(self.Motor2B,GPIO.HIGH)
         GPIO.output(self.Motor2E,GPIO.HIGH)
 
-        sleep(t)
-
-        GPIO.output(self.Motor1E,GPIO.LOW)
-        GPIO.output(self.Motor2E,GPIO.LOW)
+        """
+        If movement_time is specified, then shut down motors after the
+        amount of time, otherwise continue spinning the motors ad infinitum
+        """
+        if movement_time != None:
+            sleep(movement_time)
+            self.stop()
 
     def stop(self):
         # This function will need to interrupt the previous 3 functions
         GPIO.output(self.Motor1E,GPIO.LOW)
         GPIO.output(self.Motor2E,GPIO.LOW)
+
+    def clear_gpio_motor_pins(self):
         GPIO.cleanup()
