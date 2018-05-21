@@ -7,12 +7,11 @@ class TestServer():
 
     @classmethod
     def setup_class(self):
-        #self.s = server.Server()
-        return
+        self.s = server.Server()
 
     @classmethod
     def teardown_class(self):
-        return
+        self.s.clear_gpio_motor_pins()
 
     @pytest.mark.skip(reason="Passed.")
     def test_basic_webpage(self, client):

@@ -10,6 +10,9 @@ class Server():
         """
         self.m = movement.Movement()
 
+    def clear_gpio_motor_pins(self):
+        self.m.clear_gpio_motor_pins()
+
 
     def start_webserver(self):
         print("Initializing Server")
@@ -50,4 +53,4 @@ if __name__ == '__main__':
     s = Server()
     app = s.start_webserver()
     app.debug=True
-    app.run(port=5000)
+    app.run(host='0.0.0.0', port=5000)
