@@ -1,0 +1,7 @@
+{
+  "test_camera.py::TestCamera": true,
+  "test_camera.py::TestCamera::()::test_camera_rotation": true,
+  "test_camera.py::TestCamera::()::test_degree": true,
+  "test_camera.py::TestCamera::()::test_smooth_rotate": true,
+  "test_pytest.py::TestPytest::()::test_hi_fail": true
+}

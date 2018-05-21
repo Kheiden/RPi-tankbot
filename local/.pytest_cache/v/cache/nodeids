@@ -1,0 +1,4 @@
+[
+  "test_pytest.py::TestPytest::()::test_hi",
+  "test_pytest.py::TestPytest::()::test_hi_fail"
+]
