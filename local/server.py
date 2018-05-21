@@ -30,20 +30,20 @@ class Server():
             return 200
 
         @app.route("/backwards")
-        def go_forwards():
+        def go_backwards():
             self.m.backward()
             return 200
 
         @app.route("/turn_right")
-        def go_forwards():
+        def turn_right():
             self.m.rotate(direction="right")
             return 200
 
         @app.route("/turn_left")
-        def go_forwards():
+        def turn_left():
             self.m.rotate(direction="left")
             return 200
-            
+
         return app
 
 if __name__ == '__main__':
