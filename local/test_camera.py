@@ -41,11 +41,8 @@ class TestCamera():
             y_axis_degrees))
         self.c.move_camera(x_axis_degrees, y_axis_degrees)
 
-<<<<<<< HEAD
+
     @pytest.mark.skip(reason="Passed.")
-=======
-    #@pytest.mark.skip(reason="Testing.")
->>>>>>> master
     def test_smooth_rotate(self):
         """First, center the camera"""
         self.c.move_camera(0, 0)
