@@ -1,6 +1,7 @@
 import pytest
 
 import server
+import time
 from flask import url_for
 
 class TestServer():
