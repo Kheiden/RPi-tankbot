@@ -1,6 +1,7 @@
 from flask import Flask, render_template, Response
 
 import movement
+import camera
 
 class Server():
 
@@ -9,6 +10,7 @@ class Server():
         This class is used to control the web server hosted on the RPi
         """
         self.m = movement.Movement()
+        self.c = camera.Camera()
 
     def clear_gpio_motor_pins(self):
         self.m.clear_gpio_motor_pins()

@@ -25,7 +25,7 @@ class TestServer():
         assert res.status_code == 200
         assert res.json == {'hello': 'world!'}
 
-    def test_left_video_stream(self):
+    def test_left_video_stream(self, client):
         res = client.get(url_for('left_camera_stream'))
         assert res.status_code == 200
         assert res
