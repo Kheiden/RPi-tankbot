@@ -74,6 +74,22 @@ class Camera():
         self.pwm_x.stop()
         self.pwm_y.stop()
 
+    def start_left_camera(self):
+        CAMERA_WIDTH = 640
+        CAMERA_HEIGHT = 480
+
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+        left.set(cv2.CAP_PROP_FPS,1)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        while True:
+            left.grab()
+            _, leftFrame = left.retrieve()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + leftFrame + b'\r\n')
+        left.release()
 
     def start_cameras(self):
         """
@@ -102,7 +118,7 @@ class Camera():
         right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
         while(True):
-            if not (left.grab()):
+            if not (left.grab() and right.grab()):
                 print("No more frames")
                 break
 

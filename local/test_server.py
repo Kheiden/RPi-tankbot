@@ -25,8 +25,7 @@ class TestServer():
         assert res.status_code == 200
         assert res.json == {'hello': 'world!'}
 
-    def test_web_controller(self, client):
-        # 60 seconds to play around
-        time.sleep(60)
-        # instant succeed
-        assert True==True
+    def test_left_video_stream(self):
+        res = client.get(url_for('left_camera_stream'))
+        assert res.status_code == 200
+        assert res

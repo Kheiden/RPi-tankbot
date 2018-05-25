@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, Response
 
 import movement
 
@@ -25,27 +25,32 @@ class Server():
         @app.route("/stop")
         def stop():
             self.m.stop()
-            return 200
+            return
 
         @app.route("/forwards")
         def go_forwards():
             self.m.forward()
-            return 200
+            return
 
         @app.route("/backwards")
         def go_backwards():
             self.m.backward()
-            return 200
+            return
 
         @app.route("/turn_right")
         def turn_right():
             self.m.rotate(direction="right")
-            return 200
+            return
 
         @app.route("/turn_left")
         def turn_left():
             self.m.rotate(direction="left")
-            return 200
+            return
+
+        @app.route("/left_camera_stream")
+        def left_camera_stream():
+            return Response(self.c.start_left_camera()),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
         return app
 
