@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import time
+import cv2
 
 class Camera():
 
