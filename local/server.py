@@ -27,27 +27,27 @@ class Server():
         @app.route("/stop")
         def stop():
             self.m.stop()
-            return
+            return "ok"
 
         @app.route("/forwards")
         def go_forwards():
             self.m.forward()
-            return
+            return "ok"
 
         @app.route("/backwards")
         def go_backwards():
             self.m.backward()
-            return
+            return "ok"
 
         @app.route("/turn_right")
         def turn_right():
             self.m.rotate(direction="right")
-            return
+            return "ok"
 
         @app.route("/turn_left")
         def turn_left():
             self.m.rotate(direction="left")
-            return
+            return "ok"
 
         @app.route("/left_camera_stream")
         def left_camera_stream():
