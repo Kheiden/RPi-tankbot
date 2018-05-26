@@ -2,6 +2,8 @@ import RPi.GPIO as GPIO
 import time
 import cv2
 
+from PIL import Image
+
 class Camera():
 
     def __init__(self):
@@ -65,10 +67,6 @@ class Camera():
             self.stop_servos()
             time.sleep(timesleep)
 
-
-
-
-
         self.stop_servos()
 
     def stop_servos(self):
@@ -82,14 +80,16 @@ class Camera():
         left = cv2.VideoCapture(0)
         left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
         left.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
-        left.set(cv2.CAP_PROP_FPS,1)
+        left.set(cv2.CAP_PROP_FPS,30)
         left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
         while True:
             left.grab()
             _, leftFrame = left.retrieve()
+            imgRGB=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2RGB)
+            jpg_image = Image.fromarray(imgRGB)
             yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + leftFrame + b'\r\n')
+                   b'Content-Type: image/jpeg\r\n\r\n' + jpg_image + b'\r\n')
         left.release()
 
     def start_cameras(self):
