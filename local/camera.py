@@ -88,8 +88,11 @@ class Camera():
             _, leftFrame = left.retrieve()
             imgRGB=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2RGB)
             jpg_image = Image.fromarray(imgRGB)
+            bytes_array = io.BytesIO()
+            jpg_image.save(bytes_array, format='JPEG')
+            jpg_image_bytes = bytes_array.getvalue()
             yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + jpg_image + b'\r\n')
+                   b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
         left.release()
 
     def start_cameras(self):
