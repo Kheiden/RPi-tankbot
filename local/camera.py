@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 import cv2
+import io
 
 from PIL import Image
 
