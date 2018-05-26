@@ -74,6 +74,28 @@ class Camera():
         self.pwm_x.stop()
         self.pwm_y.stop()
 
+    def start_right_camera(self):
+        CAMERA_WIDTH = 640
+        CAMERA_HEIGHT = 480
+
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+        right.set(cv2.CAP_PROP_FPS,30)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        while True:
+            right.grab()
+            _, rightFrame = right.retrieve()
+            imgRGB=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2RGB)
+            jpg_image = Image.fromarray(imgRGB)
+            bytes_array = io.BytesIO()
+            jpg_image.save(bytes_array, format='JPEG')
+            jpg_image_bytes = bytes_array.getvalue()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
+        right.release()
+
     def start_left_camera(self):
         CAMERA_WIDTH = 640
         CAMERA_HEIGHT = 480
