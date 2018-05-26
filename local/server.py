@@ -1,4 +1,4 @@
-from flask import Flask, render_template, Response
+rightfrom flask import Flask, render_template, Response
 
 import movement
 import camera
@@ -53,6 +53,12 @@ class Server():
         def left_camera_stream():
             return Response(self.c.start_left_camera(),
                 mimetype='multipart/x-mixed-replace; boundary=frame')
+
+        @app.route("/right_camera_stream")
+        def right_camera_stream():
+            return Response(self.c.start_right_camera(),
+                mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
         return app
 
