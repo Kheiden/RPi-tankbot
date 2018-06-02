@@ -1,5 +1,7 @@
 import RPi.GPIO as GPIO
 from datetime import datetime
+
+import numpy as np
 import time
 import cv2
 import io
