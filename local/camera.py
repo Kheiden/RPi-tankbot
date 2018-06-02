@@ -101,8 +101,7 @@ class Camera():
         jpg_image = Image.fromarray(imgRGB_combined)
 
         filename = datetime.now().strftime("%F_%H-%M-%S.%f")
-        with open("/home/pi/RPi-tankbot/local/frames/{}.jpg".format(filename), "w") as newimg:
-            jpg_image.save(newimg, format='JPEG')
+        jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}.jpg".format(filename), format='JPEG')
 
         right.release()
         left.release()
