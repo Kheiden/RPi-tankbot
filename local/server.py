@@ -15,7 +15,6 @@ class Server():
     def clear_gpio_motor_pins(self):
         self.m.clear_gpio_motor_pins()
 
-
     def start_webserver(self):
         print("Initializing Server")
         app = Flask(__name__)
@@ -67,3 +66,4 @@ if __name__ == '__main__':
     app = s.start_webserver()
     app.debug=True
     app.run(host='0.0.0.0', port=5000)
+    s.clear_gpio_motor_pins()

@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO
+from datetime import datetime
 import time
 import cv2
 import io
@@ -73,6 +74,38 @@ class Camera():
     def stop_servos(self):
         self.pwm_x.stop()
         self.pwm_y.stop()
+
+    def take_stereo_photo(self, x_res, y_res):
+        CAMERA_WIDTH = x_res
+        CAMERA_HEIGHT = y_res
+
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+
+        right.grab()
+        left.grab()
+
+        _, rightFrame = right.retrieve()
+        _, leftFrame = left.retrieve()
+
+        imgRGB_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2RGB)
+        imgRGB_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2RGB)
+        imgRGB_combined = np.concatenate((imgRGB_left, imgRGB_right), axis=1)
+        jpg_image = Image.fromarray(imgRGB_combined)
+
+        filename = datetime.now().strftime("%F_%H-%M-%S.%f")
+        jpg_image.save("frames/{}.jpg".format(filename), format='JPEG')
+
+        right.release()
+        left.release()
+
+        width, height = jpg_image.size
+        return width, height
 
     def start_right_camera(self):
         CAMERA_WIDTH = 640
