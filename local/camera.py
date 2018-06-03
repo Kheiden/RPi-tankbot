@@ -82,7 +82,7 @@ class Camera():
         CAMERA_HEIGHT = y_res
 
         print("CAMERA_WIDTH: {}, CAMERA_HEIGHT:{}".format(CAMERA_WIDTH, CAMERA_HEIGHT))
-        
+
         right = cv2.VideoCapture(1)
         right.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
         right.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
@@ -91,8 +91,10 @@ class Camera():
         left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
         left.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
 
-        right.grab()
-        left.grab()
+        if right.grab():
+            pass
+        if left.grab():
+            pass
 
         _, rightFrame = right.retrieve()
         _, leftFrame = left.retrieve()
