@@ -81,6 +81,8 @@ class Camera():
         CAMERA_WIDTH = x_res
         CAMERA_HEIGHT = y_res
 
+        print("CAMERA_WIDTH: {}, CAMERA_HEIGHT:{}".format(CAMERA_WIDTH, CAMERA_HEIGHT))
+        
         right = cv2.VideoCapture(1)
         right.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
         right.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)

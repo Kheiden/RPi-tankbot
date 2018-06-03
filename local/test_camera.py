@@ -23,6 +23,12 @@ class TestCamera():
 
     def test_concat_cameras(self):
         # This test will take a single still photo at max resolution with both cameras
+        x_res = 320
+        y_res = 240
+        width, height = self.c.take_stereo_photo(x_res, y_res)
+        assert width == x_res*2
+        assert height == y_res
+
         x_res = 640
         y_res = 480
         width, height = self.c.take_stereo_photo(x_res, y_res)
