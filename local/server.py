@@ -58,6 +58,10 @@ class Server():
             return Response(self.c.start_right_camera(),
                 mimetype='multipart/x-mixed-replace; boundary=frame')
 
+        @app.route("/left_and_right_camera_stream")
+        def right_camera_stream():
+            return Response(self.c.start_left_and_right_cameras(),
+                mimetype='multipart/x-mixed-replace; boundary=frame')
 
         return app
 
