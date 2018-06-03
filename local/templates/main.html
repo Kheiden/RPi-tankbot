@@ -14,13 +14,63 @@ table, th, td {
   <table style="width:1280px">
 
   <tr>
-    <td width="50%" height="480px">Left Camera</td>
-    <td width="50%" height="480px">Right Camera</td>
+    <td width="50%" height="480px"><img id="left_cam_stream" src=""></td>
+    <td width="50%" height="480px"><img id="right_cam_stream" src=""></td>
   </tr>
+</table>
+<table  style="width:1280px">
+    <tr>
+        <td width="100%" height="480px"><img id="left_and_right_camera_stream" src=""></td>
+    </tr>
 </table>
 </head>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+function start_left_cam_stream()
+{
+var img = document.getElementById("left_cam_stream");
+img.src="/left_camera_stream";
+return false;
+}
+function stop_left_cam_stream()
+{
+var img = document.getElementById("left_cam_stream");
+img.src="";
+return false;
+}
+
+
+function start_right_cam_stream()
+{
+var img = document.getElementById("right_cam_stream");
+img.src="/right_camera_stream";
+return false;
+}
+function stop_right_cam_stream()
+{
+var img = document.getElementById("right_cam_stream");
+img.src="";
+return false;
+}
+
+function start_left_and_right_cam_stream()
+{
+var img = document.getElementById("left_and_right_camera_stream");
+img.src="/left_and_right_camera_stream";
+return false;
+}
+function stop_left_and_right_cam_stream()
+{
+var img = document.getElementById("left_and_right_camera_stream");
+img.src="";
+return false;
+}
+</script>
+
+
+
 <script>
 $(document).ready(function(){
     $("#b_forwards").mousedown(function(){
@@ -82,25 +132,38 @@ $(document).ready(function(){
         });
     });
 });
+$(document).ready(function(){
+    $("#b_stop").mousedown(function(){
+        $.get("stop", function(data, status){
+            console.log("stopping motors!")
+        });
+    });
+});
 </script>
 
 <body>
 
-    <table style="width:300px">
+    <table style="width:800px">
       <tr>
-        <th></th>
-        <th><button id="b_forwards">Forwards</button></th>
-        <th></th>
-      </tr>
-      <tr>
-        <td width="33%"><button id="b_left">Left</button></td>
-        <td width="34%"></td>
-        <td width="33%"><button id="b_right">Right</button></td>
-      </tr>
-      <tr>
+        <td style="height:50px"></td>
+        <td><button id="b_forwards">Forwards</button></td>
         <td></td>
+        <td width="20%"><button id="b_start_left" onclick="start_left_cam_stream();">Start Left Camera Stream</button></td>
+        <td width="20%"><button id="b_stop_left" onclick="stop_left_cam_stream();">Stop Left Camera Stream</button></td>
+      </tr>
+      <tr>
+        <td width="20%"><button id="b_left">Left</button></td>
+        <td width="20%" style="height:50px"><button id="b_stop">STOP</button></td>
+        <td width="20%"><button id="b_right">Right</button></td>
+        <td width="20%"><button id="b_start_right" onclick="start_right_cam_stream();">Start Right Camera Stream</button></td>
+        <td width="20%"><button id="b_stop_right" onclick="stop_right_cam_stream();">Stop Right Camera Stream</button></td>
+      </tr>
+      <tr>
+        <td style="height:50px"></td>
         <td><button id="b_backwards">Backwards</button></td>
         <td></td>
+        <td width="20%"><button id="b_start_left_and_right" onclick="start_left_and_right_cam_stream();">Start Dual Camera Stream</button></td>
+        <td width="20%"><button id="b_stop_left_and_right" onclick="stop_left_and_right_cam_stream();">Stop Dual Camera Stream</button></td>
       </tr>
     </table>
 

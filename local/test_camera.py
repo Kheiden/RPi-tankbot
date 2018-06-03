@@ -20,7 +20,40 @@ class TestCamera():
         """
         self.c.stop_servos()
 
-    @pytest.mark.skip(reason="Skipping to isolate test.")
+    @pytest.mark.skip(reason="Passed.")
+    def test_concat_cameras(self):
+        # This test will take a single still photo at max resolution with both cameras
+        x_res = 320
+        y_res = 240
+        width, height = self.c.take_stereo_photo(x_res, y_res)
+        assert width == x_res*2
+        assert height == y_res
+
+        x_res = 640
+        y_res = 480
+        width, height = self.c.take_stereo_photo(x_res, y_res)
+        assert width == x_res*2
+        assert height == y_res
+
+        x_res = 1280
+        y_res = 720
+        width, height = self.c.take_stereo_photo(x_res, y_res)
+        assert width == x_res*2
+        assert height == y_res
+
+        x_res = 1904
+        y_res = 1080
+        width, height = self.c.take_stereo_photo(x_res, y_res)
+        assert width == x_res*2
+        assert height == y_res
+
+        x_res = 1920
+        y_res = 1080
+        width, height = self.c.take_stereo_photo(x_res, y_res)
+        assert width == x_res*2
+        assert height == y_res
+
+    @pytest.mark.skip(reason="Not yet passed.")
     def test_camera_rotation(self):
         for i in range(-90, 91, 10):
             print("Moving camera to {}".format(i))
@@ -31,7 +64,7 @@ class TestCamera():
             time.sleep(0.5)
         self.assertTrue(True)
 
-    @pytest.mark.skip(reason="Skipping to isolate test.")
+    @pytest.mark.skip(reason="Not yet passed.")
     def test_degree(self):
         x_axis_degrees = 0
         y_axis_degrees = 0
@@ -42,7 +75,7 @@ class TestCamera():
         self.c.move_camera(x_axis_degrees, y_axis_degrees)
 
 
-    @pytest.mark.skip(reason="Passed.")
+    @pytest.mark.skip(reason="Not yet passed.")
     def test_smooth_rotate(self):
         """First, center the camera"""
         self.c.move_camera(0, 0)
@@ -60,7 +93,7 @@ class TestCamera():
         speed = "FAST"
         self.c.move_camera_smooth(x_start, y_start, x_end, y_end, speed)
 
-    @pytest.mark.skip(reason="Passed.")
+    @pytest.mark.skip(reason="Not yet passed.")
     def test_zero_camera(self):
         self.c.move_camera(0, 0)
 

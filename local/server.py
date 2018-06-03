@@ -1,6 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, Response
 
 import movement
+import camera
 
 class Server():
 
@@ -9,10 +10,10 @@ class Server():
         This class is used to control the web server hosted on the RPi
         """
         self.m = movement.Movement()
+        self.c = camera.Camera()
 
     def clear_gpio_motor_pins(self):
         self.m.clear_gpio_motor_pins()
-
 
     def start_webserver(self):
         print("Initializing Server")
@@ -25,27 +26,42 @@ class Server():
         @app.route("/stop")
         def stop():
             self.m.stop()
-            return 200
+            return "ok"
 
         @app.route("/forwards")
         def go_forwards():
             self.m.forward()
-            return 200
+            return "ok"
 
         @app.route("/backwards")
         def go_backwards():
             self.m.backward()
-            return 200
+            return "ok"
 
         @app.route("/turn_right")
         def turn_right():
             self.m.rotate(direction="right")
-            return 200
+            return "ok"
 
         @app.route("/turn_left")
         def turn_left():
             self.m.rotate(direction="left")
-            return 200
+            return "ok"
+
+        @app.route("/left_camera_stream")
+        def left_camera_stream():
+            return Response(self.c.start_left_camera(),
+                mimetype='multipart/x-mixed-replace; boundary=frame')
+
+        @app.route("/right_camera_stream")
+        def right_camera_stream():
+            return Response(self.c.start_right_camera(),
+                mimetype='multipart/x-mixed-replace; boundary=frame')
+
+        @app.route("/left_and_right_camera_stream")
+        def left_and_right_camera_stream():
+            return Response(self.c.start_left_and_right_cameras(),
+                mimetype='multipart/x-mixed-replace; boundary=frame')
 
         return app
 
@@ -54,3 +70,4 @@ if __name__ == '__main__':
     app = s.start_webserver()
     app.debug=True
     app.run(host='0.0.0.0', port=5000)
+    s.clear_gpio_motor_pins()

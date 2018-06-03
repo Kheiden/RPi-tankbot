@@ -1,5 +1,12 @@
 import RPi.GPIO as GPIO
+from datetime import datetime
+
+import numpy as np
 import time
+import cv2
+import io
+
+from PIL import Image
 
 class Camera():
 
@@ -64,30 +71,95 @@ class Camera():
             self.stop_servos()
             time.sleep(timesleep)
 
-
-
-
-
         self.stop_servos()
 
     def stop_servos(self):
         self.pwm_x.stop()
         self.pwm_y.stop()
 
+    def take_stereo_photo(self, x_res, y_res):
+        CAMERA_WIDTH = x_res
+        CAMERA_HEIGHT = y_res
 
-    def start_cameras(self):
-        """
-        # This method is used to start the cameras and display the video feed
-        # on the GUI.
+        print("CAMERA_WIDTH: {}, CAMERA_HEIGHT:{}".format(CAMERA_WIDTH, CAMERA_HEIGHT))
 
-        Note: Imports are done in the method level because of latency issues with
-        importing large modules on the RPi.
-        """
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+        right.grab()
+        _, rightFrame = right.retrieve()
+        right.release()
 
-        import cv2
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+        left.grab()
+        _, leftFrame = left.retrieve()
+        left.release()
 
-        CAMERA_WIDTH = 1920
-        CAMERA_HEIGHT = 1080
+
+        imgRGB_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2RGB)
+        imgRGB_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2RGB)
+        imgRGB_combined = np.concatenate((imgRGB_left, imgRGB_right), axis=1)
+        jpg_image = Image.fromarray(imgRGB_combined)
+
+        filename = datetime.now().strftime("%F_%H-%M-%S.%f")
+        jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}.jpg".format(filename), format='JPEG')
+
+
+        width, height = jpg_image.size
+        return width, height
+
+    def start_right_camera(self):
+        CAMERA_WIDTH = 640
+        CAMERA_HEIGHT = 480
+
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+        right.set(cv2.CAP_PROP_FPS,30)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        while True:
+            right.grab()
+            _, rightFrame = right.retrieve()
+            imgRGB=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2RGB)
+            jpg_image = Image.fromarray(imgRGB)
+            bytes_array = io.BytesIO()
+            jpg_image.save(bytes_array, format='JPEG')
+            jpg_image_bytes = bytes_array.getvalue()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
+        right.release()
+
+    def start_left_camera(self):
+        CAMERA_WIDTH = 640
+        CAMERA_HEIGHT = 480
+
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+        left.set(cv2.CAP_PROP_FPS,30)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        while True:
+            left.grab()
+            _, leftFrame = left.retrieve()
+            imgRGB=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2RGB)
+            jpg_image = Image.fromarray(imgRGB)
+            bytes_array = io.BytesIO()
+            jpg_image.save(bytes_array, format='JPEG')
+            jpg_image_bytes = bytes_array.getvalue()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
+        left.release()
+
+    def start_left_and_right_cameras(self):
+
+        CAMERA_WIDTH = 640
+        CAMERA_HEIGHT = 480
 
         left = cv2.VideoCapture(0)
         left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
@@ -102,17 +174,24 @@ class Camera():
         right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
         while(True):
-            if not (left.grab()):
+            if not (left.grab() and right.grab()):
                 print("No more frames")
                 break
 
             _, leftFrame = left.retrieve()
             _, rightFrame = right.retrieve()
 
-            cv2.imshow('left', leftFrame)
-            cv2.imshow('right', rightFrame)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+            imgRGB_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2RGB)
+            imgRGB_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2RGB)
+            imgRGB_combined = np.concatenate((imgRGB_left, imgRGB_right), axis=1)
+            jpg_image = Image.fromarray(imgRGB_combined)
+
+            bytes_array = io.BytesIO()
+            jpg_image.save(bytes_array, format='JPEG')
+            jpg_image_bytes = bytes_array.getvalue()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
+
 
         left.release()
         right.release()
