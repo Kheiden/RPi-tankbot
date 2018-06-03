@@ -87,17 +87,18 @@ class Camera():
         right.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
         right.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
 
+        right.grab()
+        _, rightFrame = right.retrieve()
+        right.release()
+
         left = cv2.VideoCapture(0)
         left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
         left.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
 
-        if right.grab():
-            pass
-        if left.grab():
-            pass
-
-        _, rightFrame = right.retrieve()
+        left.grab()
         _, leftFrame = left.retrieve()
+        left.release()
+
 
         imgRGB_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2RGB)
         imgRGB_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2RGB)
@@ -107,8 +108,6 @@ class Camera():
         filename = datetime.now().strftime("%F_%H-%M-%S.%f")
         jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}.jpg".format(filename), format='JPEG')
 
-        right.release()
-        left.release()
 
         width, height = jpg_image.size
         return width, height
