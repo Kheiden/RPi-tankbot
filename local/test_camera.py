@@ -20,11 +20,26 @@ class TestCamera():
         """
         self.c.stop_servos()
 
+
     def test_concat_cameras(self):
         # This test will take a single still photo at max resolution with both cameras
-        width, height = self.c.take_stereo_photo(x_res=1920, y_res=1080)
-        assert width == 1920*2
-        assert height == 1080
+        x_res = 640
+        y_res = 480
+        width, height = self.c.take_stereo_photo(x_res, y_res)
+        assert width == x_res*2
+        assert height == y_res
+
+        x_res = 1024
+        y_res = 768
+        width, height = self.c.take_stereo_photo(x_res, y_res)
+        assert width == x_res*2
+        assert height == y_res
+
+        x_res = 1920
+        y_res = 1080
+        width, height = self.c.take_stereo_photo(x_res, y_res)
+        assert width == x_res*2
+        assert height == y_res
 
 
     @pytest.mark.skip(reason="Skipping to isolate test.")
