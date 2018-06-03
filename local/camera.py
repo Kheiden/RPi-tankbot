@@ -156,19 +156,10 @@ class Camera():
                    b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
         left.release()
 
-    def start_cameras(self):
-        """
-        # This method is used to start the cameras and display the video feed
-        # on the GUI.
+    def start_left_and_right_cameras(self):
 
-        Note: Imports are done in the method level because of latency issues with
-        importing large modules on the RPi.
-        """
-
-        import cv2
-
-        CAMERA_WIDTH = 1920
-        CAMERA_HEIGHT = 1080
+        CAMERA_WIDTH = 640
+        CAMERA_HEIGHT = 480
 
         left = cv2.VideoCapture(0)
         left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
@@ -190,10 +181,17 @@ class Camera():
             _, leftFrame = left.retrieve()
             _, rightFrame = right.retrieve()
 
-            cv2.imshow('left', leftFrame)
-            cv2.imshow('right', rightFrame)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+            imgRGB_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2RGB)
+            imgRGB_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2RGB)
+            imgRGB_combined = np.concatenate((imgRGB_left, imgRGB_right), axis=1)
+            jpg_image = Image.fromarray(imgRGB_combined)
+
+            bytes_array = io.BytesIO()
+            jpg_image.save(bytes_array, format='JPEG')
+            jpg_image_bytes = bytes_array.getvalue()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
+
 
         left.release()
         right.release()
