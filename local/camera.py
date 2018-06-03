@@ -158,8 +158,8 @@ class Camera():
 
     def start_left_and_right_cameras(self):
 
-        CAMERA_WIDTH = 640
-        CAMERA_HEIGHT = 480
+        CAMERA_WIDTH = 1280
+        CAMERA_HEIGHT = 720
 
         left = cv2.VideoCapture(0)
         left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
