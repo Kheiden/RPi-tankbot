@@ -86,7 +86,7 @@ class Camera():
         right = cv2.VideoCapture(1)
         right.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
         right.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
-
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
         right.grab()
         _, rightFrame = right.retrieve()
         right.release()
@@ -94,7 +94,7 @@ class Camera():
         left = cv2.VideoCapture(0)
         left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
         left.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
-
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
         left.grab()
         _, leftFrame = left.retrieve()
         left.release()
