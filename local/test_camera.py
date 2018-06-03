@@ -35,8 +35,14 @@ class TestCamera():
         assert width == x_res*2
         assert height == y_res
 
-        x_res = 1024
-        y_res = 768
+        x_res = 1280
+        y_res = 720
+        width, height = self.c.take_stereo_photo(x_res, y_res)
+        assert width == x_res*2
+        assert height == y_res
+
+        x_res = 1904
+        y_res = 1080
         width, height = self.c.take_stereo_photo(x_res, y_res)
         assert width == x_res*2
         assert height == y_res
@@ -46,7 +52,6 @@ class TestCamera():
         width, height = self.c.take_stereo_photo(x_res, y_res)
         assert width == x_res*2
         assert height == y_res
-
 
     @pytest.mark.skip(reason="Skipping to isolate test.")
     def test_camera_rotation(self):
