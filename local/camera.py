@@ -77,40 +77,63 @@ class Camera():
         self.pwm_x.stop()
         self.pwm_y.stop()
 
-    def take_stereo_photo(self, x_res, y_res):
+    def take_stereo_photo(self, x_res, y_res, type="combined"):
+        """
+        type="combined" (or any other value) is a single .JPG file
+        type="separate" is two separate .JPG files
+        """
         CAMERA_WIDTH = x_res
         CAMERA_HEIGHT = y_res
-
         print("CAMERA_WIDTH: {}, CAMERA_HEIGHT:{}".format(CAMERA_WIDTH, CAMERA_HEIGHT))
 
         right = cv2.VideoCapture(1)
         right.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
         right.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
         right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
-        right.grab()
-        _, rightFrame = right.retrieve()
-        right.release()
+
+
 
         left = cv2.VideoCapture(0)
         left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
         left.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
         left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
-        left.grab()
+
+
+        for i in range(45):
+            #This is used to "warm up" the camera before retrieving the photo
+            left.grab()
+            right.grab()
+        _, rightFrame = right.retrieve()
         _, leftFrame = left.retrieve()
+        right.release()
         left.release()
 
 
         imgRGB_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2RGB)
         imgRGB_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2RGB)
-        imgRGB_combined = np.concatenate((imgRGB_left, imgRGB_right), axis=1)
-        jpg_image = Image.fromarray(imgRGB_combined)
+        if type == "separate":
+            jpg_image_right = Image.fromarray(imgRGB_right)
+            jpg_image_left = Image.fromarray(imgRGB_left)
+            filename = datetime.now().strftime("%F_%H-%M-%S.%f")
+            jpg_image_right.save("/home/pi/RPi-tankbot/local/frames/{}_right.jpg".format(filename), format='JPEG')
+            jpg_image_left.save("/home/pi/RPi-tankbot/local/frames/{}_left.jpg".format(filename), format='JPEG')
 
-        filename = datetime.now().strftime("%F_%H-%M-%S.%f")
-        jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}.jpg".format(filename), format='JPEG')
+            width_right, height_right = jpg_image_right.size
+            width_left, height_left = jpg_image_left.size
+            if ((width_right == width_left) and (height_right == height_left)):
+                return width_right, height_right
+            else:
+                # This shouldn't happen.  If it does, error out.
+                return 0, 0
+        else:
+            # if not defined, then it's combined ;)
+            imgRGB_combined = np.concatenate((imgRGB_left, imgRGB_right), axis=1)
+            jpg_image = Image.fromarray(imgRGB_combined)
+            filename = datetime.now().strftime("%F_%H-%M-%S.%f")
+            jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_combined.jpg".format(filename), format='JPEG')
 
-
-        width, height = jpg_image.size
-        return width, height
+            width, height = jpg_image.size
+            return width, height
 
     def start_right_camera(self):
         CAMERA_WIDTH = 640
@@ -158,8 +181,8 @@ class Camera():
 
     def start_left_and_right_cameras(self):
 
-        CAMERA_WIDTH = 640
-        CAMERA_HEIGHT = 480
+        CAMERA_WIDTH = 1280
+        CAMERA_HEIGHT = 720
 
         left = cv2.VideoCapture(0)
         left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)

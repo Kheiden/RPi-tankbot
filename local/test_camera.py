@@ -20,36 +20,50 @@ class TestCamera():
         """
         self.c.stop_servos()
 
-    @pytest.mark.skip(reason="Passed.")
-    def test_concat_cameras(self):
-        # This test will take a single still photo at max resolution with both cameras
-        x_res = 320
-        y_res = 240
-        width, height = self.c.take_stereo_photo(x_res, y_res)
-        assert width == x_res*2
-        assert height == y_res
 
-        x_res = 640
-        y_res = 480
-        width, height = self.c.take_stereo_photo(x_res, y_res)
-        assert width == x_res*2
-        assert height == y_res
-
-        x_res = 1280
-        y_res = 720
-        width, height = self.c.take_stereo_photo(x_res, y_res)
-        assert width == x_res*2
-        assert height == y_res
-
-        x_res = 1904
+    def test_stereo_photo(self):
+        x_res = 1920
         y_res = 1080
-        width, height = self.c.take_stereo_photo(x_res, y_res)
+        width, height = self.c.take_stereo_photo(x_res, y_res , type="combined")
         assert width == x_res*2
         assert height == y_res
 
         x_res = 1920
         y_res = 1080
-        width, height = self.c.take_stereo_photo(x_res, y_res)
+        width, height = self.c.take_stereo_photo(x_res, y_res , type="separate")
+        assert width == x_res
+        assert height == y_res
+
+    #@pytest.mark.skip(reason="")
+    def test_concat_cameras(self):
+        # This test will take a single still photo at max resolution with both cameras
+        x_res = 320
+        y_res = 240
+        width, height = self.c.take_stereo_photo(x_res, y_res, type="combined")
+        assert width == x_res*2
+        assert height == y_res
+
+        x_res = 640
+        y_res = 480
+        width, height = self.c.take_stereo_photo(x_res, y_res, type="combined")
+        assert width == x_res*2
+        assert height == y_res
+
+        x_res = 1280
+        y_res = 720
+        width, height = self.c.take_stereo_photo(x_res, y_res , type="combined")
+        assert width == x_res*2
+        assert height == y_res
+
+        x_res = 1904
+        y_res = 1080
+        width, height = self.c.take_stereo_photo(x_res, y_res , type="combined")
+        assert width == x_res*2
+        assert height == y_res
+
+        x_res = 1920
+        y_res = 1080
+        width, height = self.c.take_stereo_photo(x_res, y_res , type="combined")
         assert width == x_res*2
         assert height == y_res
 
