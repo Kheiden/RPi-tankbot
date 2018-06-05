@@ -99,7 +99,7 @@ class Camera():
         left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
 
-        for i in range(5):
+        for i in range(30):
             #This is used to "warm up" the camera before retrieving the photo
             left.grab()
             right.grab()
