@@ -20,7 +20,7 @@ class TestCamera():
         """
         self.c.stop_servos()
 
-    def calibration_cameras(self):
+    def test_calibration_cameras(self):
         x_res = 1920
         y_res = 1080
         for i in range(20):
