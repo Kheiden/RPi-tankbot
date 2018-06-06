@@ -20,7 +20,16 @@ class TestCamera():
         """
         self.c.stop_servos()
 
+    def calibration_cameras(self):
+        x_res = 1920
+        y_res = 1080
+        for i in range(20):
+            width, height = self.c.take_stereo_photo(x_res, y_res , type="separate")
+            assert width == x_res
+            assert height == y_res
 
+
+    @pytest.mark.skip(reason="Passed.")
     def test_stereo_photo(self):
         x_res = 1920
         y_res = 1080
@@ -34,7 +43,7 @@ class TestCamera():
         assert width == x_res
         assert height == y_res
 
-    #@pytest.mark.skip(reason="")
+    @pytest.mark.skip(reason="Passed.")
     def test_concat_cameras(self):
         # This test will take a single still photo at max resolution with both cameras
         x_res = 320
