@@ -20,7 +20,7 @@ class TestCamera():
         """
         self.c.stop_servos()
 
-    @pytest.mark.skip(reason="Passed.")
+
     def test_calibration_cameras(self):
         result = self.c.calibrate_cameras()
         assert any(result)
