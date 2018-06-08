@@ -34,8 +34,10 @@ class Camera():
         return
 
 
-    def calibrate_cameras(self):
+    def calibrate_cameras(self, cam_num=0, save_chessboard=False):
         """
+        cam_num 0 is left and 1 is right.
+
         Code sample based on:
         http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_calib3d/py_calibration/py_calibration.html
         """
@@ -50,8 +52,8 @@ class Camera():
         objpoints = [] # 3d point in real world space
         imgpoints = [] # 2d points in image plane.
         num_chessboards_found = []
-
-        images = glob.glob('/home/pi/calibration_frames/*.jpg')
+        right_or_left = ["_right" if cam_num==1 else "_left"][0])
+        images = glob.glob('/home/pi/calibration_frames/*{}.jpg'.format(right_or_left))
 
         for file_name in images:
             img = cv2.imread(file_name)
@@ -68,10 +70,25 @@ class Camera():
                 imgpoints.append(corners2)
 
                 # Draw and display the corners
-                img = cv2.drawChessboardCorners(img, (9,6), corners2,ret)
-                jpg_image = Image.fromarray(img)
-                jpg_image.save(file_name.replace("calibration_frames", "chessboard_frames"), format='JPEG')
+                if save_chessboard == True:
+                    img = cv2.drawChessboardCorners(img, (9,6), corners2,ret)
+                    jpg_image = Image.fromarray(img)
+                    jpg_image.save(file_name.replace("calibration_frames", "chessboard_frames"), format='JPEG')
                 num_chessboards_found.append(True)
+
+        ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
+
+        img = cv2.imread('/home/pi/calibration_frames/2018-06-06_04-30-53.771705{}.jpg'.format(right_or_left))
+        h,  w = img.shape[:2]
+        newcameramtx, roi=cv2.getOptimalNewCameraMatrix(mtx,dist,(w,h),1,(w,h))
+
+        # undistort
+        dst = cv2.undistort(img, mtx, dist, None, newcameramtx)
+
+        # crop the image
+        x,y,w,h = roi
+        dst = dst[y:y+h, x:x+w]
+        cv2.imwrite('/home/pi/calibration_frames/output{}.jpg'.format(right_or_left), dst)
 
         return num_chessboards_found
 
