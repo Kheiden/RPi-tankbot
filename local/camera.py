@@ -52,7 +52,7 @@ class Camera():
         objpoints = [] # 3d point in real world space
         imgpoints = [] # 2d points in image plane.
         num_chessboards_found = []
-        right_or_left = ["_right" if cam_num==1 else "_left"][0])
+        right_or_left = ["_right" if cam_num==1 else "_left"][0]
         images = glob.glob('/home/pi/calibration_frames/*{}.jpg'.format(right_or_left))
 
         for file_name in images:
