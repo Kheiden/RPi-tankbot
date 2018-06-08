@@ -70,8 +70,10 @@ class Camera():
                 # Draw and display the corners
                 img = cv2.drawChessboardCorners(img, (9,6), corners2,ret)
                 jpg_image = Image.fromarray(img)
-                jpg_image.save("/home/pi/chessboard_frames/{}.jpg".format(file_name), format='JPEG')
+                jpg_image.save(file_name, format='JPEG')
                 num_chessboards_found.append(True)
+
+        return num_chessboards_found
 
 
     def move_camera(self, x_axis_degrees=None, y_axis_degrees=None):
