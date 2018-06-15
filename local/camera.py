@@ -3,6 +3,7 @@ from datetime import datetime
 
 from diskcache import Cache
 import numpy as np
+import random
 import glob
 import time
 import cv2
@@ -53,6 +54,8 @@ class Camera():
         right_or_left = ["_right" if cam_num==1 else "_left"][0]
 
         cache = Cache('/tmp/calibrationcachedata{}'.format(right_or_left))
+        images = glob.glob('/home/pi/calibration_frames/*{}.jpg'.format(right_or_left))
+
         if 'objpoints' and 'imgpoints' in cache:
             print("Camera calibration data has been found in cache.")
             objpoints = cache['objpoints']
@@ -63,7 +66,6 @@ class Camera():
             objpoints = [] # 3d point in real world space
             imgpoints = [] # 2d points in image plane.
             num_chessboards_found = []
-            images = glob.glob('/home/pi/calibration_frames/*{}.jpg'.format(right_or_left))
 
             for file_name in images:
                 img = cv2.imread(file_name)
@@ -91,7 +93,14 @@ class Camera():
             cache['imgpoints'] = imgpoints
             cache.close()
 
+        # Opencv sample code uses the var 'grey' from the last openend picture
+        # I'm going to choose one at random
+        file_name = random.sample(images, 1)
+        img = cv2.imread(file_name)
+        gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
+        np.savez('/tmp/camera_calibration{}.npz'.format(right_or_left), mtx=mtx, dist=dist, rvecs=rvecs, tvecs=tvecs)
 
         img = cv2.imread('/home/pi/input_output/input{}.jpg'.format(right_or_left))
         h,  w = img.shape[:2]
