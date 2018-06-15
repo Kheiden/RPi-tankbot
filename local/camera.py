@@ -78,7 +78,7 @@ class Camera():
 
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
 
-        img = cv2.imread('/home/pi/calibration_frames/input{}.jpg'.format(right_or_left))
+        img = cv2.imread('/home/pi/input_output/input{}.jpg'.format(right_or_left))
         h,  w = img.shape[:2]
         newcameramtx, roi=cv2.getOptimalNewCameraMatrix(mtx,dist,(w,h),1,(w,h))
 
@@ -97,7 +97,7 @@ class Camera():
         # crop the image
         x,y,w,h = roi
         dst = dst[y:y+h, x:x+w]
-        cv2.imwrite('/home/pi/calibration_frames/output_two{}.jpg'.format(right_or_left), dst)
+        cv2.imwrite('/home/pi/input_output/output{}.jpg'.format(right_or_left), dst)
 
 
 
