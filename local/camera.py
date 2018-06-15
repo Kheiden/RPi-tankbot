@@ -115,13 +115,14 @@ class Camera():
         #cv2.imwrite('/home/pi/calibration_frames/output_one{}.jpg'.format(right_or_left), dst)
 
         # undistort
-        mapx,mapy = cv2.initUndistortRectifyMap(mtx,dist,None,newcameramtx,(w,h),5)
-        dst = cv2.remap(img,mapx,mapy,cv2.INTER_LINEAR)
+        undistortedImg = cv2.undistort(img, mtx, dist, None, newCameraMtx)
+        #mapx,mapy = cv2.initUndistortRectifyMap(mtx,dist,None,newcameramtx,(w,h),5)
+        #dst = cv2.remap(img,mapx,mapy,cv2.INTER_LINEAR)
 
         # crop the image
-        x,y,w,h = roi
-        dst = dst[y:y+h, x:x+w]
-        cv2.imwrite('/home/pi/input_output/output{}.jpg'.format(right_or_left), dst)
+        #x,y,w,h = roi
+        #dst = dst[y:y+h, x:x+w]
+        cv2.imwrite('/home/pi/input_output/output{}.jpg'.format(right_or_left), undistortedImg)
 
         return True
 
