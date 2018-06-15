@@ -95,7 +95,7 @@ class Camera():
 
         # Opencv sample code uses the var 'grey' from the last openend picture
         # I'm going to choose one at random
-        file_name = random.sample(images, 1)
+        file_name = random.sample(images, 1)[0]
         img = cv2.imread(file_name)
         gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
