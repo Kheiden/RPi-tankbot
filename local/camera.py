@@ -120,8 +120,11 @@ class Camera():
         #dst = cv2.remap(img,mapx,mapy,cv2.INTER_LINEAR)
 
         # crop the image
+        CROP_WIDTH = 960
         x,y,w,h = roi
-        undistortedImg = undistortedImg[y:y+h, x:x+w]
+        undistortedImg = undistortedImg[:,
+            int((CAMERA_WIDTH-CROP_WIDTH)/2):
+            int(CROP_WIDTH+(CAMERA_WIDTH-CROP_WIDTH)/2)]
         cv2.imwrite('/home/pi/input_output/output{}.jpg'.format(right_or_left), undistortedImg)
 
         return True
