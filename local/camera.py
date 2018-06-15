@@ -56,7 +56,7 @@ class Camera():
         images = glob.glob('/home/pi/calibration_frames/*{}.jpg'.format(right_or_left))
 
         # Testing for now. TODO remove the index below
-        for file_name in images[1]:
+        for file_name in images[:2]:
             img = cv2.imread(file_name)
             gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
