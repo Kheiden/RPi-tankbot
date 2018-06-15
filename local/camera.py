@@ -115,7 +115,7 @@ class Camera():
         #cv2.imwrite('/home/pi/calibration_frames/output_one{}.jpg'.format(right_or_left), dst)
 
         # undistort
-        undistortedImg = cv2.undistort(img, mtx, dist, None, newCameraMtx)
+        undistortedImg = cv2.undistort(img, mtx, dist, None, newcameramtx)
         #mapx,mapy = cv2.initUndistortRectifyMap(mtx,dist,None,newcameramtx,(w,h),5)
         #dst = cv2.remap(img,mapx,mapy,cv2.INTER_LINEAR)
 
