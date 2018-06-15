@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 from datetime import datetime
 
+from diskcache import Cache
 import numpy as np
 import glob
 import time
@@ -49,38 +50,46 @@ class Camera():
         objp[:,:2] = np.mgrid[0:9,0:6].T.reshape(-1,2)
 
         # Arrays to store object points and image points from all the images.
-        objpoints = [] # 3d point in real world space
-        imgpoints = [] # 2d points in image plane.
-        num_chessboards_found = []
         right_or_left = ["_right" if cam_num==1 else "_left"][0]
-        images = glob.glob('/home/pi/calibration_frames/*{}.jpg'.format(right_or_left))
 
-        # Testing for now. TODO remove the index below
-        for file_name in images[:2]:
-            img = cv2.imread(file_name)
-            gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+        cache = Cache('/tmp/calibrationcachedata{}'.format(right_or_left))
+        if 'objpoints' and 'imgpoints' in cache:
+            print("Camera calibration data has been found in cache.")
+            objpoints = cache['objpoints']
+            imgpoints = cache['imgpoints']
+        else:
+            print("Camera calibration data not found in cache.")
 
-            # Find the chess board corners
-            ret, corners = cv2.findChessboardCorners(gray, (9,6),None)
+            objpoints = [] # 3d point in real world space
+            imgpoints = [] # 2d points in image plane.
+            num_chessboards_found = []
+            images = glob.glob('/home/pi/calibration_frames/*{}.jpg'.format(right_or_left))
 
-            # If found, add object points, image points (after refining them)
-            if ret == True:
-                objpoints.append(objp)
+            for file_name in images:
+                img = cv2.imread(file_name)
+                gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
-                corners2 = cv2.cornerSubPix(gray,corners,(11,11),(-1,-1),criteria)
-                imgpoints.append(corners2)
+                # Find the chess board corners
+                ret, corners = cv2.findChessboardCorners(gray, (9,6),None)
 
-                # Draw and display the corners
-                if save_chessboard == True:
-                    img = cv2.drawChessboardCorners(img, (9,6), corners2,ret)
-                    jpg_image = Image.fromarray(img)
-                    jpg_image.save(file_name.replace("calibration_frames", "chessboard_frames"), format='JPEG')
-                num_chessboards_found.append(True)
-        print(type(objpoints))
-        with open('/home/pi/RPi-tankbot/local/calibration_objpoints{}.dat'.format(right_or_left), "w") as filename:
-            filename.write(objpoints)
-            filename.close()
+                # If found, add object points, image points (after refining them)
+                if ret == True:
+                    objpoints.append(objp)
 
+                    corners2 = cv2.cornerSubPix(gray,corners,(11,11),(-1,-1),criteria)
+                    imgpoints.append(corners2)
+
+                    # Draw and display the corners
+                    if save_chessboard == True:
+                        img = cv2.drawChessboardCorners(img, (9,6), corners2,ret)
+                        jpg_image = Image.fromarray(img)
+                        jpg_image.save(file_name.replace("calibration_frames", "chessboard_frames"), format='JPEG')
+                    num_chessboards_found.append(True)
+
+            print("Saving calibration data to cache...")
+            cache['objpoints'] = objpoints
+            cache['imgpoints'] = imgpoints
+            cache.close()
 
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
 
@@ -105,9 +114,7 @@ class Camera():
         dst = dst[y:y+h, x:x+w]
         cv2.imwrite('/home/pi/input_output/output{}.jpg'.format(right_or_left), dst)
 
-
-
-        return num_chessboards_found
+        return True
 
 
     def move_camera(self, x_axis_degrees=None, y_axis_degrees=None):
