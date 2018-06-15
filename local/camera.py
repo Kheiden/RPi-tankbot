@@ -34,7 +34,7 @@ class Camera():
         return
 
 
-    def calibrate_cameras(self, cam_num=0, save_chessboard=False):
+    def calibrate_camera(self, cam_num=0, save_chessboard=False):
         """
         cam_num 0 is left and 1 is right.
 
@@ -78,7 +78,7 @@ class Camera():
 
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
 
-        img = cv2.imread('/home/pi/calibration_frames/2018-06-06_04-30-53.771705{}.jpg'.format(right_or_left))
+        img = cv2.imread('/home/pi/calibration_frames/input{}.jpg'.format(right_or_left))
         h,  w = img.shape[:2]
         newcameramtx, roi=cv2.getOptimalNewCameraMatrix(mtx,dist,(w,h),1,(w,h))
 
@@ -88,7 +88,18 @@ class Camera():
         # crop the image
         x,y,w,h = roi
         dst = dst[y:y+h, x:x+w]
-        cv2.imwrite('/home/pi/calibration_frames/output{}.jpg'.format(right_or_left), dst)
+        cv2.imwrite('/home/pi/calibration_frames/output_one{}.jpg'.format(right_or_left), dst)
+
+        # undistort
+        mapx,mapy = cv2.initUndistortRectifyMap(mtx,dist,None,newcameramtx,(w,h),5)
+        dst = cv2.remap(img,mapx,mapy,cv2.INTER_LINEAR)
+
+        # crop the image
+        x,y,w,h = roi
+        dst = dst[y:y+h, x:x+w]
+        cv2.imwrite('/home/pi/calibration_frames/output_two{}.jpg'.format(right_or_left), dst)
+
+
 
         return num_chessboards_found
 
