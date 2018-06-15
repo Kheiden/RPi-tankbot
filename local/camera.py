@@ -55,7 +55,8 @@ class Camera():
         right_or_left = ["_right" if cam_num==1 else "_left"][0]
         images = glob.glob('/home/pi/calibration_frames/*{}.jpg'.format(right_or_left))
 
-        for file_name in images:
+        # Testing for now. TODO remove the index below
+        for file_name in images[1]:
             img = cv2.imread(file_name)
             gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
@@ -75,6 +76,11 @@ class Camera():
                     jpg_image = Image.fromarray(img)
                     jpg_image.save(file_name.replace("calibration_frames", "chessboard_frames"), format='JPEG')
                 num_chessboards_found.append(True)
+        print(type(objpoints))
+        with open('/home/pi/RPi-tankbot/local/calibration_objpoints{}.dat'.format(right_or_left), "w") as filename:
+            filename.write(objpoints)
+            filename.close()
+
 
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
 
