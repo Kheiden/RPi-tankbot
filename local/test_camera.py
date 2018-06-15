@@ -23,9 +23,9 @@ class TestCamera():
 
     def test_calibration_cameras(self):
         result1 = self.c.calibrate_camera(cam_num=0)
-        assert any(result1)
+        assert result1
         result2 = self.c.calibrate_camera(cam_num=1)
-        assert any(result2)
+        assert result2
 
 
     @pytest.mark.skip(reason="Passed.")
