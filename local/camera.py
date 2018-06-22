@@ -107,7 +107,8 @@ class Camera():
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
         np.savez('/tmp/camera_calibration{}.npz'.format(right_or_left), mtx=mtx, dist=dist, rvecs=rvecs, tvecs=tvecs)
 
-        img = cv2.imread('/home/pi/input_output/input{}.jpg'.format(right_or_left))
+        uncropped_img = cv2.imread('/home/pi/input_output/input{}.jpg'.format(right_or_left))
+        img = uncropped_img[0:1080, 240:1440]
         h,  w = img.shape[:2]
         newcameramtx, roi=cv2.getOptimalNewCameraMatrix(mtx,dist,(w,h),1,(w,h))
 
