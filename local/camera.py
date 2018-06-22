@@ -70,11 +70,8 @@ class Camera():
             for file_name in images:
                 camera_width = 1920
                 crop_width = 1440
-                img = cv2.imread(file_name)
-                img = img[:,
-                        int((camera_width-crop_width)/2):
-                        int(camera_width+(camera_width-crop_width)/2)]
-
+                img_uncropped = cv2.imread(file_name)
+                img = img_uncropped[0:1080, 240:1440]
 
                 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
@@ -93,6 +90,7 @@ class Camera():
                         img = cv2.drawChessboardCorners(img, (9,6), corners2,ret)
                         jpg_image = Image.fromarray(img)
                         jpg_image.save(file_name.replace("calibration_frames", "chessboard_frames"), format='JPEG')
+                        #jpg_image.save(r"C:\Users\kurtw\Documents\raspberry pi\Local Test Code\chessboard\output.jpg", format='JPEG')
                     num_chessboards_found.append(True)
 
             print("Saving calibration data to cache...")
