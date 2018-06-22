@@ -68,6 +68,13 @@ class Camera():
             num_chessboards_found = []
 
             for file_name in images:
+                camera_width = 1920
+                crop_width = 1440
+                img = img[:,
+                        int((camera_width-crop_width)/2):
+                        int(camera_width+(camera_width-crop_width)/2)]
+
+
                 img = cv2.imread(file_name)
                 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
