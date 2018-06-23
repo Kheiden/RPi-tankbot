@@ -42,16 +42,21 @@ class Camera():
 
         Code sample based on:
         http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_calib3d/py_calibration/py_calibration.html
+        and
+        https://medium.com/@kennethjiang/calibrate-fisheye-lens-using-opencv-333b05afa0b0
         """
-        # termination criteria
-        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
-
-        # prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,5,0)
-        objp = np.zeros((6*9,3), np.float32)
-        objp[:,:2] = np.mgrid[0:9,0:6].T.reshape(-1,2)
-
         # Arrays to store object points and image points from all the images.
         right_or_left = ["_right" if cam_num==1 else "_left"][0]
+
+        CHECKERBOARD = (6,9)
+
+        subpix_criteria = (cv2.TERM_CRITERIA_EPS+cv2.TERM_CRITERIA_MAX_ITER, 30, 0.1)
+        calibration_flags = cv2.fisheye.CALIB_RECOMPUTE_EXTRINSIC+cv2.fisheye.CALIB_CHECK_COND+cv2.fisheye.CALIB_FIX_SKEW
+
+        objp = np.zeros((1, CHECKERBOARD[0]*CHECKERBOARD[1], 3), np.float32)
+        objp[0,:,:2] = np.mgrid[0:CHECKERBOARD[0], 0:CHECKERBOARD[1]].T.reshape(-1, 2)
+
+        _img_shape = None
 
         cache = Cache('/tmp/calibrationcachedata{}'.format(right_or_left))
         images = glob.glob('/home/pi/calibration_frames/*{}.jpg'.format(right_or_left))
@@ -68,37 +73,66 @@ class Camera():
             num_chessboards_found = []
 
             for file_name in images:
-                camera_width = 1920
-                crop_width = 1440
                 img_uncropped = cv2.imread(file_name)
+                # crop the image
                 # y start at 0, end at 1080
                 # x start at 240, end at 1440
                 img = img_uncropped[0:1080, 240:1440]
 
+                if _img_shape == None:
+                    _img_shape = img.shape[:2]
+                else:
+                    assert _img_shape == img.shape[:2], "All images must share the same size."
+
+                camera_width = 1920
+                crop_width = 1440
+
                 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
                 # Find the chess board corners
-                ret, corners = cv2.findChessboardCorners(gray, (9,6),None)
+                ret, corners = cv2.findChessboardCorners(gray, CHECKERBOARD, cv2.CALIB_CB_ADAPTIVE_THRESH+cv2.CALIB_CB_FAST_CHECK+cv2.CALIB_CB_NORMALIZE_IMAGE)
 
                 # If found, add object points, image points (after refining them)
                 if ret == True:
                     objpoints.append(objp)
 
-                    corners2 = cv2.cornerSubPix(gray,corners,(11,11),(-1,-1),criteria)
-                    imgpoints.append(corners2)
+                    cv2.cornerSubPix(gray,corners,(3,3),(-1,-1),subpix_criteria)
+                    imgpoints.append(corners)
 
                     # Draw and display the corners
                     if save_chessboard == True:
-                        img = cv2.drawChessboardCorners(img, (9,6), corners2,ret)
+                        img = cv2.drawChessboardCorners(img, CHECKERBOARD, corners, ret)
                         jpg_image = Image.fromarray(img)
                         jpg_image.save(file_name.replace("calibration_frames", "chessboard_frames"), format='JPEG')
                         #jpg_image.save(r"C:\Users\kurtw\Documents\raspberry pi\Local Test Code\chessboard\output.jpg", format='JPEG')
                     num_chessboards_found.append(True)
-
             print("Saving calibration data to cache...")
             cache['objpoints'] = objpoints
             cache['imgpoints'] = imgpoints
             cache.close()
+
+        # Starting from here if cache is found...
+        N_OK = len(objpoints)
+        K = np.zeros((3, 3))
+        D = np.zeros((4, 1))
+        rvecs = [np.zeros((1, 1, 3), dtype=np.float64) for i in range(N_OK)]
+        tvecs = [np.zeros((1, 1, 3), dtype=np.float64) for i in range(N_OK)]
+        rms, _, _, _, _ = \
+            cv2.fisheye.calibrate(
+                objpoints,
+                imgpoints,
+                gray.shape[::-1],
+                K,
+                D,
+                rvecs,
+                tvecs,
+                calibration_flags,
+                (cv2.TERM_CRITERIA_EPS+cv2.TERM_CRITERIA_MAX_ITER, 30, 1e-6)
+            )
+        print("Found " + str(N_OK) + " valid images for calibration")
+        print("DIM=" + str(_img_shape[::-1]))
+        print("K=np.array(" + str(K.tolist()) + ")")
+        print("D=np.array(" + str(D.tolist()) + ")")
 
         # Opencv sample code uses the var 'grey' from the last openend picture
         # I'm going to choose one at random
@@ -115,24 +149,7 @@ class Camera():
         newcameramtx, roi=cv2.getOptimalNewCameraMatrix(mtx,dist,(w,h),1,(w,h))
 
         # undistort
-        #dst = cv2.undistort(img, mtx, dist, None, newcameramtx)
-
-        # crop the image
-        #x,y,w,h = roi
-        #dst = dst[y:y+h, x:x+w]
-        #cv2.imwrite('/home/pi/calibration_frames/output_one{}.jpg'.format(right_or_left), dst)
-
-        # undistort
         undistortedImg = cv2.undistort(img, mtx, dist, None, newcameramtx)
-        #mapx,mapy = cv2.initUndistortRectifyMap(mtx,dist,None,newcameramtx,(w,h),5)
-        #dst = cv2.remap(img,mapx,mapy,cv2.INTER_LINEAR)
-
-        # crop the image
-        #CROP_WIDTH = 960
-        #x,y,w,h = roi
-        #undistortedImg = undistortedImg[:,
-        #    int((CAMERA_WIDTH-CROP_WIDTH)/2):
-        #    int(CROP_WIDTH+(CAMERA_WIDTH-CROP_WIDTH)/2)]
 
         cv2.imwrite('/home/pi/input_output/output{}.jpg'.format(right_or_left), np.hstack((img, undistortedImg)))
 
