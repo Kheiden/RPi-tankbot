@@ -71,6 +71,8 @@ class Camera():
                 camera_width = 1920
                 crop_width = 1440
                 img_uncropped = cv2.imread(file_name)
+                # y start at 0, end at 1080
+                # x start at 240, end at 1440
                 img = img_uncropped[0:1080, 240:1440]
 
                 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
