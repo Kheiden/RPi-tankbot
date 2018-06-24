@@ -112,6 +112,14 @@ class Camera():
             cache.close()
 
         # Starting from here if cache is found...
+
+        # Opencv sample code uses the var 'grey' from the last opened picture
+        # I'm going to choose one at random
+
+        file_name = random.sample(images, 1)[0]
+        img = cv2.imread(file_name)
+        gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+
         N_OK = len(objpoints)
         K = np.zeros((3, 3))
         D = np.zeros((4, 1))
@@ -133,12 +141,6 @@ class Camera():
         #print("DIM=" + str(_img_shape[::-1]))
         #print("K=np.array(" + str(K.tolist()) + ")")
         #rint("D=np.array(" + str(D.tolist()) + ")")
-
-        # Opencv sample code uses the var 'grey' from the last openend picture
-        # I'm going to choose one at random
-        file_name = random.sample(images, 1)[0]
-        img = cv2.imread(file_name)
-        gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
         np.savez('/tmp/camera_calibration{}.npz'.format(right_or_left), mtx=mtx, dist=dist, rvecs=rvecs, tvecs=tvecs)
