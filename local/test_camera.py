@@ -26,7 +26,7 @@ class TestCamera():
         y_res = 1080
         for i in range(64):
             width, height = self.c.take_stereo_photo(x_res, y_res , type="separate")
-            assert width == x_res*2
+            assert width == x_res
             assert height == y_res
 
 
