@@ -58,7 +58,7 @@ class Camera():
 
         _img_shape = None
 
-        cache = Cache('/tmp/calibrationcachedata{}'.format(right_or_left))
+        cache = Cache('/home/pi/calibration_data/calibrationcachedata{}'.format(right_or_left))
         images = glob.glob('/home/pi/calibration_frames/*{}.jpg'.format(right_or_left))
 
         if 'objpoints' and 'imgpoints' in cache:
@@ -144,7 +144,7 @@ class Camera():
         #rint("D=np.array(" + str(D.tolist()) + ")")
 
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
-        np.savez('/tmp/camera_calibration{}.npz'.format(right_or_left), mtx=mtx, dist=dist, rvecs=rvecs, tvecs=tvecs)
+        np.savez('/home/pi/calibration_data/camera_calibration{}.npz'.format(right_or_left), mtx=mtx, dist=dist, rvecs=rvecs, tvecs=tvecs)
 
         img_uncropped = cv2.imread('/home/pi/input_output/input{}.jpg'.format(right_or_left))
         #img = img_uncropped[0:1080, 240:1440]
