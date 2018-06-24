@@ -157,7 +157,7 @@ class Camera():
         map1, map2 = cv2.fisheye.initUndistortRectifyMap(K, D, np.eye(3), K, DIM, cv2.CV_16SC2)
         undistorted_img = cv2.remap(img, map1, map2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
 
-        cv2.imwrite('/home/pi/input_output/output{}.jpg'.format(right_or_left), np.hstack((img, undistortedImg)))
+        cv2.imwrite('/home/pi/input_output/output{}.jpg'.format(right_or_left), np.hstack((img, undistorted_img)))
 
         return True
 
