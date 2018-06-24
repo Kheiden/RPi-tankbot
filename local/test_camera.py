@@ -20,7 +20,16 @@ class TestCamera():
         """
         self.c.stop_servos()
 
-    #@pytest.mark.skip(reason="Passed.")
+
+    #@pytest.mark.skip(reason="Not Yet Passed.")
+    def test_calibration_cameras(self):
+        result1 = self.c.calibrate_camera(cam_num=0, save_chessboard=True)
+        assert result1
+        result2 = self.c.calibrate_camera(cam_num=1, save_chessboard=True)
+        assert result2
+
+
+    @pytest.mark.skip(reason="Passed.")
     def test_chessboard_photos(self):
         x_res = 1920
         y_res = 1080
@@ -28,15 +37,6 @@ class TestCamera():
             width, height = self.c.take_stereo_photo(x_res, y_res , type="separate")
             assert width == x_res
             assert height == y_res
-
-
-    @pytest.mark.skip(reason="Not Yet Passed.")
-    def test_calibration_cameras(self):
-        result1 = self.c.calibrate_camera(cam_num=0, save_chessboard=False)
-        assert result1
-        result2 = self.c.calibrate_camera(cam_num=1, save_chessboard=False)
-        assert result2
-
 
     @pytest.mark.skip(reason="Passed.")
     def test_stereo_photo(self):
