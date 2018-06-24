@@ -121,6 +121,7 @@ class Camera():
         gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
         N_OK = len(objpoints)
+        DIM= (1920, 1080)
         K = np.zeros((3, 3))
         D = np.zeros((4, 1))
         rvecs = [np.zeros((1, 1, 3), dtype=np.float64) for i in range(N_OK)]
