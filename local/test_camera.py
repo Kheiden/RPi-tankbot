@@ -25,9 +25,9 @@ class TestCamera():
         x_res = 1920
         y_res = 1080
         for i in range(64):
-        width, height = self.c.take_stereo_photo(x_res, y_res , type="separate")
-        assert width == x_res*2
-        assert height == y_res
+            width, height = self.c.take_stereo_photo(x_res, y_res , type="separate")
+            assert width == x_res*2
+            assert height == y_res
 
 
     @pytest.mark.skip(reason="Not Yet Passed.")
