@@ -59,8 +59,11 @@ class Camera():
         _img_shape = None
 
         #cache = Cache('/home/pi/calibration_data/calibrationcachedata{}'.format(right_or_left))
-        npz_file = np.load('/home/pi/calibration_data/camera_calibration{}.npz'.format(right_or_left),
-            cache_K=cache_K, cache_D=cache_D)
+        try:
+            npz_file = np.load('/home/pi/calibration_data/camera_calibration{}.npz'.format(right_or_left))
+        except:
+            # If the file doesn't exist
+            pass
         images = glob.glob('/home/pi/calibration_frames/*{}.jpg'.format(right_or_left))
 
         if 'K' and 'D' in npz_file.files:
