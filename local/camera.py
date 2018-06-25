@@ -59,20 +59,30 @@ class Camera():
         _img_shape = None
 
         #cache = Cache('/home/pi/calibration_data/calibrationcachedata{}'.format(right_or_left))
+        """
+        TODO:
+        if the file exists, then load it
+        If the file doesn't exist, then calibrate the cameras and save result to file
+        """
+
+        images = glob.glob('/home/pi/calibration_frames/*{}.jpg'.format(right_or_left))
+        calbrate_cameras = None
+
         try:
             npz_file = np.load('/home/pi/calibration_data/camera_calibration{}.npz'.format(right_or_left))
+            if 'K' and 'D' in npz_file.files:
+                print("Camera calibration data has been found in cache.")
+                cache_K = npz_file['K']
+                cache_D = npz_file['D']
+            else:
+                print("Camera calibration data not found in cache.")
+                calbrate_cameras = True
         except:
             # If the file doesn't exist
-            pass
-        images = glob.glob('/home/pi/calibration_frames/*{}.jpg'.format(right_or_left))
-
-        if 'K' and 'D' in npz_file.files:
-            print("Camera calibration data has been found in cache.")
-            cache_K = npz_file['K']
-            cache_D = npz_file['D']
-        else:
             print("Camera calibration data not found in cache.")
+            calbrate_cameras = True
 
+        if calbrate_cameras == True:
             objpoints = [] # 3d point in real world space
             imgpoints = [] # 2d points in image plane.
             num_chessboards_found = []
