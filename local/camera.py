@@ -1,7 +1,6 @@
 import RPi.GPIO as GPIO
 from datetime import datetime
 
-from diskcache import Cache
 import numpy as np
 import random
 import glob
@@ -36,7 +35,7 @@ class Camera():
         return
 
 
-    def calibrate_camera(self, cam_num=0, save_chessboard=False):
+    def calibrate_camera(self, cam_num=0):
         """
         cam_num 0 is left and 1 is right.
 
@@ -47,7 +46,7 @@ class Camera():
         """
         # Arrays to store object points and image points from all the images.
         right_or_left = ["_right" if cam_num==1 else "_left"][0]
-
+        home_dir = "/home/pi"
         CHECKERBOARD = (6,9)
 
         subpix_criteria = (cv2.TERM_CRITERIA_EPS+cv2.TERM_CRITERIA_MAX_ITER, 30, 0.1)
@@ -57,25 +56,25 @@ class Camera():
         objp[0,:,:2] = np.mgrid[0:CHECKERBOARD[0], 0:CHECKERBOARD[1]].T.reshape(-1, 2)
 
         _img_shape = None
-
-        #cache = Cache('/home/pi/calibration_data/calibrationcachedata{}'.format(right_or_left))
+        objpoints = [] # 3d point in real world space
+        imgpoints = [] # 2d points in image plane.
         """
         TODO:
         if the file exists, then load it
         If the file doesn't exist, then calibrate the cameras and save result to file
         """
 
-        images = glob.glob('/home/pi/calibration_frames/*{}.jpg'.format(right_or_left))
+        images = glob.glob('{}/calibration_frames/*{}.jpg'.format(home_dir, right_or_left))
         calbrate_cameras = None
 
         try:
-            npz_file = np.load('/home/pi/calibration_data/camera_calibration{}.npz'.format(right_or_left))
-            if 'K' and 'D' in npz_file.files:
+            npz_file = np.load('{}/calibration_data/camera_calibration{}.npz'.format(home_dir, right_or_left))
+            if 'map1' and 'map2' in npz_file.files:
                 print("Camera calibration data has been found in cache.")
-                cache_K = npz_file['K']
-                cache_D = npz_file['D']
+                map1 = npz_file['map1']
+                map2 = npz_file['map2']
             else:
-                print("Camera calibration data not found in cache.")
+                print("Camera data file found but data corrupted.")
                 calbrate_cameras = True
         except:
             # If the file doesn't exist
@@ -85,22 +84,13 @@ class Camera():
         if calbrate_cameras == True:
             objpoints = [] # 3d point in real world space
             imgpoints = [] # 2d points in image plane.
-            num_chessboards_found = []
 
             for file_name in images:
-                img_uncropped = cv2.imread(file_name)
-                # crop the image
-                # y start at 0, end at 1080
-                # x start at 240, end at 1440
-                #img = img_uncropped[0:1080, 240:1440]
-                img = img_uncropped
-
+                img = cv2.imread(file_name)
                 if _img_shape == None:
                     _img_shape = img.shape[:2]
                 else:
                     assert _img_shape == img.shape[:2], "All images must share the same size."
-
-                camera_width = 1920
 
                 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
@@ -113,24 +103,11 @@ class Camera():
                     cv2.cornerSubPix(gray,corners,(3,3),(-1,-1),subpix_criteria)
                     imgpoints.append(corners)
 
-                    # Draw and display the corners
-                    if save_chessboard == True:
-                        img = cv2.drawChessboardCorners(img, CHECKERBOARD, corners, ret)
-                        jpg_image = Image.fromarray(img)
-                        jpg_image.save(file_name.replace("calibration_frames", "chessboard_frames"), format='JPEG')
-                        #jpg_image.save(r"C:\Users\kurtw\Documents\raspberry pi\Local Test Code\chessboard\output.jpg", format='JPEG')
-                    num_chessboards_found.append(True)
-
             # Opencv sample code uses the var 'grey' from the last opened picture
-            # I'm going to choose one at random
-            file_name = random.sample(images, 1)[0]
-            img = cv2.imread(file_name)
-            gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-
             N_OK = len(objpoints)
             DIM= (1920, 1080)
-            cache_K = np.zeros((3, 3))
-            cache_D = np.zeros((4, 1))
+            K = np.zeros((3, 3))
+            D = np.zeros((4, 1))
             rvecs = [np.zeros((1, 1, 3), dtype=np.float64) for i in range(N_OK)]
             tvecs = [np.zeros((1, 1, 3), dtype=np.float64) for i in range(N_OK)]
             rms, _, _, _, _ = \
@@ -138,42 +115,28 @@ class Camera():
                     objpoints,
                     imgpoints,
                     gray.shape[::-1],
-                    cache_K,
-                    cache_D,
+                    K,
+                    D,
                     rvecs,
                     tvecs,
                     calibration_flags,
                     (cv2.TERM_CRITERIA_EPS+cv2.TERM_CRITERIA_MAX_ITER, 30, 1e-6)
                 )
 
-            print("Saving calibration data as npz...")
-            #cache['K'] = cache_K
-            #cache['D'] = cache_D
-            #cache.close()
-            np.savez('/home/pi/calibration_data/camera_calibration{}.npz'.format(right_or_left),
-                cache_K=cache_K, cache_D=cache_K)
+            map1, map2 = cv2.fisheye.initUndistortRectifyMap(K, D, np.eye(3), K, DIM, cv2.CV_16SC2)
+            np.savez('{}/calibration_data/camera_calibration{}.npz'.format(home_dir, right_or_left),
+                map1=map1, map2=map2)
 
         # Starting from here if cache is found...
-
-        #print("Found " + str(N_OK) + " valid images for calibration")
-        #print("DIM=" + str(_img_shape[::-1]))
-        #print("K=np.array(" + str(K.tolist()) + ")")
-        #rint("D=np.array(" + str(D.tolist()) + ")")
-
-        ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
-
-        img = cv2.imread('/home/pi/input_output/input{}.jpg'.format(right_or_left))
+        img = cv2.imread('{}/input_output/input{}.jpg'.format(home_dir, right_or_left))
         h,  w = img.shape[:2]
-        newcameramtx, roi=cv2.getOptimalNewCameraMatrix(mtx,dist,(w,h),1,(w,h))
 
-        # undistort
-
-        map1, map2 = cv2.fisheye.initUndistortRectifyMap(cache_K, cache_D, np.eye(3), cache_K, DIM, cv2.CV_16SC2)
+        processing_time01 = cv2.getTickCount()
         undistorted_img = cv2.remap(img, map1, map2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
-
-        cv2.imwrite('/home/pi/input_output/output{}.jpg'.format(right_or_left), np.hstack((img, undistorted_img)))
-
-        return True
+        processing_time02 = cv2.getTickCount()
+        cv2.imwrite('{}/input_output/output{}.jpg'.format(home_dir, right_or_left), np.hstack((img, undistorted_img)))
+        processing_time = (processing_time02 - processing_time01)/ cv2.getTickFrequency()
+        return processing_time
 
 
     def move_camera(self, x_axis_degrees=None, y_axis_degrees=None):
