@@ -24,10 +24,10 @@ class TestCamera():
     #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_calibration_cameras(self):
         threshold_seconds = 3
-        result1 = self.c.calibrate_camera(cam_num=0, save_chessboard=False)
+        result1 = self.c.calibrate_camera(cam_num=0)
         print(result1)
         assert (result1 < threshold_seconds)
-        result2 = self.c.calibrate_camera(cam_num=1, save_chessboard=False)
+        result2 = self.c.calibrate_camera(cam_num=1)
         print(result2)
         assert (result2 < threshold_seconds)
 
