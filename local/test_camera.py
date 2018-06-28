@@ -40,14 +40,14 @@ class TestCamera():
         """
         img = cv2.imread('{}/input_output/input_left.jpg'.format(self.home_dir))
         threshold_miliseconds = 1000
-        result1 = self.c.undistort_image(img, cam_num=0)
+        result1 = self.c.undistort_image(img=img, cam_num=0)
         print(result1[0]*1000)
         assert (result1[0]*1000 < threshold_miliseconds)
         cv2.imwrite('{}/input_output/output_left.jpg'.format(self.home_dir), np.hstack((img, result1[1])))
 
         img = cv2.imread('{}/input_output/input_right.jpg'.format(self.home_dir))
         assert (result1[0]*1000 < threshold_miliseconds)
-        result2 = self.c.undistort_image(img, cam_num=1)
+        result2 = self.c.undistort_image(img=img, cam_num=1)
         print(result2[0]*1000)
         assert (result2[0]*1000 < threshold_miliseconds)
         cv2.imwrite('{}/input_output/output_right.jpg'.format(self.home_dir), np.hstack((img, result2[1])))
