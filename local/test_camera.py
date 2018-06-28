@@ -2,6 +2,7 @@ import pytest
 
 import camera
 import time
+import cv2
 
 class TestCamera():
 
@@ -12,6 +13,7 @@ class TestCamera():
         """
 
         self.c = camera.Camera()
+        self.home_dir = "/home/pi"
 
     @classmethod
     def teardown_class(self):
@@ -29,22 +31,26 @@ class TestCamera():
         result2 = self.c.calibrate_camera(cam_num=1)
         print(result2)
         assert (result2 < threshold_seconds)
-        result3 = self.c.calibrate_stereo_cameras(self)
+        result3 = self.c.calibrate_stereo_cameras()
 
     #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_undistort_image(self):
         """
         # I want to be able to undistort an image in less than 1 second
         """
-        #img = cv2.imread('{}/input_output/input{}.jpg'.format(home_dir, right_or_left))
+        img = cv2.imread('{}/input_output/input_left.jpg'.format(self.home_dir))
         threshold_miliseconds = 1000
-        result1 = self.c.undistort_image(cam_num=0)
+        result1 = self.c.undistort_image(img, cam_num=0)
         print(result1[0]*1000)
-        #cv2.imwrite('{}/input_output/output{}.jpg'.format(home_dir, right_or_left), np.hstack((img, undistorted_img)))
         assert (result1[0]*1000 < threshold_miliseconds)
-        result2 = self.c.undistort_image(cam_num=1)
+        cv2.imwrite('{}/input_output/output_left.jpg'.format(self.home_dir), np.hstack((img, result1[1])))
+
+        img = cv2.imread('{}/input_output/input_right.jpg'.format(self.home_dir))
+        assert (result1[0]*1000 < threshold_miliseconds)
+        result2 = self.c.undistort_image(img, cam_num=1)
         print(result2[0]*1000)
         assert (result2[0]*1000 < threshold_miliseconds)
+        cv2.imwrite('{}/input_output/output_right.jpg'.format(self.home_dir), np.hstack((img, result2[1])))
 
     #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_calibrate_cameras(self):
