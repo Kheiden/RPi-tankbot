@@ -144,6 +144,7 @@ class Camera():
         https://medium.com/@kennethjiang/calibrate-fisheye-lens-using-opencv-333b05afa0b0
         """
         # Arrays to store object points and image points from all the images.
+        processing_time01 = cv2.getTickCount()
         right_or_left = ["_right" if cam_num==1 else "_left"][0]
         home_dir = "/home/pi"
 
