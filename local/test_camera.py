@@ -21,7 +21,7 @@ class TestCamera():
         self.c.stop_servos()
 
 
-    def test_calibrate_stereo_camera():
+    def test_calibrate_stereo_camera(self):
         threshold_seconds = 30
         result1 = self.c.calibrate_camera(cam_num=0)
         print(result1)
@@ -29,12 +29,12 @@ class TestCamera():
         result2 = self.c.calibrate_camera(cam_num=1)
         print(result2)
         assert (result2 < threshold_seconds)
-        result3 = self.c.calibrate_stereo_cameras()
+        result3 = self.c.calibrate_stereo_cameras(self)
 
     #@pytest.mark.skip(reason="Not Yet Passed.")
-    def test_undistort_photo():
+    def test_undistort_image(self):
         """
-        # I want to be able to undistort a photo in less than 1 second
+        # I want to be able to undistort an image in less than 1 second
         """
         #img = cv2.imread('{}/input_output/input{}.jpg'.format(home_dir, right_or_left))
         threshold_miliseconds = 1000
