@@ -32,6 +32,8 @@ class Camera():
         time.sleep(1)
         self.pwm_x.stop()
         self.pwm_y.stop()
+
+        self.home_dir = "/home/pi"
         return
 
 
@@ -59,10 +61,8 @@ class Camera():
         TERMINATION_CRITERIA = (cv2.TERM_CRITERIA_EPS+cv2.TERM_CRITERIA_MAX_ITER, 30, 0.01)
         OPTIMIZE_ALPHA = 0.25
 
-        home_dir = "/home/pi"
-
         try:
-            npz_file = np.load('{}/calibration_data/stereo_camera_calibration.npz'.format(home_dir))
+            npz_file = np.load('{}/calibration_data/stereo_camera_calibration.npz'.format(self.home_dir))
             processing_time02 = cv2.getTickCount()
             processing_time = (processing_time02 - processing_time01)/ cv2.getTickFrequency()
             return processing_time
@@ -73,7 +73,7 @@ class Camera():
             right_or_left = ["_right" if cam_num==1 else "_left"][0]
 
             try:
-                npz_file = np.load('{}/calibration_data/camera_calibration{}.npz'.format(home_dir, right_or_left))
+                npz_file = np.load('{}/calibration_data/camera_calibration{}.npz'.format(self.home_dir, right_or_left))
 
                 list_of_vars = ['map1', 'map2', 'objpoints', 'imgpoints', 'camera_matrix', 'distortion_coeff']
                 print(sorted(list_of_vars))
@@ -126,7 +126,7 @@ class Camera():
                 rightProjection, imageSize, cv2.CV_32FC1)
 
 
-        np.savez_compressed('{}/calibration_data/stereo_camera_calibration.npz'.format(home_dir), imageSize=imageSize,
+        np.savez_compressed('{}/calibration_data/stereo_camera_calibration.npz'.format(self.home_dir), imageSize=imageSize,
                 leftMapX=leftMapX, leftMapY=leftMapY, leftROI=leftROI,
         rightMapX=rightMapX, rightMapY=rightMapY, rightROI=rightROI)
         processing_time02 = cv2.getTickCount()
@@ -146,7 +146,6 @@ class Camera():
         # Arrays to store object points and image points from all the images.
         processing_time01 = cv2.getTickCount()
         right_or_left = ["_right" if cam_num==1 else "_left"][0]
-        home_dir = "/home/pi"
 
         CHECKERBOARD = (6,9)
 
@@ -165,11 +164,11 @@ class Camera():
         If the file doesn't exist, then calibrate the cameras and save result to file
         """
 
-        images = glob.glob('{}/calibration_frames/*{}.jpg'.format(home_dir, right_or_left))
+        images = glob.glob('{}/calibration_frames/*{}.jpg'.format(self.home_dir, right_or_left))
         calbrate_cameras = None
 
         try:
-            npz_file = np.load('{}/calibration_data/camera_calibration{}.npz'.format(home_dir, right_or_left))
+            npz_file = np.load('{}/calibration_data/camera_calibration{}.npz'.format(self.home_dir, right_or_left))
             if 'map1' and 'map2' in npz_file.files:
                 print("Camera calibration data has been found in cache.")
                 map1 = npz_file['map1']
@@ -226,7 +225,7 @@ class Camera():
                 )
 
             map1, map2 = cv2.fisheye.initUndistortRectifyMap(K, D, np.eye(3), K, DIM, cv2.CV_16SC2)
-            np.savez('{}/calibration_data/camera_calibration{}.npz'.format(home_dir, right_or_left),
+            np.savez('{}/calibration_data/camera_calibration{}.npz'.format(self.home_dir, right_or_left),
                 map1=map1, map2=map2)
 
 
@@ -235,7 +234,7 @@ class Camera():
         processing_time = (processing_time02 - processing_time01)/ cv2.getTickFrequency()
         return processing_time
 
-    def undistort_image(self, cam_num, img):
+    def undistort_image(self, img, cam_num):
         """
         # Takes an image  as a numpy array and undistorts it
         """
@@ -244,7 +243,7 @@ class Camera():
 
         h,  w = img.shape[:2]
         try:
-            npz_file = np.load('{}/calibration_data/camera_calibration{}.npz'.format(home_dir, right_or_left))
+            npz_file = np.load('{}/calibration_data/camera_calibration{}.npz'.format(self.home_dir, right_or_left))
             if 'map1' and 'map2' in npz_file.files:
                 print("Camera calibration data has been found in cache.")
                 map1 = npz_file['map1']
@@ -258,7 +257,7 @@ class Camera():
 
         undistorted_img = cv2.remap(img, map1, map2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
         processing_time02 = cv2.getTickCount()
-        #cv2.imwrite('{}/input_output/output{}.jpg'.format(home_dir, right_or_left), np.hstack((img, undistorted_img)))
+        #cv2.imwrite('{}/input_output/output{}.jpg'.format(self.home_dir, right_or_left), np.hstack((img, undistorted_img)))
         processing_time = (processing_time02 - processing_time01)/ cv2.getTickFrequency()
         return (processing_time, undistorted_img)
 
