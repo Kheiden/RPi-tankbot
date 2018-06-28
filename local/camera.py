@@ -35,103 +35,103 @@ class Camera():
         return
 
 
-def calibrate_stereo_cameras(self):
-    # We need a lot of variables to calibrate the stereo camera
-    """
-    Based on code from:
-    https://gist.github.com/aarmea/629e59ac7b640a60340145809b1c9013
-    """
-    processing_time01 = cv2.getTickCount()
-    objectPoints = None
+    def calibrate_stereo_cameras(self):
+        # We need a lot of variables to calibrate the stereo camera
+        """
+        Based on code from:
+        https://gist.github.com/aarmea/629e59ac7b640a60340145809b1c9013
+        """
+        processing_time01 = cv2.getTickCount()
+        objectPoints = None
 
-    rightImagePoints = None
-    rightCameraMatrix = None
-    rightDistortionCoefficients = None
+        rightImagePoints = None
+        rightCameraMatrix = None
+        rightDistortionCoefficients = None
 
-    leftImagePoints = None
-    leftCameraMatrix = None
-    leftDistortionCoefficients = None
+        leftImagePoints = None
+        leftCameraMatrix = None
+        leftDistortionCoefficients = None
 
-    rotationMatrix = None
-    translationVector = None
-    imageSize = (1920, 1080)
+        rotationMatrix = None
+        translationVector = None
+        imageSize = (1920, 1080)
 
-    TERMINATION_CRITERIA = (cv2.TERM_CRITERIA_EPS+cv2.TERM_CRITERIA_MAX_ITER, 30, 0.01)
-    OPTIMIZE_ALPHA = 0.25
+        TERMINATION_CRITERIA = (cv2.TERM_CRITERIA_EPS+cv2.TERM_CRITERIA_MAX_ITER, 30, 0.01)
+        OPTIMIZE_ALPHA = 0.25
 
-    home_dir = "/home/pi"
+        home_dir = "/home/pi"
 
-    try:
-        npz_file = np.load('{}/calibration_data/stereo_camera_calibration.npz'.format(home_dir))
+        try:
+            npz_file = np.load('{}/calibration_data/stereo_camera_calibration.npz'.format(home_dir))
+            processing_time02 = cv2.getTickCount()
+            processing_time = (processing_time02 - processing_time01)/ cv2.getTickFrequency()
+            return processing_time
+        except:
+            pass
+
+        for cam_num in [0, 1]:
+            right_or_left = ["_right" if cam_num==1 else "_left"][0]
+
+            try:
+                npz_file = np.load('{}/calibration_data/camera_calibration{}.npz'.format(home_dir, right_or_left))
+
+                list_of_vars = ['map1', 'map2', 'objpoints', 'imgpoints', 'camera_matrix', 'distortion_coeff']
+                print(sorted(list_of_vars))
+                print(sorted(npz_file.files))
+
+                if sorted(list_of_vars) == sorted(npz_file.files):
+                    print("Camera calibration data has been found in cache.")
+                    map1 = npz_file['map1']
+                    map2 = npz_file['map2']
+                    objectPoints = npz_file['objpoints']
+                    if right_or_left == "_right":
+                        rightImagePoints = npz_file['imgpoints']
+                        rightCameraMatrix = npz_file['camera_matrix']
+                        rightDistortionCoefficients = npz_file['distortion_coeff']
+                    if right_or_left == "_left":
+                        leftImagePoints = npz_file['imgpoints']
+                        leftCameraMatrix = npz_file['camera_matrix']
+                        leftDistortionCoefficients = npz_file['distortion_coeff']
+                else:
+                    print("Camera data file found but data corrupted.")
+            except:
+                #If the file doesn't exist
+                print("Camera calibration data not found in cache.")
+                return False
+
+
+        print("Calibrating cameras together...")
+        (_, _, _, _, _, rotationMatrix, translationVector, _, _) = cv2.stereoCalibrate(
+                objectPoints, leftImagePoints, rightImagePoints,
+                leftCameraMatrix, leftDistortionCoefficients,
+                rightCameraMatrix, rightDistortionCoefficients,
+                imageSize, None, None, None, None,
+                cv2.CALIB_FIX_INTRINSIC, TERMINATION_CRITERIA)
+
+        print("Rectifying cameras...")
+        (leftRectification, rightRectification, leftProjection, rightProjection,
+                dispartityToDepthMap, leftROI, rightROI) = cv2.stereoRectify(
+                        leftCameraMatrix, leftDistortionCoefficients,
+                        rightCameraMatrix, rightDistortionCoefficients,
+                        imageSize, rotationMatrix, translationVector,
+                        None, None, None, None, None,
+                        cv2.CALIB_ZERO_DISPARITY, OPTIMIZE_ALPHA)
+
+        print("Saving calibration...")
+        leftMapX, leftMapY = cv2.initUndistortRectifyMap(
+                leftCameraMatrix, leftDistortionCoefficients, leftRectification,
+                leftProjection, imageSize, cv2.CV_32FC1)
+        rightMapX, rightMapY = cv2.initUndistortRectifyMap(
+                rightCameraMatrix, rightDistortionCoefficients, rightRectification,
+                rightProjection, imageSize, cv2.CV_32FC1)
+
+
+        np.savez_compressed('{}/calibration_data/stereo_camera_calibration.npz'.format(home_dir), imageSize=imageSize,
+                leftMapX=leftMapX, leftMapY=leftMapY, leftROI=leftROI,
+        rightMapX=rightMapX, rightMapY=rightMapY, rightROI=rightROI)
         processing_time02 = cv2.getTickCount()
         processing_time = (processing_time02 - processing_time01)/ cv2.getTickFrequency()
         return processing_time
-    except:
-        pass
-
-    for cam_num in [0, 1]:
-        right_or_left = ["_right" if cam_num==1 else "_left"][0]
-
-        try:
-            npz_file = np.load('{}/calibration_data/camera_calibration{}.npz'.format(home_dir, right_or_left))
-
-            list_of_vars = ['map1', 'map2', 'objpoints', 'imgpoints', 'camera_matrix', 'distortion_coeff']
-            print(sorted(list_of_vars))
-            print(sorted(npz_file.files))
-
-            if sorted(list_of_vars) == sorted(npz_file.files):
-                print("Camera calibration data has been found in cache.")
-                map1 = npz_file['map1']
-                map2 = npz_file['map2']
-                objectPoints = npz_file['objpoints']
-                if right_or_left == "_right":
-                    rightImagePoints = npz_file['imgpoints']
-                    rightCameraMatrix = npz_file['camera_matrix']
-                    rightDistortionCoefficients = npz_file['distortion_coeff']
-                if right_or_left == "_left":
-                    leftImagePoints = npz_file['imgpoints']
-                    leftCameraMatrix = npz_file['camera_matrix']
-                    leftDistortionCoefficients = npz_file['distortion_coeff']
-            else:
-                print("Camera data file found but data corrupted.")
-        except:
-            #If the file doesn't exist
-            print("Camera calibration data not found in cache.")
-            return False
-
-
-    print("Calibrating cameras together...")
-    (_, _, _, _, _, rotationMatrix, translationVector, _, _) = cv2.stereoCalibrate(
-            objectPoints, leftImagePoints, rightImagePoints,
-            leftCameraMatrix, leftDistortionCoefficients,
-            rightCameraMatrix, rightDistortionCoefficients,
-            imageSize, None, None, None, None,
-            cv2.CALIB_FIX_INTRINSIC, TERMINATION_CRITERIA)
-
-    print("Rectifying cameras...")
-    (leftRectification, rightRectification, leftProjection, rightProjection,
-            dispartityToDepthMap, leftROI, rightROI) = cv2.stereoRectify(
-                    leftCameraMatrix, leftDistortionCoefficients,
-                    rightCameraMatrix, rightDistortionCoefficients,
-                    imageSize, rotationMatrix, translationVector,
-                    None, None, None, None, None,
-                    cv2.CALIB_ZERO_DISPARITY, OPTIMIZE_ALPHA)
-
-    print("Saving calibration...")
-    leftMapX, leftMapY = cv2.initUndistortRectifyMap(
-            leftCameraMatrix, leftDistortionCoefficients, leftRectification,
-            leftProjection, imageSize, cv2.CV_32FC1)
-    rightMapX, rightMapY = cv2.initUndistortRectifyMap(
-            rightCameraMatrix, rightDistortionCoefficients, rightRectification,
-            rightProjection, imageSize, cv2.CV_32FC1)
-
-
-    np.savez_compressed('{}/calibration_data/stereo_camera_calibration.npz'.format(home_dir), imageSize=imageSize,
-            leftMapX=leftMapX, leftMapY=leftMapY, leftROI=leftROI,
-    rightMapX=rightMapX, rightMapY=rightMapY, rightROI=rightROI)
-    processing_time02 = cv2.getTickCount()
-    processing_time = (processing_time02 - processing_time01)/ cv2.getTickFrequency()
-    return processing_time
 
 
     def calibrate_camera(self, cam_num=0):
