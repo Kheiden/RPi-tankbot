@@ -23,6 +23,11 @@ class TestCamera():
         """
         self.c.stop_servos()
 
+    #@pytest.mark.skip(reason="Not Yet Passed.")
+    def test_create_single_disparity_map(self):
+        result = self.c.create_disparity_map()
+        assert result
+
     @pytest.mark.skip(reason="Passed.")
     def test_calibrate_stereo_camera(self):
         threshold_seconds = 30

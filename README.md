@@ -1,6 +1,6 @@
 #Autonomous Tracked Robot on the RPi platform
 
-![Current Version front](https://github.com/Kheiden/RPi-tankbot/tree/master/documentation/photos/Current_Version_front.jpg)
+![Current Version front](https://raw.githubusercontent.com/Kheiden/RPi-tankbot/master/documentation/photos/Current_Version_front.jpg)
 
 server/
 - Code related to processing the video stream

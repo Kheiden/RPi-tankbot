@@ -36,6 +36,41 @@ class Camera():
         self.home_dir = "/home/pi"
         return
 
+    def create_disparity_map(self):
+        """
+        Based on:
+        https://github.com/jagracar/OpenCV-python-tests/blob/master/OpenCV-tutorials/cameraCalibration/depthMap.py
+        """
+        # take two photos
+        file_name = "disparity_test"
+        take_stereo_photo(1920, 1080, filename, "separate")
+        npzfile = np.load('{}/calibration_data/stereo_camera_calibration.npz'.format(self.home_dir))
+
+        imageSize = npzfile['imageSize']
+        leftMapX = npzfile['leftMapX']
+        leftMapY = npzfile['leftMapY']
+        leftROI = npzfile['leftROI']
+        rightMapX = npzfile['rightMapX']
+        rightMapY = npzfile['rightMapY']
+        rightROI = npzfile['rightROI']
+
+        # Load the left and right images in gray scale
+        imgLeft = cv2.imread('/home/pi/RPi-tankbot/local/frames/{}_left.jpg'.format(file_name))
+        imgRight = cv2.imread('/home/pi/RPi-tankbot/local/frames/{}_right.jpg'.format(file_name))
+
+        # Initialize the stereo block matching object
+        stereo = cv2.StereoBM_create(numDisparities=32, blockSize=13)
+
+        # Compute the disparity image
+        disparity = stereo.compute(imgLeft, imgRight)
+
+        # Normalize the image for representation
+        min = disparity.min()
+        max = disparity.max()
+        disparity = np.uint8(255 * (disparity - min) / (max - min))
+        jpg_image_right.save("/home/pi/RPi-tankbot/local/frames/{}_disparity.jpg".format(filename), format='JPEG')
+
+        return True
 
     def calibrate_stereo_cameras(self):
         # We need a lot of variables to calibrate the stereo camera
@@ -306,7 +341,7 @@ class Camera():
         self.pwm_x.stop()
         self.pwm_y.stop()
 
-    def take_stereo_photo(self, x_res, y_res, type="combined"):
+    def take_stereo_photo(self, x_res, y_res, filename=None, type="combined"):
         """
         type="combined" (or any other value) is a single .JPG file
         type="separate" is two separate .JPG files
@@ -319,8 +354,6 @@ class Camera():
         right.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
         right.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
         right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
-
-
 
         left = cv2.VideoCapture(0)
         left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
@@ -337,13 +370,13 @@ class Camera():
         right.release()
         left.release()
 
-
         imgRGB_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2RGB)
         imgRGB_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2RGB)
         if type == "separate":
             jpg_image_right = Image.fromarray(imgRGB_right)
             jpg_image_left = Image.fromarray(imgRGB_left)
-            filename = datetime.now().strftime("%F_%H-%M-%S.%f")
+            if filename == None:
+                filename = datetime.now().strftime("%F_%H-%M-%S.%f")
             jpg_image_right.save("/home/pi/RPi-tankbot/local/frames/{}_right.jpg".format(filename), format='JPEG')
             jpg_image_left.save("/home/pi/RPi-tankbot/local/frames/{}_left.jpg".format(filename), format='JPEG')
 
@@ -358,7 +391,8 @@ class Camera():
             # if not defined, then it's combined ;)
             imgRGB_combined = np.concatenate((imgRGB_left, imgRGB_right), axis=1)
             jpg_image = Image.fromarray(imgRGB_combined)
-            filename = datetime.now().strftime("%F_%H-%M-%S.%f")
+            if filename == None:
+                filename = datetime.now().strftime("%F_%H-%M-%S.%f")
             jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_combined.jpg".format(filename), format='JPEG')
 
             width, height = jpg_image.size
