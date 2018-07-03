@@ -63,7 +63,7 @@ class Camera():
 
         # Initialize the stereo block matching object
         stereo = cv2.StereoBM_create()
-        stereo.setMinDisparity(4)
+        stereo.setMinDisparity(32)
         stereo.setNumDisparities(128)
         stereo.setBlockSize(21)
         stereo.setROI1(leftROI)
