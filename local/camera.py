@@ -53,6 +53,7 @@ class Camera():
         rightMapX = npzfile['rightMapX']
         rightMapY = npzfile['rightMapY']
         rightROI = npzfile['rightROI']
+        print(leftROI, type(leftROI))
 
         # Load the left and right images in gray scale
         imgLeft = cv2.imread('/home/pi/RPi-tankbot/local/frames/{}_left.jpg'.format(file_name))
