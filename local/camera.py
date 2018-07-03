@@ -43,7 +43,7 @@ class Camera():
         """
         # take two photos
         file_name = "disparity_test"
-        take_stereo_photo(1920, 1080, filename, "separate")
+        self.take_stereo_photo(1920, 1080, filename, "separate")
         npzfile = np.load('{}/calibration_data/stereo_camera_calibration.npz'.format(self.home_dir))
 
         imageSize = npzfile['imageSize']
