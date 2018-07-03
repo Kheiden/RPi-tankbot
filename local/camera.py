@@ -58,12 +58,17 @@ class Camera():
         imgLeft = cv2.imread('/home/pi/RPi-tankbot/local/frames/{}_left.jpg'.format(file_name))
         imgRight = cv2.imread('/home/pi/RPi-tankbot/local/frames/{}_right.jpg'.format(file_name))
 
+
+
+
         grayLeft = cv2.cvtColor(imgLeft, cv2.COLOR_BGR2GRAY)
         grayRight = cv2.cvtColor(imgRight, cv2.COLOR_BGR2GRAY)
 
+        grayLeft = self.undistort_image(grayLeft, cam_num=0)
+        grayRight = self.undistort_image(grayRight, cam_num=1)
         # Initialize the stereo block matching object
         stereo = cv2.StereoBM_create()
-        stereo.setMinDisparity(32)
+        stereo.setMinDisparity(4)
         stereo.setNumDisparities(128)
         stereo.setBlockSize(21)
         stereo.setROI1(leftROI)
