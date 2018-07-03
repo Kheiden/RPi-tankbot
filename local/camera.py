@@ -79,7 +79,8 @@ class Camera():
         max = disparity.max()
         disparity = np.uint8(255 * (disparity - min) / (max - min))
 
-        disparity.save("/home/pi/RPi-tankbot/local/frames/{}_disparity.jpg".format(file_name), format='JPEG')
+        jpg_image = Image.fromarray(disparity)
+        jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_disparity.jpg".format(file_name), format='JPEG')
 
         return True
 
