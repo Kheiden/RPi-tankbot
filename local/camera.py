@@ -46,14 +46,13 @@ class Camera():
         self.take_stereo_photo(1920, 1080, file_name, "separate")
         npzfile = np.load('{}/calibration_data/stereo_camera_calibration.npz'.format(self.home_dir))
 
-        imageSize = npzfile['imageSize']
+        imageSize = tuple(npzfile['imageSize'])
         leftMapX = npzfile['leftMapX']
         leftMapY = npzfile['leftMapY']
-        leftROI = npzfile['leftROI']
+        leftROI = tuple(npzfile['leftROI'])
         rightMapX = npzfile['rightMapX']
         rightMapY = npzfile['rightMapY']
-        rightROI = npzfile['rightROI']
-        print(leftROI, type(leftROI))
+        rightROI = tuple(npzfile['rightROI'])
 
         # Load the left and right images in gray scale
         imgLeft = cv2.imread('/home/pi/RPi-tankbot/local/frames/{}_left.jpg'.format(file_name))
