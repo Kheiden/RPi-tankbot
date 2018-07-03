@@ -75,11 +75,11 @@ class Camera():
         disparity = stereo.compute(grayLeft, grayRight)
 
         # Normalize the image for representation
-        #min = disparity.min()
-        #max = disparity.max()
-        #disparity = np.uint8(255 * (disparity - min) / (max - min))
+        min = disparity.min()
+        max = disparity.max()
+        disparity = np.uint8(255 * (disparity - min) / (max - min))
 
-        jpg_image = Image.fromarray(disparity / 2048)
+        jpg_image = Image.fromarray(disparity)
         jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_disparity.jpg".format(file_name), format='JPEG')
 
         return True
