@@ -43,7 +43,7 @@ class Camera():
         """
         # take two photos
         file_name = "disparity_test"
-        self.take_stereo_photo(1920, 1080, filename, "separate")
+        self.take_stereo_photo(1920, 1080, file_name, "separate")
         npzfile = np.load('{}/calibration_data/stereo_camera_calibration.npz'.format(self.home_dir))
 
         imageSize = npzfile['imageSize']
@@ -68,7 +68,7 @@ class Camera():
         min = disparity.min()
         max = disparity.max()
         disparity = np.uint8(255 * (disparity - min) / (max - min))
-        jpg_image_right.save("/home/pi/RPi-tankbot/local/frames/{}_disparity.jpg".format(filename), format='JPEG')
+        jpg_image_right.save("/home/pi/RPi-tankbot/local/frames/{}_disparity.jpg".format(file_name), format='JPEG')
 
         return True
 
