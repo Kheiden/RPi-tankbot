@@ -56,7 +56,7 @@ class Camera():
         verts = out_points
         colors = out_colors
 
-        fn = 'out.ply'
+        fn = '/home/pi/RPi-tankbot/local/frames/out.ply'
         ply_header = '''ply
         format ascii 1.0
         element vertex %(vert_num)d
