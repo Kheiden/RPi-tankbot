@@ -57,6 +57,18 @@ class Camera():
         colors = out_colors
 
         fn = 'out.ply'
+        ply_header = '''ply
+        format ascii 1.0
+        element vertex %(vert_num)d
+        property float x
+        property float y
+        property float z
+        property uchar red
+        property uchar green
+        property uchar blue
+        end_header
+        '''
+
         verts = verts.reshape(-1, 3)
         colors = colors.reshape(-1, 3)
         verts = np.hstack([verts, colors])
