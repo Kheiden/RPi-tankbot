@@ -47,8 +47,8 @@ class Camera():
                         [0,-1, 0,  0.5*h], # turn points 180 deg around x-axis,
                         [0, 0, 0,     -f], # so that y-axis looks up
                         [0, 0, 1,      0]])
-        points = cv.reprojectImageTo3D(disp, Q)
-        colors = cv.cvtColor(imgL, cv.COLOR_BGR2RGB)
+        points = cv2.reprojectImageTo3D(disp, Q)
+        colors = cv2.cvtColor(imgL, cv2.COLOR_BGR2RGB)
         mask = disp > disp.min()
         out_points = points[mask]
         out_colors = colors[mask]
