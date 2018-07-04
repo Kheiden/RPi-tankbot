@@ -83,15 +83,8 @@ class Camera():
         # Compute the disparity image
         disparity = stereo.compute(grayLeft, grayRight)
 
-        # Normalize the image for representation
-        #min = disparity.min()
-        #print("min", min)
-        #max = disparity.max()
-        #print("max", max)
-        #disparity = (disp - min_disp) / num_disp
-        print(type(disparity))
-
         jpg_image = Image.fromarray(disparity)
+        print(type(jpg_image))
         jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_disparity.jpg".format(file_name), format='JPEG')
 
         return True
