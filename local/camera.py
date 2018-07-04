@@ -113,28 +113,33 @@ class Camera():
         imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_left.jpg".format(file_name), format='JPEG')
         imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_right.jpg".format(file_name), format='JPEG')
 
-        # Initialize the stereo block matching object
-        stereo = cv2.StereoBM_create()
-        #stereo.setMinDisparity(4)
-        stereo.setNumDisparities(16) #was 128
-        stereo.setBlockSize(15) #was 21
-        stereo.setROI1(leftROI)
-        stereo.setROI2(rightROI)
-        #stereo.setSpeckleRange(16)
-        #stereo.setSpeckleWindowSize(45)
+        for x in range(128):
+            for y in range(128):
+                try:
+                    # Initialize the stereo block matching object
+                    stereo = cv2.StereoBM_create()
+                    #stereo.setMinDisparity(4)
+                    stereo.setNumDisparities(x) #was 128
+                    stereo.setBlockSize(y) #was 21
+                    stereo.setROI1(leftROI)
+                    stereo.setROI2(rightROI)
+                    #stereo.setSpeckleRange(16)
+                    #stereo.setSpeckleWindowSize(45)
 
-        # Compute the disparity image
-        disparity = stereo.compute(grayLeft, grayRight)
+                    # Compute the disparity image
+                    disparity = stereo.compute(grayLeft, grayRight)
 
-        if save_disparity_image == True:
-            # Normalize the image for representation
-            min = disparity.min()
-            max = disparity.max()
-            disparity_normalized = np.uint8(255 * (disparity - min) / (max - min))
+                    if save_disparity_image == True:
+                        # Normalize the image for representation
+                        min = disparity.min()
+                        max = disparity.max()
+                        disparity_normalized = np.uint8(255 * (disparity - min) / (max - min))
 
-            jpg_image = Image.fromarray(disparity_normalized)
-            #print(type(jpg_image))
-            jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_disparity.jpg".format(file_name), format='JPEG')
+                        jpg_image = Image.fromarray(disparity_normalized)
+                        #print(type(jpg_image))
+                        jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_disp{}_blk{}.jpg".format(file_name, x, y), format='JPEG')
+                except:
+                    pass
 
         return imgLeft, disparity
 
