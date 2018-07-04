@@ -138,7 +138,7 @@ class Camera():
 
             jpg_image = Image.fromarray(disparity_normalized)
             #print(type(jpg_image))
-            jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_disp{}_blk{}.jpg".format(file_name, x, y), format='JPEG')
+            jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_disparity_map.jpg".format(file_name), format='JPEG')
 
         return imgLeft, disparity
 
