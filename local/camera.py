@@ -36,7 +36,28 @@ class Camera():
         self.home_dir = "/home/pi"
         return
 
-    def create_disparity_map(self):
+    def create_3d_point_cloud(self, imgL, disparity_map):
+        """
+        Based on sample code from OpenCV
+        """
+        print('generating 3d point cloud...',)
+        h, w = imgL.shape[:2]
+        f = 0.8*w                          # guess for focal length
+        Q = np.float32([[1, 0, 0, -0.5*w],
+                        [0,-1, 0,  0.5*h], # turn points 180 deg around x-axis,
+                        [0, 0, 0,     -f], # so that y-axis looks up
+                        [0, 0, 1,      0]])
+        points = cv.reprojectImageTo3D(disp, Q)
+        colors = cv.cvtColor(imgL, cv.COLOR_BGR2RGB)
+        mask = disp > disp.min()
+        out_points = points[mask]
+        out_colors = colors[mask]
+        out_fn = 'out.ply'
+        write_ply('out.ply', out_points, out_colors)
+        print('%s saved' % 'out.ply')
+        return True
+
+    def create_disparity_map(self, save_disparity_image=True):
         """
         Based on:
         https://github.com/jagracar/OpenCV-python-tests/blob/master/OpenCV-tutorials/cameraCalibration/depthMap.py
@@ -83,16 +104,17 @@ class Camera():
         # Compute the disparity image
         disparity = stereo.compute(grayLeft, grayRight)
 
-        # Normalize the image for representation
-        min = disparity.min()
-        max = disparity.max()
-        disparity = np.uint8(255 * (disparity - min) / (max - min))
+        if save_disparity_image == True:
+            # Normalize the image for representation
+            min = disparity.min()
+            max = disparity.max()
+            disparity_normalized = np.uint8(255 * (disparity - min) / (max - min))
 
-        jpg_image = Image.fromarray(disparity)
-        #print(type(jpg_image))
-        jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_disparity.jpg".format(file_name), format='JPEG')
+            jpg_image = Image.fromarray(disparity_normalized)
+            #print(type(jpg_image))
+            jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_disparity.jpg".format(file_name), format='JPEG')
 
-        return True
+        return imgLeft, disparity
 
     def calibrate_stereo_cameras(self):
         # We need a lot of variables to calibrate the stereo camera
