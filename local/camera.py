@@ -74,7 +74,7 @@ class Camera():
         stereo = cv2.StereoBM_create()
         #stereo.setMinDisparity(4)
         stereo.setNumDisparities(16) #was 128
-        stereo.setBlockSize(25) #was 21
+        stereo.setBlockSize(50) #was 21
         #stereo.setROI1(leftROI)
         #stereo.setROI2(rightROI)
         #stereo.setSpeckleRange(16)
