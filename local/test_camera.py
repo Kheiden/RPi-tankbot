@@ -25,7 +25,7 @@ class TestCamera():
 
     def test_create_3d_point_cloud(self):
         imgLeft, disparity_map = self.c.create_disparity_map()
-        result = self.c.create_3d_point_cloud(imgLeft, disparity_map)
+        result = self.c.create_3d_point_cloud(imgLeft[1], disparity_map)
         assert result
 
     @pytest.mark.skip(reason="Not Yet Passed.")
