@@ -58,17 +58,14 @@ class Camera():
         imgLeft = cv2.imread('/home/pi/RPi-tankbot/local/frames/{}_left.jpg'.format(file_name))
         imgRight = cv2.imread('/home/pi/RPi-tankbot/local/frames/{}_right.jpg'.format(file_name))
 
+        imgLeft = self.undistort_image(imgLeft, cam_num=0)
+        imgRight = self.undistort_image(imgRight, cam_num=1)
+
         grayLeft = cv2.cvtColor(imgLeft, cv2.COLOR_BGR2GRAY)
         grayRight = cv2.cvtColor(imgRight, cv2.COLOR_BGR2GRAY)
 
-        grayLeft = self.undistort_image(grayLeft, cam_num=0)
-        grayRight = self.undistort_image(grayRight, cam_num=1)
-
         imgLeft_jpg = Image.fromarray(grayLeft)
         imgRight_jpg = Image.fromarray(grayRight)
-
-        imgLeft_jpg = cv2.imread('/home/pi/RPi-tankbot/local/frames/{}_left.jpg'.format(file_name))
-        imgRight_jpg = cv2.imread('/home/pi/RPi-tankbot/local/frames/{}_right.jpg'.format(file_name))
 
         imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_left.jpg".format(file_name), format='JPEG')
         imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_right.jpg".format(file_name), format='JPEG')
@@ -295,7 +292,7 @@ class Camera():
 
     def undistort_image(self, img, cam_num):
         """
-        # Takes an image  as a numpy array and undistorts it
+        # Takes an image in as a numpy array and undistorts it
         """
         processing_time01 = cv2.getTickCount()
         right_or_left = ["_right" if cam_num==1 else "_left"][0]
