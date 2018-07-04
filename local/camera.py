@@ -85,11 +85,17 @@ class Camera():
 
         # Normalize the image for representation
         min = disparity.min()
+        print("min", min)
         max = disparity.max()
-        disparity = np.uint8(255 * (disparity - min) / (max - min))
+        print("max", max)
+        disparity1 = np.uint8(255 * (disparity - min) / (max - min))
 
-        jpg_image = Image.fromarray(disparity)
-        jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_disparity.jpg".format(file_name), format='JPEG')
+        jpg_image = Image.fromarray(disparity1)
+        jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_disparity1.jpg".format(file_name), format='JPEG')
+
+        disparity2 = disparity / 1024
+        jpg_image = Image.fromarray(disparity2)
+        jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_disparity2.jpg".format(file_name), format='JPEG')
 
         return True
 
