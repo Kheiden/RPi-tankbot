@@ -354,6 +354,7 @@ class Camera():
         right_or_left = ["_right" if cam_num==1 else "_left"][0]
 
         w,  h = img.shape[:2]
+        print("w, h", w, h)
         try:
             npz_file = np.load('{}/calibration_data/{}p/camera_calibration{}.npz'.format(self.home_dir, w, right_or_left))
             if 'map1' and 'map2' in npz_file.files:
@@ -467,7 +468,6 @@ class Camera():
                 # This shouldn't happen.  If it does, error out.
                 return 0, 0
         elif type == "together":
-            # if not defined, then it's combined ;)
             imgRGB_combined = np.concatenate((imgRGB_left, imgRGB_right), axis=1)
             jpg_image = Image.fromarray(imgRGB_combined)
             if filename == None:
