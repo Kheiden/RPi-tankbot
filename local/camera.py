@@ -468,7 +468,7 @@ class Camera():
 
             width, height = jpg_image.size
             return width, height
-        elif type = "image_array":
+        elif type == "image_array":
             return imgRGB_left, imgRGB_right
         else:
             return
