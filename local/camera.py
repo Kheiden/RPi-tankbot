@@ -79,7 +79,7 @@ class Camera():
         print('%s saved' % 'out.ply')
         return True
 
-    def create_disparity_map(self, resolution="270p", save_disparity_image=False):
+    def create_disparity_map(self, imgL, ImgR, resolution="270p", save_disparity_image=False):
         """
         Based on:
         https://github.com/jagracar/OpenCV-python-tests/blob/master/OpenCV-tutorials/cameraCalibration/depthMap.py

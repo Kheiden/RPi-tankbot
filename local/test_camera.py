@@ -32,7 +32,8 @@ class TestCamera():
 
     #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_create_single_disparity_map(self):
-        result = self.c.create_disparity_map(resolution="540p")
+        imgL, imgR = self.c.take_stereo_photo(x_res, y_res, type="image_array")
+        result = self.c.create_disparity_map(imgL, imgR, resolution="540p", save_disparity_image=True)
         assert result
 
 
