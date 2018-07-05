@@ -340,7 +340,7 @@ class Camera():
         processing_time = (processing_time02 - processing_time01)/ cv2.getTickFrequency()
         return processing_time
 
-    def undistort_image(self, img, cam_num, resolution="270p"):
+    def undistort_image(self, img, cam_num):
         """
         # Takes an image in as a numpy array and undistorts it
         """
@@ -349,7 +349,7 @@ class Camera():
 
         h,  w = img.shape[:2]
         try:
-            npz_file = np.load('{}/calibration_data/{}/camera_calibration{}.npz'.format(self.home_dir, resolution, right_or_left))
+            npz_file = np.load('{}/calibration_data/{}p/camera_calibration{}.npz'.format(self.home_dir, w, right_or_left))
             if 'map1' and 'map2' in npz_file.files:
                 print("Camera calibration data has been found in cache.")
                 map1 = npz_file['map1']
