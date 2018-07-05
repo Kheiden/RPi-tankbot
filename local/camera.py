@@ -424,8 +424,8 @@ class Camera():
         type="separate" is two separate .JPG files
         """
 
-        CAMERA_HEIGHT = int(resolution[:-1])
-        CAMERA_WIDTH = round(CAMERA_HEIGHT * 1.777777)
+        CAMERA_HEIGHT = y_res
+        CAMERA_WIDTH = x_res
 
         print("CAMERA_WIDTH: {}, CAMERA_HEIGHT:{}".format(CAMERA_WIDTH, CAMERA_HEIGHT))
 
