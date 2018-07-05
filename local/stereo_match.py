@@ -2,23 +2,21 @@ from camera import Camera
 
 import cv2
 
-class StereoMatch:
+class StereoMatch():
 
     def __init__(self):
         self.c = Camera()
 
     def main(self):
         processing_time = []
-        while True:
+        for i in range(60):
             processing_time01 = cv2.getTickCount()
             imgLeft, disparity = self.c.create_disparity_map()
-            cv2.imshow('image',img)
-            processing_time.append(cv2.getTickCount() - processing_time01)
-            K = cv2.waitKey(0)
-            if k ==27:
-                cv2.destroyAllWindows()
-                print("Median processing time:", sorted(processing_time)[int(len(processing_time)/2)])
+            disparity = Image.fromarray(disparity)
+            disparity.save("/home/pi/input_output/stream_test/{}".format(i), format='JPEG')
+            print("Processing time:", cv2.getTickCount() - processing_time01)
 
 
 if __name__ == '__main__':
-    main()
+    s = StereoMatch()
+    s.main()
