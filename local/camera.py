@@ -348,8 +348,10 @@ class Camera():
         right_or_left = ["_right" if cam_num==1 else "_left"][0]
 
         h,  w = img.shape[:2]
+        print("h,w:", h, w)
+        resolution = str(w)
         try:
-            npz_file = np.load('{}/calibration_data/{}p/camera_calibration{}.npz'.format(self.home_dir, w, right_or_left))
+            npz_file = np.load('{}/calibration_data/{}p/camera_calibration{}.npz'.format(self.home_dir, resolution, right_or_left))
             if 'map1' and 'map2' in npz_file.files:
                 print("Camera calibration data has been found in cache.")
                 map1 = npz_file['map1']
