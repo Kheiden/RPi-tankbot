@@ -79,14 +79,14 @@ class Camera():
         print('%s saved' % 'out.ply')
         return True
 
-    def create_disparity_map(self, save_disparity_image=True):
+    def create_disparity_map(self, save_disparity_image=False):
         """
         Based on:
         https://github.com/jagracar/OpenCV-python-tests/blob/master/OpenCV-tutorials/cameraCalibration/depthMap.py
         """
         # take two photos
         file_name = "disparity_test"
-        self.take_stereo_photo(1920, 1080, file_name, "separate")
+        imgLeft, imgRight = self.take_stereo_photo(1920, 1080, file_name, "image_array")
         npzfile = np.load('{}/calibration_data/stereo_camera_calibration.npz'.format(self.home_dir))
 
         imageSize = tuple(npzfile['imageSize'])
@@ -98,8 +98,8 @@ class Camera():
         rightROI = tuple(npzfile['rightROI'])
 
         # Load the left and right images in gray scale
-        imgLeft = cv2.imread('/home/pi/RPi-tankbot/local/frames/{}_left.jpg'.format(file_name))
-        imgRight = cv2.imread('/home/pi/RPi-tankbot/local/frames/{}_right.jpg'.format(file_name))
+        #imgLeft = cv2.imread('/home/pi/RPi-tankbot/local/frames/{}_left.jpg'.format(file_name))
+        #imgRight = cv2.imread('/home/pi/RPi-tankbot/local/frames/{}_right.jpg'.format(file_name))
 
         imgLeft = self.undistort_image(imgLeft, cam_num=0)
         imgRight = self.undistort_image(imgRight, cam_num=1)
@@ -110,8 +110,9 @@ class Camera():
         imgLeft_jpg = Image.fromarray(grayLeft)
         imgRight_jpg = Image.fromarray(grayRight)
 
-        imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_left.jpg".format(file_name), format='JPEG')
-        imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_right.jpg".format(file_name), format='JPEG')
+
+        #imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_left.jpg".format(file_name), format='JPEG')
+        #imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_right.jpg".format(file_name), format='JPEG')
 
         #disparity_range = [16, 32, 48, 64]
         #block_size_range = [i for i in range(41, 59, 2)]
@@ -457,7 +458,7 @@ class Camera():
             else:
                 # This shouldn't happen.  If it does, error out.
                 return 0, 0
-        else:
+        elif type = "together":
             # if not defined, then it's combined ;)
             imgRGB_combined = np.concatenate((imgRGB_left, imgRGB_right), axis=1)
             jpg_image = Image.fromarray(imgRGB_combined)
@@ -467,6 +468,10 @@ class Camera():
 
             width, height = jpg_image.size
             return width, height
+        elif type = "image_array":
+            return imgRGB_left, imgRGB_right
+        else:
+            return
 
     def start_right_camera(self):
         CAMERA_WIDTH = 640
