@@ -89,7 +89,7 @@ class Camera():
         resy = int(resolution[:-1])
         resx = round(resy * 1.777777)
         imgLeft, imgRight = self.take_stereo_photo(resx, resy, file_name, "image_array")
-        npzfile = np.load('{}/calibration_data/stereo_camera_calibration.npz'.format(self.home_dir))
+        npzfile = np.load('{}/calibration_data/{}/stereo_camera_calibration.npz'.format(self.home_dir, resolution))
 
         imageSize = tuple(npzfile['imageSize'])
         leftMapX = npzfile['leftMapX']
