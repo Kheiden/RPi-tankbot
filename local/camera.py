@@ -423,8 +423,10 @@ class Camera():
         type="combined" (or any other value) is a single .JPG file
         type="separate" is two separate .JPG files
         """
-        CAMERA_WIDTH = x_res
-        CAMERA_HEIGHT = y_res
+
+        CAMERA_HEIGHT = int(resolution[:-1])
+        CAMERA_WIDTH = round(CAMERA_HEIGHT * 1.777777)
+
         print("CAMERA_WIDTH: {}, CAMERA_HEIGHT:{}".format(CAMERA_WIDTH, CAMERA_HEIGHT))
 
         right = cv2.VideoCapture(1)

@@ -32,6 +32,8 @@ class TestCamera():
 
     #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_create_single_disparity_map(self):
+        x_res = 960
+        y_res = 540
         imgL, imgR = self.c.take_stereo_photo(x_res, y_res, type="image_array")
         result = self.c.create_disparity_map(imgL, imgR, resolution="540p", save_disparity_image=True)
         assert result
@@ -89,7 +91,7 @@ class TestCamera():
         x_res = 1920
         y_res = 1080
         for i in range(64):
-            width, height = self.c.take_stereo_photo(x_res, y_res , type="separate")
+            width, height = self.c.take_stereo_photo(x_res, y_res, type="separate")
             assert width == x_res
             assert height == y_res
 
@@ -97,13 +99,13 @@ class TestCamera():
     def test_stereo_photo(self):
         x_res = 1920
         y_res = 1080
-        width, height = self.c.take_stereo_photo(x_res, y_res , type="combined")
+        width, height = self.c.take_stereo_photo(x_res, y_res, type="combined")
         assert width == x_res*2
         assert height == y_res
 
         x_res = 1920
         y_res = 1080
-        width, height = self.c.take_stereo_photo(x_res, y_res , type="separate")
+        width, height = self.c.take_stereo_photo(x_res, y_res, type="separate")
         assert width == x_res
         assert height == y_res
 
