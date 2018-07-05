@@ -458,7 +458,7 @@ class Camera():
             else:
                 # This shouldn't happen.  If it does, error out.
                 return 0, 0
-        elif type = "together":
+        elif type == "together":
             # if not defined, then it's combined ;)
             imgRGB_combined = np.concatenate((imgRGB_left, imgRGB_right), axis=1)
             jpg_image = Image.fromarray(imgRGB_combined)
