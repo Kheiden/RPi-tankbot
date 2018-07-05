@@ -79,14 +79,16 @@ class Camera():
         print('%s saved' % 'out.ply')
         return True
 
-    def create_disparity_map(self, save_disparity_image=False):
+    def create_disparity_map(self, resolution="270p", save_disparity_image=False):
         """
         Based on:
         https://github.com/jagracar/OpenCV-python-tests/blob/master/OpenCV-tutorials/cameraCalibration/depthMap.py
         """
         # take two photos
         file_name = "disparity_test"
-        imgLeft, imgRight = self.take_stereo_photo(1920, 1080, file_name, "image_array")
+        resy = int(resolution[:-1])
+        resx = round(resy * 1.777777)
+        imgLeft, imgRight = self.take_stereo_photo(resx, resy, file_name, "image_array")
         npzfile = np.load('{}/calibration_data/stereo_camera_calibration.npz'.format(self.home_dir))
 
         imageSize = tuple(npzfile['imageSize'])
@@ -142,7 +144,7 @@ class Camera():
 
         return imgLeft, disparity_normalized
 
-    def calibrate_stereo_cameras(self):
+    def calibrate_stereo_cameras(self, resolution="270p"):
         # We need a lot of variables to calibrate the stereo camera
         """
         Based on code from:
@@ -161,13 +163,17 @@ class Camera():
 
         rotationMatrix = None
         translationVector = None
-        imageSize = (1920, 1080)
+
+        resy = int(resolution[:-1])
+        resx = round(resy * 1.777777)
+        imageSize= (resx, resy)
+        #imageSize = (1920, 1080)
 
         TERMINATION_CRITERIA = (cv2.TERM_CRITERIA_EPS+cv2.TERM_CRITERIA_MAX_ITER, 30, 0.01)
         OPTIMIZE_ALPHA = 0.25
 
         try:
-            npz_file = np.load('{}/calibration_data/stereo_camera_calibration.npz'.format(self.home_dir))
+            npz_file = np.load('{}/calibration_data/{}/stereo_camera_calibration.npz'.format(self.home_dir, resolution))
             processing_time02 = cv2.getTickCount()
             processing_time = (processing_time02 - processing_time01)/ cv2.getTickFrequency()
             return processing_time
@@ -178,7 +184,7 @@ class Camera():
             right_or_left = ["_right" if cam_num==1 else "_left"][0]
 
             try:
-                npz_file = np.load('{}/calibration_data/camera_calibration{}.npz'.format(self.home_dir, right_or_left))
+                npz_file = np.load('{}/calibration_data/{}/camera_calibration{}.npz'.format(self.home_dir, resolution, right_or_left))
 
                 list_of_vars = ['map1', 'map2', 'objpoints', 'imgpoints', 'camera_matrix', 'distortion_coeff']
                 print(sorted(list_of_vars))

@@ -24,7 +24,19 @@ class TestCamera():
         self.c.stop_servos()
 
 
+    @pytest.mark.skip(reason="Not Yet Passed.")
+    def test_create_3d_point_cloud(self):
+        imgLeft, disparity_map = self.c.create_disparity_map()
+        result = self.c.create_3d_point_cloud(imgLeft[1], disparity_map)
+        assert result
+
     #@pytest.mark.skip(reason="Not Yet Passed.")
+    def test_create_single_disparity_map(self):
+        result = self.c.create_disparity_map(resolution="540p")
+        assert result
+
+
+    @pytest.mark.skip(reason="Passed.")
     def test_undistort_image_multiple_resolution(self):
         """
         # I want to be able to undistort an image in less than 1 second
@@ -43,18 +55,6 @@ class TestCamera():
             print(result2[0]*1000)
             assert (result2[0]*1000 < threshold_miliseconds)
             cv2.imwrite('{}/input_output/{}/output_right.jpg'.format(self.home_dir, resolution), np.hstack((img, result2[1])))
-
-
-    @pytest.mark.skip(reason="Not Yet Passed.")
-    def test_create_3d_point_cloud(self):
-        imgLeft, disparity_map = self.c.create_disparity_map()
-        result = self.c.create_3d_point_cloud(imgLeft[1], disparity_map)
-        assert result
-
-    @pytest.mark.skip(reason="Not Yet Passed.")
-    def test_create_single_disparity_map(self):
-        result = self.c.create_disparity_map()
-        assert result
 
     @pytest.mark.skip(reason="Passed.")
     def test_calibrate_stereo_camera(self):
