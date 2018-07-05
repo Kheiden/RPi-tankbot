@@ -1,5 +1,5 @@
 from camera import Camera
-
+from PIL import Image
 import cv2
 
 class StereoMatch():
@@ -13,7 +13,7 @@ class StereoMatch():
             processing_time01 = cv2.getTickCount()
             imgLeft, disparity = self.c.create_disparity_map()
             disparity = Image.fromarray(disparity)
-            disparity.save("/home/pi/input_output/stream_test/{}".format(i), format='JPEG')
+            disparity.save("/home/pi/input_output/stream_test/{}.jpg".format(i), format='JPEG')
             print("Processing time:", cv2.getTickCount() - processing_time01)
 
 
