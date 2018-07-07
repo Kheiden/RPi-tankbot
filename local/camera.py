@@ -248,12 +248,16 @@ class Camera():
                         cv2.CALIB_ZERO_DISPARITY, OPTIMIZE_ALPHA)
 
         print("Saving calibration...")
-        leftMapX, leftMapY = cv2.initUndistortRectifyMap(
+        leftMapX, leftMapY = cv2.fisheye.initUndistortRectifyMap(
                 leftCameraMatrix, leftDistortionCoefficients, leftRectification,
-                leftProjection, imageSize, cv2.CV_32FC1)
+                leftProjection, imageSize, cv2.CV_16SC2)
+
+        #map1, map2 = cv2.fisheye.initUndistortRectifyMap(K, D, np.eye(3), K, DIM, cv2.CV_16SC2)
+
+
         rightMapX, rightMapY = cv2.initUndistortRectifyMap(
                 rightCameraMatrix, rightDistortionCoefficients, rightRectification,
-                rightProjection, imageSize, cv2.CV_32FC1)
+                rightProjection, imageSize, cv2.CV_16SC2)
 
 
         np.savez_compressed('{}/calibration_data/stereo_camera_calibration.npz'.format(self.home_dir), imageSize=imageSize,
@@ -333,6 +337,9 @@ class Camera():
                     objpoints.append(objp)
                     cv2.cornerSubPix(gray,corners,(3,3),(-1,-1),subpix_criteria)
                     imgpoints.append(corners)
+                else:
+                    print("Error! couldn't find chessboard corner in below file!!")
+                    print(file_name)
 
             # Opencv sample code uses the var 'grey' from the last opened picture
             DIM= (res_x, res_y)
@@ -340,7 +347,7 @@ class Camera():
             D = np.zeros((4, 1))
             rvecs = [np.zeros((1, 1, 3), dtype=np.float64) for i in range(N_OK)]
             tvecs = [np.zeros((1, 1, 3), dtype=np.float64) for i in range(N_OK)]
-            rms, _, _, _, _ = \
+            rms, camera_matrix, distortion_coeff, _, _ = \
                 cv2.fisheye.calibrate(
                     objpoints,
                     imgpoints,
@@ -355,7 +362,8 @@ class Camera():
 
             map1, map2 = cv2.fisheye.initUndistortRectifyMap(K, D, np.eye(3), K, DIM, cv2.CV_16SC2)
             np.savez('{}/calibration_data/{}p/camera_calibration{}.npz'.format(self.home_dir,  res_y, right_or_left),
-                map1=map1, map2=map2)
+                map1=map1, map2=map2, objpoints=objpoints, imgpoints=imgpoints,
+                camera_matrix=camera_matrix, distortion_coeff=distortion_coeff)
 
 
         # Starting from here if cache is found...
