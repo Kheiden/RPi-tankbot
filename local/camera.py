@@ -245,7 +245,7 @@ class Camera():
         return processing_time
 
 
-    def calibrate_camera(self, cam_num=0, resolution="270p"):
+    def calibrate_camera(self, cam_num=0, res_x=640, res_y=480):
         """
         cam_num 0 is left and 1 is right.
 
@@ -274,11 +274,11 @@ class Camera():
         If the file doesn't exist, then calibrate the cameras and save result to file
         """
 
-        images = glob.glob('{}/calibration_frames/{}/*{}.jpg'.format(self.home_dir, resolution, right_or_left))
+        images = glob.glob('{}/calibration_frames/{}p/*{}.jpg'.format(self.home_dir, res_y, right_or_left))
         calbrate_cameras = None
 
         try:
-            npz_file = np.load('{}/calibration_data/{}/camera_calibration{}.npz'.format(self.home_dir,  resolution, right_or_left))
+            npz_file = np.load('{}/calibration_data/{}p/camera_calibration{}.npz'.format(self.home_dir,  res_y, right_or_left))
             if 'map1' and 'map2' in npz_file.files:
                 print("Camera calibration data has been found in cache.")
                 map1 = npz_file['map1']
@@ -296,7 +296,8 @@ class Camera():
             objpoints = [] # 3d point in real world space
             imgpoints = [] # 2d points in image plane.
 
-            for file_name in images:
+            for index, file_name in enumerate(images):
+                print(index, file_name)
                 img = cv2.imread(file_name)
                 if _img_shape == None:
                     _img_shape = img.shape[:2]
@@ -315,10 +316,7 @@ class Camera():
                     imgpoints.append(corners)
 
             # Opencv sample code uses the var 'grey' from the last opened picture
-            N_OK = len(objpoints)
-            resy = int(resolution[:-1])
-            resx = round(resy * 1.777777)
-            DIM= (resx, resy)
+            DIM= (res_x, res_y)
             K = np.zeros((3, 3))
             D = np.zeros((4, 1))
             rvecs = [np.zeros((1, 1, 3), dtype=np.float64) for i in range(N_OK)]
@@ -337,7 +335,7 @@ class Camera():
                 )
 
             map1, map2 = cv2.fisheye.initUndistortRectifyMap(K, D, np.eye(3), K, DIM, cv2.CV_16SC2)
-            np.savez('{}/calibration_data/{}/camera_calibration{}.npz'.format(self.home_dir,  resolution, right_or_left),
+            np.savez('{}/calibration_data/{}p/camera_calibration{}.npz'.format(self.home_dir,  res_y, right_or_left),
                 map1=map1, map2=map2)
 
 
@@ -354,11 +352,11 @@ class Camera():
         right_or_left = ["_right" if cam_num==1 else "_left"][0]
 
         w,  h = img.shape[:2]
-        print("w, h", w, h)
+        #print("Undistorting picture with (width, height):", (w, h))
         try:
             npz_file = np.load('{}/calibration_data/{}p/camera_calibration{}.npz'.format(self.home_dir, w, right_or_left))
             if 'map1' and 'map2' in npz_file.files:
-                print("Camera calibration data has been found in cache.")
+                #print("Camera calibration data has been found in cache.")
                 map1 = npz_file['map1']
                 map2 = npz_file['map2']
             else:

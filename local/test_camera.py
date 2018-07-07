@@ -39,12 +39,13 @@ class TestCamera():
         assert result
 
 
-    @pytest.mark.skip(reason="Passed.")
+    #@pytest.mark.skip(reason="Passed.")
     def test_undistort_image_multiple_resolution(self):
         """
         # I want to be able to undistort an image in less than 1 second
         """
-        for resolution in ['270p', "540p", "1080p"]:
+        #['270p', "540p", "1080p"]
+        for resolution in ['480p']:
             img = cv2.imread('{}/input_output/{}/input_left.jpg'.format(self.home_dir, resolution))
             threshold_miliseconds = 1000
             result1 = self.c.undistort_image(img=img, cam_num=0)
@@ -78,15 +79,15 @@ class TestCamera():
         # if the calibration data exists, then the method will return
         """
         threshold_seconds = 1800
-        result1 = self.c.calibrate_camera(cam_num=0)
+        result1 = self.c.calibrate_camera(cam_num=0, res_x=1920, res_y=1080)
         print(result1)
         assert (result1 < threshold_seconds)
-        result2 = self.c.calibrate_camera(cam_num=1)
+        result2 = self.c.calibrate_camera(cam_num=1, res_x=1920, res_y=1080)
         print(result2)
         assert (result2 < threshold_seconds)
 
 
-    #@pytest.mark.skip(reason="Passed.")
+    @pytest.mark.skip(reason="Passed.")
     def test_chessboard_photos(self):
         x_res = 640 #1920
         y_res = 480 #1080
