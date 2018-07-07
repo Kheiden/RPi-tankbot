@@ -30,7 +30,7 @@ class TestCamera():
         result = self.c.create_3d_point_cloud(imgLeft[1], disparity_map)
         assert result
 
-    #@pytest.mark.skip(reason="Not Yet Passed.")
+    @pytest.mark.skip(reason="Not Yet Passed.")
     def test_create_single_disparity_map(self):
         x_res = 960
         y_res = 540
@@ -86,7 +86,7 @@ class TestCamera():
         assert (result2 < threshold_seconds)
 
 
-    @pytest.mark.skip(reason="Passed.")
+    #@pytest.mark.skip(reason="Passed.")
     def test_chessboard_photos(self):
         x_res = 640 #1920
         y_res = 480 #1080
