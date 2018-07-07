@@ -88,9 +88,9 @@ class TestCamera():
 
     @pytest.mark.skip(reason="Passed.")
     def test_chessboard_photos(self):
-        x_res = 1920
-        y_res = 1080
-        for i in range(64):
+        x_res = 640 #1920
+        y_res = 480 #1080
+        for i in range(2):
             width, height = self.c.take_stereo_photo(x_res, y_res, type="separate")
             assert width == x_res
             assert height == y_res
