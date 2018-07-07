@@ -352,7 +352,7 @@ class Camera():
         h, w = img.shape[:2]
         print("Undistorting picture with (width, height):", (w, h))
         try:
-            npz_file = np.load('{}/calibration_data/{}p/camera_calibration{}.npz'.format(self.home_dir, w, right_or_left))
+            npz_file = np.load('{}/calibration_data/{}p/camera_calibration{}.npz'.format(self.home_dir, h, right_or_left))
             if 'map1' and 'map2' in npz_file.files:
                 #print("Camera calibration data has been found in cache.")
                 map1 = npz_file['map1']
