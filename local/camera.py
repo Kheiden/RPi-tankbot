@@ -368,7 +368,8 @@ class Camera():
         processing_time02 = cv2.getTickCount()
         #cv2.imwrite('{}/input_output/output{}.jpg'.format(self.home_dir, right_or_left), np.hstack((img, undistorted_img)))
         processing_time = (processing_time02 - processing_time01)/ cv2.getTickFrequency()
-        return (processing_time, undistorted_img)
+        #Return an image the same size as the input image
+        return (processing_time, undistorted_img[0:h, 0:w])
 
     def move_camera(self, x_axis_degrees=None, y_axis_degrees=None):
         """
