@@ -109,6 +109,14 @@ class Camera():
         #imgLeft = self.undistort_image(imgLeft, cam_num=0)
         #imgRight = self.undistort_image(imgRight, cam_num=1)
 
+
+        imgLeft_jpg = Image.fromarray(imgLeft)
+        imgRight_jpg = Image.fromarray(imgRight)
+
+        imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_distorted_left.jpg".format(file_name), format='JPEG')
+        imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_distorted_right.jpg".format(file_name), format='JPEG')
+
+
         imgLeft = cv2.remap(imgLeft, leftMapX, leftMapY, interpolation=cv2.INTER_LINEAR)
         imgRight = cv2.remap(imgRight, rightMapX, rightMapY, interpolation=cv2.INTER_LINEAR)
 
