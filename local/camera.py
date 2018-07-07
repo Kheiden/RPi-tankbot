@@ -79,17 +79,16 @@ class Camera():
         print('%s saved' % 'out.ply')
         return True
 
-    def create_disparity_map(self, imgL, ImgR, resolution="270p", save_disparity_image=False):
+    def create_disparity_map(self, imgL, ImgR, res_x=640, res_y=480, save_disparity_image=False):
         """
         Based on:
         https://github.com/jagracar/OpenCV-python-tests/blob/master/OpenCV-tutorials/cameraCalibration/depthMap.py
         """
         # take two photos
         file_name = "disparity_test"
-        resy = int(resolution[:-1])
-        resx = round(resy * 1.777777)
+
         imgLeft, imgRight = self.take_stereo_photo(resx, resy, file_name, "image_array")
-        npzfile = np.load('{}/calibration_data/{}/stereo_camera_calibration.npz'.format(self.home_dir, resolution))
+        npzfile = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
 
         imageSize = tuple(npzfile['imageSize'])
         leftMapX = npzfile['leftMapX']
@@ -113,8 +112,8 @@ class Camera():
         imgRight_jpg = Image.fromarray(grayRight)
 
 
-        #imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_left.jpg".format(file_name), format='JPEG')
-        #imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_right.jpg".format(file_name), format='JPEG')
+        imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_left.jpg".format(file_name), format='JPEG')
+        imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_right.jpg".format(file_name), format='JPEG')
 
         #disparity_range = [16, 32, 48, 64]
         #block_size_range = [i for i in range(41, 59, 2)]
