@@ -119,8 +119,8 @@ class Camera():
         imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_right.jpg".format(file_name), format='JPEG')
 
 
-        grayLeft = cv2.cvtColor(imgLeft[1], cv2.COLOR_BGR2GRAY)
-        grayRight = cv2.cvtColor(imgRight[1], cv2.COLOR_BGR2GRAY)
+        grayLeft = cv2.cvtColor(imgLeft, cv2.COLOR_RGB2GRAY)
+        grayRight = cv2.cvtColor(imgRight, cv2.COLOR_RGB2GRAY)
 
         imgLeft_jpg = Image.fromarray(grayLeft)
         imgRight_jpg = Image.fromarray(grayRight)
