@@ -35,7 +35,7 @@ class TestCamera():
         x_res = 640
         y_res = 480
         imgL, imgR = self.c.take_stereo_photo(x_res, y_res, type="image_array")
-        result = self.c.create_disparity_map(imgL, imgR, resolution="540p", save_disparity_image=True)
+        result = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
         assert result
 
 
