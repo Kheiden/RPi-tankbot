@@ -109,11 +109,8 @@ class Camera():
         imgLeft = self.undistort_image(imgLeft, cam_num=0)
         imgRight = self.undistort_image(imgRight, cam_num=1)
 
-        imgLeft_rgb = cv2.cvtColor(imgLeft[1], cv2.COLOR_BGR2RGB)
-        imgRight_rgb = cv2.cvtColor(imgRight[1], cv2.COLOR_BGR2RGB)
-
-        imgLeft_jpg = Image.fromarray(imgLeft_rgb)
-        imgRight_jpg = Image.fromarray(imgRight_rgb)
+        imgLeft_jpg = Image.fromarray(imgLeft)
+        imgRight_jpg = Image.fromarray(imgRight)
 
         imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_left.jpg".format(file_name), format='JPEG')
         imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_right.jpg".format(file_name), format='JPEG')
