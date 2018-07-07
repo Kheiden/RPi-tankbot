@@ -349,7 +349,7 @@ class Camera():
         processing_time01 = cv2.getTickCount()
         right_or_left = ["_right" if cam_num==1 else "_left"][0]
 
-        w,  h = img.shape[:2]
+        h, w = img.shape[:2]
         print("Undistorting picture with (width, height):", (w, h))
         try:
             npz_file = np.load('{}/calibration_data/{}p/camera_calibration{}.npz'.format(self.home_dir, w, right_or_left))
