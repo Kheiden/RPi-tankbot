@@ -109,8 +109,8 @@ class Camera():
         #imgLeft = self.undistort_image(imgLeft, cam_num=0)
         #imgRight = self.undistort_image(imgRight, cam_num=1)
 
-        imgLeft = cv2.remap(imgLeft, leftMapX, leftMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
-        imgRight = cv2.remap(imgRight, rightMapX, rightMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
+        imgLeft = cv2.remap(imgLeft, leftMapX, leftMapY, interpolation=cv2.INTER_LINEAR)
+        imgRight = cv2.remap(imgRight, rightMapX, rightMapY, interpolation=cv2.INTER_LINEAR)
 
         imgLeft_jpg = Image.fromarray(imgLeft)
         imgRight_jpg = Image.fromarray(imgRight)
