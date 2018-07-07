@@ -134,13 +134,13 @@ class Camera():
 
         # Initialize the stereo block matching object
         stereo = cv2.StereoBM_create()
-        stereo.setMinDisparity(0)
-        stereo.setNumDisparities(48)
-        stereo.setBlockSize(25)
+        stereo.setMinDisparity(4)
+        stereo.setNumDisparities(64)
+        stereo.setBlockSize(5)
         stereo.setROI1(leftROI)
         stereo.setROI2(rightROI)
-        stereo.setSpeckleRange(0)
-        stereo.setSpeckleWindowSize(0)
+        stereo.setSpeckleRange(16)
+        stereo.setSpeckleWindowSize(55)
         stereo.setPreFilterCap(31)
 
         # Compute the disparity image
