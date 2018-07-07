@@ -79,15 +79,19 @@ class Camera():
         print('%s saved' % 'out.ply')
         return True
 
-    def create_disparity_map(self, imgL, ImgR, res_x=640, res_y=480, save_disparity_image=False):
+    def create_disparity_map(self, imgLeft, imgRight, res_x=640, res_y=480, save_disparity_image=False):
         """
         Based on:
         https://github.com/jagracar/OpenCV-python-tests/blob/master/OpenCV-tutorials/cameraCalibration/depthMap.py
+
+        create_disparity_map takes in two undistorted images from left and right cameras.
+        This function will undistort the images by passing each image to undistort_image
+
         """
         # take two photos
         file_name = "disparity_test"
 
-        imgLeft, imgRight = self.take_stereo_photo(res_x, res_y, file_name, "image_array")
+        #imgLeft, imgRight = self.take_stereo_photo(res_x, res_y, file_name, "image_array")
         npzfile = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
 
         imageSize = tuple(npzfile['imageSize'])
@@ -105,6 +109,16 @@ class Camera():
         imgLeft = self.undistort_image(imgLeft, cam_num=0)
         imgRight = self.undistort_image(imgRight, cam_num=1)
 
+        imgLeft_rgb = cv2.cvtColor(imgLeft[1], cv2.COLOR_BGR2RGB)
+        imgRight_rgb = cv2.cvtColor(imgRight[1], cv2.COLOR_BGR2RGB)
+
+        imgLeft_jpg = Image.fromarray(imgLeft_rgb)
+        imgRight_jpg = Image.fromarray(imgRight_rgb)
+
+        imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_left.jpg".format(file_name), format='JPEG')
+        imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_right.jpg".format(file_name), format='JPEG')
+
+
         grayLeft = cv2.cvtColor(imgLeft[1], cv2.COLOR_BGR2GRAY)
         grayRight = cv2.cvtColor(imgRight[1], cv2.COLOR_BGR2GRAY)
 
@@ -112,8 +126,8 @@ class Camera():
         imgRight_jpg = Image.fromarray(grayRight)
 
 
-        imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_left.jpg".format(file_name), format='JPEG')
-        imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_right.jpg".format(file_name), format='JPEG')
+        imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_left.jpg".format(file_name), format='JPEG')
+        imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_right.jpg".format(file_name), format='JPEG')
 
         #disparity_range = [16, 32, 48, 64]
         #block_size_range = [i for i in range(41, 59, 2)]
@@ -121,8 +135,8 @@ class Camera():
         # Initialize the stereo block matching object
         stereo = cv2.StereoBM_create()
         stereo.setMinDisparity(0)
-        stereo.setNumDisparities(48) #was 128
-        stereo.setBlockSize(25) #was 21
+        stereo.setNumDisparities(48)
+        stereo.setBlockSize(25)
         stereo.setROI1(leftROI)
         stereo.setROI2(rightROI)
         stereo.setSpeckleRange(0)
