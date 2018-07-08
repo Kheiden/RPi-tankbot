@@ -38,9 +38,10 @@ class TestCamera():
         fps = 2
         processing_time, frame_counter = self.c.realtime_disparity_map_stream(time_on=time_on)
         # %5 error tolerance for the stream to be on
-        print(processing_time, frame_counter)
+        print("Processing time:{} number of frames:{}".format(processing_time, frame_counter))
         assert processing_time <= (time_on * 1.05)
         assert frame_counter >= time_on * fps
+        #1) 6.18 seconds per frame!
 
     @pytest.mark.skip(reason="Passed.")
     def test_create_single_disparity_map(self):

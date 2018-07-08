@@ -85,15 +85,16 @@ class Camera():
         processing_time01 = cv2.getTickCount()
         res_x = 640
         res_y = 480
+        npzfile = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
         while True:
             imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array")
-            result = self.create_disparity_map(imgL, imgR, res_x, res_y, save_disparity_image=False)
+            result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile, save_disparity_image=False)
             frame_counter += 1
             processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             if processing_time >= time_on:
                 return processing_time, frame_counter
 
-    def create_disparity_map(self, imgLeft, imgRight, res_x=640, res_y=480, save_disparity_image=False):
+    def create_disparity_map(self, imgLeft, imgRight, res_x=640, res_y=480, npzfile=None, save_disparity_image=False):
         """
         create_disparity_map takes in two undistorted images from left and right cameras.
         This function will undistort the images by passing each image to undistort_image
@@ -103,7 +104,8 @@ class Camera():
         file_name = "disparity_test"
 
         #imgLeft, imgRight = self.take_stereo_photo(res_x, res_y, file_name, "image_array")
-        npzfile = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
+        if npzfile is None:
+            npzfile = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
 
         imageSize = tuple(npzfile['imageSize'])
         leftMapX = npzfile['leftMapX']
@@ -467,7 +469,7 @@ class Camera():
         type="combined" (or any other value) is a single .JPG file
         type="separate" is two separate .JPG files
         """
-
+        #processing_time01 = cv2.getTickCount()
         CAMERA_HEIGHT = res_y
         CAMERA_WIDTH = res_x
 
@@ -520,6 +522,7 @@ class Camera():
             width, height = jpg_image.size
             return width, height
         elif type == "image_array":
+            #processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             return imgRGB_left, imgRGB_right
         else:
             return
