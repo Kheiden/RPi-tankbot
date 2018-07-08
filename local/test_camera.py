@@ -24,6 +24,61 @@ class TestCamera():
         self.c.stop_servos()
 
 
+    #@pytest.mark.skip(reason="Not Yet Passed.")
+    def test_create_3d_point_cloud(self):
+        res_x = 640
+        res_y = 480
+        imgL, imgR = self.c.take_stereo_photo(res_x, res_y, type="image_array")
+        imgLeft, disparity_map = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
+        result = self.c.create_3d_point_cloud(imgLeft, disparity_map)
+        assert result
+
+    @pytest.mark.skip(reason="Not Yet Passed.")
+    def test_realtime_disparity_map_stream(self):
+        # specify the amount of time that the stream is open for
+        time_on = 30
+        # Target FPS
+        fps = 2
+        processing_time, frame_counter = self.c.realtime_disparity_map_stream(time_on=time_on)
+        # %5 error tolerance for the stream to be on
+        print("Processing time:{} number of frames:{}".format(processing_time, frame_counter))
+        assert processing_time <= (time_on * 1.05)
+        assert frame_counter >= time_on * fps
+        #1) 6.18 seconds per frame (1 frame)
+        #2) 5.39 seconds per frame (1 frame)
+        #3) 4.46 seconds per frame (7 frames)
+
+    @pytest.mark.skip(reason="Passed.")
+    def test_create_single_disparity_map(self):
+        res_x = 640
+        res_y = 480
+        imgL, imgR = self.c.take_stereo_photo(res_x, res_y, type="image_array")
+        result = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
+        assert result
+
+
+    @pytest.mark.skip(reason="Passed.")
+    def test_undistort_image_multiple_resolution(self):
+        """
+        # I want to be able to undistort an image in less than 1 second
+        """
+        #['270p', "540p", "1080p"]
+        for resolution in ['480p']:
+            img = cv2.imread('{}/input_output/{}/input_left.jpg'.format(self.home_dir, resolution))
+            threshold_miliseconds = 1000
+            result1 = self.c.undistort_image(img=img, cam_num=0)
+            print(result1[0]*1000)
+            assert (result1[0]*1000 < threshold_miliseconds)
+            cv2.imwrite('{}/input_output/{}/output_left.jpg'.format(self.home_dir, resolution), np.hstack((img, result1[1])))
+
+            img = cv2.imread('{}/input_output/{}/input_right.jpg'.format(self.home_dir, resolution))
+            assert (result1[0]*1000 < threshold_miliseconds)
+            result2 = self.c.undistort_image(img=img, cam_num=1)
+            print(result2[0]*1000)
+            assert (result2[0]*1000 < threshold_miliseconds)
+            cv2.imwrite('{}/input_output/{}/output_right.jpg'.format(self.home_dir, resolution), np.hstack((img, result2[1])))
+
+    @pytest.mark.skip(reason="Passed.")
     def test_calibrate_stereo_camera(self):
         threshold_seconds = 30
         result1 = self.c.calibrate_camera(cam_num=0)
@@ -34,46 +89,28 @@ class TestCamera():
         assert (result2 < threshold_seconds)
         result3 = self.c.calibrate_stereo_cameras()
 
-    #@pytest.mark.skip(reason="Not Yet Passed.")
-    def test_undistort_image(self):
-        """
-        # I want to be able to undistort an image in less than 1 second
-        """
-        img = cv2.imread('{}/input_output/input_left.jpg'.format(self.home_dir))
-        threshold_miliseconds = 1000
-        result1 = self.c.undistort_image(img=img, cam_num=0)
-        print(result1[0]*1000)
-        assert (result1[0]*1000 < threshold_miliseconds)
-        cv2.imwrite('{}/input_output/output_left.jpg'.format(self.home_dir), np.hstack((img, result1[1])))
 
-        img = cv2.imread('{}/input_output/input_right.jpg'.format(self.home_dir))
-        assert (result1[0]*1000 < threshold_miliseconds)
-        result2 = self.c.undistort_image(img=img, cam_num=1)
-        print(result2[0]*1000)
-        assert (result2[0]*1000 < threshold_miliseconds)
-        cv2.imwrite('{}/input_output/output_right.jpg'.format(self.home_dir), np.hstack((img, result2[1])))
-
-    #@pytest.mark.skip(reason="Not Yet Passed.")
+    @pytest.mark.skip(reason="Passed.")
     def test_calibrate_cameras(self):
         """
         # Calibration takes about half an hour for each camera
         # if the calibration data exists, then the method will return
         """
         threshold_seconds = 1800
-        result1 = self.c.calibrate_camera(cam_num=0)
+        result1 = self.c.calibrate_camera(cam_num=0, res_x=1920, res_y=1080)
         print(result1)
         assert (result1 < threshold_seconds)
-        result2 = self.c.calibrate_camera(cam_num=1)
+        result2 = self.c.calibrate_camera(cam_num=1, res_x=1920, res_y=1080)
         print(result2)
         assert (result2 < threshold_seconds)
 
 
     @pytest.mark.skip(reason="Passed.")
     def test_chessboard_photos(self):
-        x_res = 1920
-        y_res = 1080
-        for i in range(64):
-            width, height = self.c.take_stereo_photo(x_res, y_res , type="separate")
+        x_res = 640 #1920
+        y_res = 480 #1080
+        for i in range(15):
+            width, height = self.c.take_stereo_photo(x_res, y_res, type="separate")
             assert width == x_res
             assert height == y_res
 
@@ -81,13 +118,13 @@ class TestCamera():
     def test_stereo_photo(self):
         x_res = 1920
         y_res = 1080
-        width, height = self.c.take_stereo_photo(x_res, y_res , type="combined")
+        width, height = self.c.take_stereo_photo(x_res, y_res, type="combined")
         assert width == x_res*2
         assert height == y_res
 
         x_res = 1920
         y_res = 1080
-        width, height = self.c.take_stereo_photo(x_res, y_res , type="separate")
+        width, height = self.c.take_stereo_photo(x_res, y_res, type="separate")
         assert width == x_res
         assert height == y_res
 

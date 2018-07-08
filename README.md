@@ -1,5 +1,7 @@
 #Autonomous Tracked Robot on the RPi platform
 
+![Current Version front](https://raw.githubusercontent.com/Kheiden/RPi-tankbot/master/documentation/photos/Current_Version_front.jpg)
+
 server/
 - Code related to processing the video stream
 - Executed on the server
@@ -13,7 +15,7 @@ Goal:
 The goal of this project is to create an autonomous tracked robot.
 
 Success Factors:
-- Build a tracked robot with stereo vision.
+- Build a tracked robot with stereo vision. [Complete]
 - The cameras must be able to perform object recognition and log the objects with a timestamp to a database.
 - The robot needs to have depth of field calculations from the stereo cameras which will be used as a sensor for object avoidance.
 - The robot needs to be able to be both remotely controlled and autonomous.
