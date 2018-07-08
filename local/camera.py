@@ -151,8 +151,8 @@ class Camera():
         imgLeft = imgLeft / 255
 
         if save_disparity_image == True:
-            jpg_image = Image.fromarray(disparity_normalized)
-            #print(type(jpg_image))
+            jpg_image = Image.fromarray(disparity_normalized*255)
+            jpg_image = jpg_image.convert('RGB')
             jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_disparity_map.jpg".format(file_name), format='JPEG')
 
         return imgLeft, disparity_normalized
