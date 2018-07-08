@@ -43,7 +43,6 @@ class TestCamera():
         assert frame_counter >= time_on * fps
         #1) 6.18 seconds per frame (1 frame)
         #2) 5.39 seconds per frame (1 frame)
-        #3) 4.47 seconds per frame (7 frames)
 
     @pytest.mark.skip(reason="Passed.")
     def test_create_single_disparity_map(self):
