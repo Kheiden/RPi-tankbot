@@ -24,7 +24,7 @@ class TestCamera():
         self.c.stop_servos()
 
 
-    #@pytest.mark.skip(reason="Not Yet Passed.")
+    @pytest.mark.skip(reason="Passed.")
     def test_create_3d_point_cloud(self):
         res_x = 640
         res_y = 480
