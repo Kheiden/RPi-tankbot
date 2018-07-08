@@ -48,7 +48,7 @@ class Camera():
                         [0, 0, 0,     -f], # so that y-axis looks up
                         [0, 0, 1,      0]])
         points = cv2.reprojectImageTo3D(disparity_map, Q)
-        colors = cv2.cvtColor(imgL, cv2.COLOR_BGR2RGB)
+        #colors = cv2.cvtColor(imgL, cv2.COLOR_BGR2RGB)
         mask = disparity_map > disparity_map.min()
         out_points = points[mask]
         out_colors = colors[mask]
@@ -144,15 +144,15 @@ class Camera():
 
         # Initialize the stereo block matching object
         stereo = cv2.StereoBM_create()
-        stereo.setBlockSize(5) # was 9
+        stereo.setBlockSize(9) # was 9
         stereo.setMinDisparity(0)
         stereo.setNumDisparities(48)
-        stereo.setDisp12MaxDiff(1)
+        stereo.setDisp12MaxDiff(2)
         stereo.setSpeckleRange(0)
         stereo.setSpeckleWindowSize(0)
         #stereo.setROI1(leftROI)
         #stereo.setROI2(rightROI)
-        stereo.setPreFilterCap(1) # was 63
+        stereo.setPreFilterCap(63) # was 63
         stereo.setPreFilterSize(5) # was 15
 
         stereo.setUniquenessRatio(3) # was 0
