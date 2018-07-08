@@ -80,7 +80,7 @@ class Camera():
         return True
 
 
-    def realtime_disparity_map_stream(self, time_on):
+    def realtime_disparity_map_stream(self, time_on, display_image=False):
         frame_counter = 0
         processing_time01 = cv2.getTickCount()
         res_x = 640
@@ -91,7 +91,12 @@ class Camera():
             result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
             frame_counter += 1
             processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
+            if display_image == True:
+                cv2.imshow('',  np.hstack((result[0], result[1])))
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
             if processing_time >= time_on:
+                cv2.destroyAllWindows()
                 return processing_time, frame_counter
 
     def create_disparity_map(self, imgLeft, imgRight, res_x=640, res_y=480, npzfile=None, save_disparity_image=False):
