@@ -81,9 +81,6 @@ class Camera():
 
     def create_disparity_map(self, imgLeft, imgRight, res_x=640, res_y=480, save_disparity_image=False):
         """
-        Based on:
-        https://github.com/jagracar/OpenCV-python-tests/blob/master/OpenCV-tutorials/cameraCalibration/depthMap.py
-
         create_disparity_map takes in two undistorted images from left and right cameras.
         This function will undistort the images by passing each image to undistort_image
 
@@ -97,18 +94,10 @@ class Camera():
         imageSize = tuple(npzfile['imageSize'])
         leftMapX = npzfile['leftMapX']
         leftMapY = npzfile['leftMapY']
-        leftROI = tuple(npzfile['leftROI'])
+        #leftROI = tuple(npzfile['leftROI'])
         rightMapX = npzfile['rightMapX']
         rightMapY = npzfile['rightMapY']
-        rightROI = tuple(npzfile['rightROI'])
-
-        # Load the left and right images in gray scale
-        #imgLeft = cv2.imread('/home/pi/RPi-tankbot/local/frames/{}_left.jpg'.format(file_name))
-        #imgRight = cv2.imread('/home/pi/RPi-tankbot/local/frames/{}_right.jpg'.format(file_name))
-
-        #imgLeft = self.undistort_image(imgLeft, cam_num=0)
-        #imgRight = self.undistort_image(imgRight, cam_num=1)
-
+        #rightROI = tuple(npzfile['rightROI'])
 
         imgLeft_jpg = Image.fromarray(imgLeft)
         imgRight_jpg = Image.fromarray(imgRight)
@@ -117,8 +106,8 @@ class Camera():
         imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_distorted_right.jpg".format(file_name), format='JPEG')
 
 
-        imgLeft = cv2.remap(imgLeft, leftMapX, leftMapY, interpolation=cv2.INTER_LINEAR)
-        imgRight = cv2.remap(imgRight, rightMapX, rightMapY, interpolation=cv2.INTER_LINEAR)
+        imgLeft = cv2.remap(imgLeft, leftMapX, leftMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
+        imgRight = cv2.remap(imgRight, rightMapX, rightMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
 
         imgLeft_jpg = Image.fromarray(imgLeft)
         imgRight_jpg = Image.fromarray(imgRight)
@@ -133,30 +122,33 @@ class Camera():
         imgLeft_jpg = Image.fromarray(grayLeft)
         imgRight_jpg = Image.fromarray(grayRight)
 
-
         imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_left.jpg".format(file_name), format='JPEG')
         imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_right.jpg".format(file_name), format='JPEG')
 
-        #disparity_range = [16, 32, 48, 64]
-        #block_size_range = [i for i in range(41, 59, 2)]
 
         # Initialize the stereo block matching object
         stereo = cv2.StereoBM_create()
-        stereo.setMinDisparity(4)
-        stereo.setNumDisparities(64)
-        stereo.setBlockSize(5)
-        stereo.setROI1(leftROI)
-        stereo.setROI2(rightROI)
-        stereo.setSpeckleRange(16)
-        stereo.setSpeckleWindowSize(55)
-        stereo.setPreFilterCap(31)
+        stereo.setBlockSize(9)
+        stereo.setMinDisparity(0)
+        stereo.setNumDisparities(48)
+        stereo.setDisp12MaxDiff(1)
+        stereo.setSpeckleRange(0)
+        stereo.setSpeckleWindowSize(0)
+        #stereo.setROI1(leftROI)
+        #stereo.setROI2(rightROI)
+        stereo.setPreFilterCap(63) # was 63
+        stereo.setPreFilterSize(15) # was 15
+
+        stereo.setUniquenessRatio(0)
+        stereo.setTextureThreshold(0)
 
         # Compute the disparity image
         disparity = stereo.compute(grayLeft, grayRight)
         # Normalize the image for representation
-        min = disparity.min()
-        max = disparity.max()
-        disparity_normalized = np.uint8(255 * (disparity - min) / (max - min))
+        norm_coeff = 255 / disparity.max()
+        disparity_normalized = disparity * norm_coeff / 255
+        # No clue why but the above normalization changes the imgL, so I need to readjust it
+        imgLeft = imgLeft / 255
 
         if save_disparity_image == True:
             jpg_image = Image.fromarray(disparity_normalized)
@@ -206,7 +198,6 @@ class Camera():
                 npz_file = np.load('{}/calibration_data/{}p/camera_calibration{}.npz'.format(self.home_dir, res_y, right_or_left))
 
                 list_of_vars = ['map1', 'map2', 'objpoints', 'imgpoints', 'camera_matrix', 'distortion_coeff']
-                print(sorted(list_of_vars))
                 print(sorted(npz_file.files))
 
                 if sorted(list_of_vars) == sorted(npz_file.files):
@@ -231,38 +222,46 @@ class Camera():
 
 
         print("Calibrating cameras together...")
-        (_, _, _, _, _, rotationMatrix, translationVector, _, _) = cv2.stereoCalibrate(
+
+        leftImagePoints = np.asarray(leftImagePoints, dtype=np.float64)
+        rightImagePoints = np.asarray(rightImagePoints, dtype=np.float64)
+
+        (RMS, _, _, _, _, rotationMatrix, translationVector) = cv2.fisheye.stereoCalibrate(
                 objectPoints, leftImagePoints, rightImagePoints,
                 leftCameraMatrix, leftDistortionCoefficients,
                 rightCameraMatrix, rightDistortionCoefficients,
-                imageSize, None, None, None, None,
+                imageSize, None, None,
                 cv2.CALIB_FIX_INTRINSIC, TERMINATION_CRITERIA)
 
+        print("Root Means Squared:", RMS)
+
         print("Rectifying cameras...")
+        R1 = np.zeros([3,3])
+        R2 = np.zeros([3,3])
+        P1 = np.zeros([3,4])
+        P2 = np.zeros([3,4])
+        Q = np.zeros([4,4])
+
         (leftRectification, rightRectification, leftProjection, rightProjection,
-                dispartityToDepthMap, leftROI, rightROI) = cv2.stereoRectify(
+                dispartityToDepthMap) = cv2.fisheye.stereoRectify(
                         leftCameraMatrix, leftDistortionCoefficients,
                         rightCameraMatrix, rightDistortionCoefficients,
                         imageSize, rotationMatrix, translationVector,
-                        None, None, None, None, None,
-                        cv2.CALIB_ZERO_DISPARITY, OPTIMIZE_ALPHA)
+                        0, R2, P1, P2, Q,
+                        cv2.CALIB_ZERO_DISPARITY, (0,0) , 0, 0)
 
         print("Saving calibration...")
         leftMapX, leftMapY = cv2.fisheye.initUndistortRectifyMap(
                 leftCameraMatrix, leftDistortionCoefficients, leftRectification,
                 leftProjection, imageSize, cv2.CV_16SC2)
-
-        #map1, map2 = cv2.fisheye.initUndistortRectifyMap(K, D, np.eye(3), K, DIM, cv2.CV_16SC2)
-
-
-        rightMapX, rightMapY = cv2.initUndistortRectifyMap(
+        rightMapX, rightMapY = cv2.fisheye.initUndistortRectifyMap(
                 rightCameraMatrix, rightDistortionCoefficients, rightRectification,
                 rightProjection, imageSize, cv2.CV_16SC2)
 
+        np.savez_compressed('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y), imageSize=imageSize,
+                leftMapX=leftMapX, leftMapY=leftMapY,
+                rightMapX=rightMapX, rightMapY=rightMapY)
 
-        np.savez_compressed('{}/calibration_data/stereo_camera_calibration.npz'.format(self.home_dir), imageSize=imageSize,
-                leftMapX=leftMapX, leftMapY=leftMapY, leftROI=leftROI,
-        rightMapX=rightMapX, rightMapY=rightMapY, rightROI=rightROI)
         processing_time02 = cv2.getTickCount()
         processing_time = (processing_time02 - processing_time01)/ cv2.getTickFrequency()
         return processing_time
@@ -285,8 +284,8 @@ class Camera():
         subpix_criteria = (cv2.TERM_CRITERIA_EPS+cv2.TERM_CRITERIA_MAX_ITER, 30, 0.1)
         calibration_flags = cv2.fisheye.CALIB_RECOMPUTE_EXTRINSIC+cv2.fisheye.CALIB_CHECK_COND+cv2.fisheye.CALIB_FIX_SKEW
 
-        objp = np.zeros((1, CHECKERBOARD[0]*CHECKERBOARD[1], 3), np.float32)
-        objp[0,:,:2] = np.mgrid[0:CHECKERBOARD[0], 0:CHECKERBOARD[1]].T.reshape(-1, 2)
+        objp = np.zeros( (CHECKERBOARD[0]*CHECKERBOARD[1], 1, 3) , np.float64)
+        objp[:,0, :2] = np.mgrid[0:CHECKERBOARD[0], 0:CHECKERBOARD[1]].T.reshape(-1, 2)
 
         _img_shape = None
         objpoints = [] # 3d point in real world space
@@ -301,7 +300,7 @@ class Camera():
         calbrate_cameras = None
 
         try:
-            npz_file = np.load('{}/calibration_data/{}p/camera_calibration{}.npz'.format(self.home_dir,  res_y, right_or_left))
+            npz_file = np.load('{}/calibration_data/{}p/camera_calibration{}.npz'.format(self.home_dir, res_y, right_or_left))
             if 'map1' and 'map2' in npz_file.files:
                 print("Camera calibration data has been found in cache.")
                 map1 = npz_file['map1']
@@ -342,11 +341,13 @@ class Camera():
                     print(file_name)
 
             # Opencv sample code uses the var 'grey' from the last opened picture
+            N_OK = len(objpoints)
             DIM= (res_x, res_y)
             K = np.zeros((3, 3))
             D = np.zeros((4, 1))
             rvecs = [np.zeros((1, 1, 3), dtype=np.float64) for i in range(N_OK)]
             tvecs = [np.zeros((1, 1, 3), dtype=np.float64) for i in range(N_OK)]
+
             rms, camera_matrix, distortion_coeff, _, _ = \
                 cv2.fisheye.calibrate(
                     objpoints,
@@ -359,6 +360,8 @@ class Camera():
                     calibration_flags,
                     (cv2.TERM_CRITERIA_EPS+cv2.TERM_CRITERIA_MAX_ITER, 30, 1e-6)
                 )
+
+            print("Root Means Squared:", rms)
 
             map1, map2 = cv2.fisheye.initUndistortRectifyMap(K, D, np.eye(3), K, DIM, cv2.CV_16SC2)
             np.savez('{}/calibration_data/{}p/camera_calibration{}.npz'.format(self.home_dir,  res_y, right_or_left),
