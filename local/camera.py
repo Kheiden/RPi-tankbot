@@ -88,7 +88,9 @@ class Camera():
         npzfile = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
         while True:
             imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array")
-            result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile, save_disparity_image=False)
+            result = self.create_disparity_map(imgL, imgR, res_x, res_y, leftMapX=npzfile['leftMapX'],
+                        leftMapY=npzfile['leftMapY'], rightMapX=npzfile['rightMapX'], rightMapY=npzfile['rightMapY'],
+                        save_disparity_image=False)
             frame_counter += 1
             processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             if processing_time >= time_on:
