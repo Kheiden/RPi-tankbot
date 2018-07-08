@@ -83,10 +83,10 @@ class Camera():
     def realtime_disparity_map_stream(self, time_on):
         frame_counter = 0
         processing_time01 = cv2.getTickCount()
-        x_res = 640
+        res_x = 640
         res_y = 480
         while True:
-            imgL, imgR = self.take_stereo_photo(x_res, y_res, type="image_array")
+            imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array")
             result = self.create_disparity_map(imgL, imgR, res_x, res_y, save_disparity_image=False)
             frame_counter += 1
             processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
@@ -462,14 +462,14 @@ class Camera():
         self.pwm_x.stop()
         self.pwm_y.stop()
 
-    def take_stereo_photo(self, x_res, y_res, filename=None, type="combined"):
+    def take_stereo_photo(self, res_x, res_y, filename=None, type="combined"):
         """
         type="combined" (or any other value) is a single .JPG file
         type="separate" is two separate .JPG files
         """
 
-        CAMERA_HEIGHT = y_res
-        CAMERA_WIDTH = x_res
+        CAMERA_HEIGHT = res_y
+        CAMERA_WIDTH = res_x
 
         print("CAMERA_WIDTH: {}, CAMERA_HEIGHT:{}".format(CAMERA_WIDTH, CAMERA_HEIGHT))
 
