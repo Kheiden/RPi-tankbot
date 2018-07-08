@@ -83,9 +83,11 @@ class Camera():
     def realtime_disparity_map_stream(self, time_on):
         frame_counter = 0
         processing_time01 = cv2.getTickCount()
+        x_res = 640
+        res_y = 480
         while True:
             imgL, imgR = self.take_stereo_photo(x_res, y_res, type="image_array")
-            result = self.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=False)
+            result = self.create_disparity_map(imgL, imgR, res_x, res_y, save_disparity_image=False)
             frame_counter += 1
             processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             if processing_time >= time_on:
