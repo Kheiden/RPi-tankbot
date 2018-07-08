@@ -79,6 +79,18 @@ class Camera():
         print('%s saved' % 'out.ply')
         return True
 
+
+    def realtime_disparity_map_stream(self, time_on):
+        frame_counter = 0
+        processing_time01 = cv2.getTickCount()
+        while True:
+            imgL, imgR = self.take_stereo_photo(x_res, y_res, type="image_array")
+            result = self.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=False)
+            frame_counter += 1
+            processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
+            if processing_time >= time_on:
+                return processing_time, frame_counter
+
     def create_disparity_map(self, imgLeft, imgRight, res_x=640, res_y=480, save_disparity_image=False):
         """
         create_disparity_map takes in two undistorted images from left and right cameras.
@@ -99,31 +111,31 @@ class Camera():
         rightMapY = npzfile['rightMapY']
         #rightROI = tuple(npzfile['rightROI'])
 
-        imgLeft_jpg = Image.fromarray(imgLeft)
-        imgRight_jpg = Image.fromarray(imgRight)
+        #imgLeft_jpg = Image.fromarray(imgLeft)
+        #imgRight_jpg = Image.fromarray(imgRight)
 
-        imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_distorted_left.jpg".format(file_name), format='JPEG')
-        imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_distorted_right.jpg".format(file_name), format='JPEG')
+        #imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_distorted_left.jpg".format(file_name), format='JPEG')
+        #imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_distorted_right.jpg".format(file_name), format='JPEG')
 
 
         imgLeft = cv2.remap(imgLeft, leftMapX, leftMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
         imgRight = cv2.remap(imgRight, rightMapX, rightMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
 
-        imgLeft_jpg = Image.fromarray(imgLeft)
-        imgRight_jpg = Image.fromarray(imgRight)
+        #imgLeft_jpg = Image.fromarray(imgLeft)
+        #imgRight_jpg = Image.fromarray(imgRight)
 
-        imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_left.jpg".format(file_name), format='JPEG')
-        imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_right.jpg".format(file_name), format='JPEG')
+        #imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_left.jpg".format(file_name), format='JPEG')
+        #imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_right.jpg".format(file_name), format='JPEG')
 
 
         grayLeft = cv2.cvtColor(imgLeft, cv2.COLOR_RGB2GRAY)
         grayRight = cv2.cvtColor(imgRight, cv2.COLOR_RGB2GRAY)
 
-        imgLeft_jpg = Image.fromarray(grayLeft)
-        imgRight_jpg = Image.fromarray(grayRight)
+        #imgLeft_jpg = Image.fromarray(grayLeft)
+        #imgRight_jpg = Image.fromarray(grayRight)
 
-        imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_left.jpg".format(file_name), format='JPEG')
-        imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_right.jpg".format(file_name), format='JPEG')
+        #imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_left.jpg".format(file_name), format='JPEG')
+        #imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_right.jpg".format(file_name), format='JPEG')
 
 
         # Initialize the stereo block matching object
