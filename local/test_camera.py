@@ -36,7 +36,7 @@ class TestCamera():
         time_on = 1
         # Target FPS
         fps = 2
-        processing_time, frame_counter = realtime_disparity_map_stream(time_on=time_on)
+        processing_time, frame_counter = self.c.realtime_disparity_map_stream(time_on=time_on)
         # %5 error tolerance for the stream to be on
         print(processing_time, frame_counter)
         assert processing_time <= (time_on * 1.05)
