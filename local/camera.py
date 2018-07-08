@@ -165,7 +165,7 @@ class Camera():
         norm_coeff = 255 / disparity.max()
         disparity_normalized = disparity * norm_coeff / 255
         # No clue why but the above normalization changes the imgL, so I need to readjust it
-        imgLeft = imgLeft / 255
+        #imgLeft = imgLeft / 255
 
         if save_disparity_image == True:
             jpg_image = Image.fromarray(disparity_normalized*255)
