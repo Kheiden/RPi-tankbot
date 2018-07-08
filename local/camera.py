@@ -48,7 +48,8 @@ class Camera():
                         [0, 0, 0,     -f], # so that y-axis looks up
                         [0, 0, 1,      0]])
         points = cv2.reprojectImageTo3D(disparity_map, Q)
-        #colors = cv2.cvtColor(imgL, cv2.COLOR_BGR2RGB)
+        #cv2.cvtColor(imgL, cv2.COLOR_BGR2RGB)
+        colors = imgL
         mask = disparity_map > disparity_map.min()
         out_points = points[mask]
         out_colors = colors[mask]
