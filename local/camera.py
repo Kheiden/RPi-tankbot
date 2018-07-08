@@ -171,7 +171,7 @@ class Camera():
             jpg_image = jpg_image.convert('RGB')
             jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_disparity_map.jpg".format(file_name), format='JPEG')
 
-        return imgLeft, disparity_normalized
+        return imgLeft, disparity
 
     def calibrate_stereo_cameras(self, res_x=640, res_y=480):
         # We need a lot of variables to calibrate the stereo camera
