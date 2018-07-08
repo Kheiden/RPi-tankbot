@@ -30,7 +30,7 @@ class TestCamera():
         result = self.c.create_3d_point_cloud(imgLeft[1], disparity_map)
         assert result
 
-    @pytest.mark.skip(reason="Not Yet Passed.")
+    #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_realtime_disparity_map_stream(self):
         # specify the amount of time that the stream is open for
         time_on = 1
