@@ -24,14 +24,14 @@ class TestCamera():
         self.c.stop_servos()
 
     def test_camera_frames(self):
-        time_on = 30
+        time_on = 3
         frame_counter = 0
         fps = 2
         res_x = 640
         res_y = 480
         processing_time01 = cv2.getTickCount()
         while True:
-            result = self.c.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
+            result = self.c.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=False)
             processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             frame_counter += 1
             if processing_time >= time_on:
