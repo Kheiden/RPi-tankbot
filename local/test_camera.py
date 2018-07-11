@@ -29,8 +29,8 @@ class TestCamera():
         fps = 2
         res_x = 640
         res_y = 480
+        processing_time01 = cv2.getTickCount()
         while True:
-            processing_time01 = cv2.getTickCount()
             result = self.c.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
             processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             frame_counter += 1
