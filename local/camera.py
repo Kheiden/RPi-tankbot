@@ -88,7 +88,7 @@ class Camera():
         res_y = 480
         npzfile = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
         while True:
-            imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array")
+            imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
             result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
             frame_counter += 1
             processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
@@ -465,7 +465,7 @@ class Camera():
         self.pwm_x.stop()
         self.pwm_y.stop()
 
-    def take_stereo_photo(self, res_x, res_y, filename=None, type="combined"):
+    def take_stereo_photo(self, res_x, res_y, filename=None, type="combined", override_warmup=False):
         """
         type="combined" (or any other value) is a single .JPG file
         type="separate" is two separate .JPG files
@@ -486,8 +486,12 @@ class Camera():
         left.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
         left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
+        if override_warmup == True:
+            num_photos = 1
+        else:
+            num_photos = 45
 
-        for i in range(45):
+        for i in range(num_photos):
             #This is used to "warm up" the camera before retrieving the photo
             left.grab()
             right.grab()

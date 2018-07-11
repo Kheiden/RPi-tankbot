@@ -23,17 +23,7 @@ class TestCamera():
         """
         self.c.stop_servos()
 
-
-    @pytest.mark.skip(reason="Passed.")
-    def test_create_3d_point_cloud(self):
-        res_x = 640
-        res_y = 480
-        imgL, imgR = self.c.take_stereo_photo(res_x, res_y, type="image_array")
-        imgLeft, disparity_map = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
-        result = self.c.create_3d_point_cloud(imgLeft, disparity_map)
-        assert result
-
-    @pytest.mark.skip(reason="Not Yet Passed.")
+    #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_realtime_disparity_map_stream(self):
         # specify the amount of time that the stream is open for
         time_on = 30
@@ -47,6 +37,16 @@ class TestCamera():
         #1) 6.18 seconds per frame (1 frame)
         #2) 5.39 seconds per frame (1 frame)
         #3) 4.46 seconds per frame (7 frames)
+
+    @pytest.mark.skip(reason="Passed.")
+    def test_create_3d_point_cloud(self):
+        res_x = 640
+        res_y = 480
+        imgL, imgR = self.c.take_stereo_photo(res_x, res_y, type="image_array")
+        imgLeft, disparity_map = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
+        result = self.c.create_3d_point_cloud(imgLeft, disparity_map)
+        assert result
+
 
     @pytest.mark.skip(reason="Passed.")
     def test_create_single_disparity_map(self):
