@@ -24,7 +24,7 @@ class TestCamera():
         self.c.stop_servos()
 
     def test_camera_frames(self):
-        time_on = 3
+        time_on = 30
         frame_counter = 0
         fps = 2
         res_x = 640
@@ -36,6 +36,8 @@ class TestCamera():
             frame_counter += 1
             if processing_time >= time_on:
                 break
+        print("processing_time:", processing_time)
+        print("frame_counter", frame_counter)
         assert processing_time <= (time_on * 1.05)
         assert frame_counter >= time_on * fps
 
