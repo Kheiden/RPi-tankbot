@@ -23,7 +23,22 @@ class TestCamera():
         """
         self.c.stop_servos()
 
-    #@pytest.mark.skip(reason="Not Yet Passed.")
+    def test_camera_frames(self):
+        time_on = 30
+        frame_counter = 0
+        fps = 2
+        while True:
+            processing_time01 = cv2.getTickCount()
+            result = self.c.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
+            processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
+            frame_counter += 1
+            if processing_time >= time_on:
+                break
+        assert processing_time <= (time_on * 1.05)
+        assert frame_counter >= time_on * fps
+
+
+    @pytest.mark.skip(reason="Not Yet Passed.")
     def test_realtime_disparity_map_stream(self):
         # specify the amount of time that the stream is open for
         time_on = 30
@@ -37,6 +52,7 @@ class TestCamera():
         #1) 6.18 seconds per frame (1 frame)
         #2) 5.39 seconds per frame (1 frame)
         #3) 4.46 seconds per frame (7 frames)
+        #4) 3.36 frames per second (9 frames)
 
     @pytest.mark.skip(reason="Passed.")
     def test_create_3d_point_cloud(self):
