@@ -13,7 +13,7 @@ class TestCamera():
         """ setup any state specific to the execution of the given class (which
         usually contains tests).
         """
-
+        self.m = movement.Movement()
         self.c = camera.Camera()
         self.home_dir = "/home/pi"
 
