@@ -554,6 +554,25 @@ class Camera():
                    b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
         right.release()
 
+    def start_disparity_map(self):
+        res_x = 640
+        res_y = 480
+        npzfile = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
+        while True:
+            imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
+            result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
+            
+            disparity = result[1]
+            norm_coeff = 255 / disparity.max()
+            disparity_normalized = disparity * norm_coeff / 255
+
+            jpg_image = Image.fromarray(disparity_normalized)
+            bytes_array = io.BytesIO()
+            jpg_image.save(bytes_array, format='JPEG')
+            jpg_image_bytes = bytes_array.getvalue()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
+
     def start_left_camera(self):
         CAMERA_WIDTH = 640
         CAMERA_HEIGHT = 480

@@ -40,6 +40,7 @@ class TestCamera():
         print("frame_counter", frame_counter)
         assert processing_time <= (time_on * 1.05)
         assert frame_counter >= time_on * fps
+        #2.2 seconds per frame
 
 
     @pytest.mark.skip(reason="Not Yet Passed.")

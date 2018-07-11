@@ -48,6 +48,11 @@ class Server():
             self.m.rotate(direction="left")
             return "ok"
 
+        @app.route("/disparity_map_stream")
+        def disparity_map_stream():
+            return Response(self.c.start_disparity_map(),
+                mimetype='multipart/x-mixed-replace; boundary=frame')
+
         @app.route("/left_camera_stream")
         def left_camera_stream():
             return Response(self.c.start_left_camera(),
