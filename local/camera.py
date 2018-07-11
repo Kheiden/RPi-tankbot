@@ -57,7 +57,7 @@ class Camera():
         verts = out_points
         colors = out_colors
 
-        file_name = "{}/RPi-tankbot/local/frames/out{}.ply".format(self.home_dir, file_num)
+        file_name = "{}/RPi-tankbot/local/cloud_points/out{}.ply".format(self.home_dir, file_num)
         ply_header = '''ply
         format ascii 1.0
         element vertex %(vert_num)d

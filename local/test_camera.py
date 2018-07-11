@@ -33,7 +33,7 @@ class TestCamera():
         res_x = 640
         res_y = 480
         npzfile = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
-        for file_num in range(7):
+        for file_num in range(8):
             imgL, imgR = self.c.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=False)
             result = self.c.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
             self.c.create_3d_point_cloud(result[0], result[1], file_num)
