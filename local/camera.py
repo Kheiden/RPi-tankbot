@@ -126,22 +126,22 @@ class Camera():
         imgLeft = cv2.remap(imgLeft, leftMapX, leftMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
         imgRight = cv2.remap(imgRight, rightMapX, rightMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
 
-        imgLeft_jpg = Image.fromarray(imgLeft)
-        imgRight_jpg = Image.fromarray(imgRight)
+        if save_disparity_image == True:
+            imgLeft_jpg = Image.fromarray(imgLeft)
+            imgRight_jpg = Image.fromarray(imgRight)
 
-        imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_left.jpg".format(file_name), format='JPEG')
-        imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_right.jpg".format(file_name), format='JPEG')
-
+            imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_left.jpg".format(file_name), format='JPEG')
+            imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_right.jpg".format(file_name), format='JPEG')
 
         grayLeft = cv2.cvtColor(imgLeft, cv2.COLOR_RGB2GRAY)
         grayRight = cv2.cvtColor(imgRight, cv2.COLOR_RGB2GRAY)
 
-        imgLeft_jpg = Image.fromarray(grayLeft)
-        imgRight_jpg = Image.fromarray(grayRight)
+        if save_disparity_image == True:
+            imgLeft_jpg = Image.fromarray(grayLeft)
+            imgRight_jpg = Image.fromarray(grayRight)
 
-        imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_left.jpg".format(file_name), format='JPEG')
-        imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_right.jpg".format(file_name), format='JPEG')
-
+            imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_left.jpg".format(file_name), format='JPEG')
+            imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_right.jpg".format(file_name), format='JPEG')
 
         # Initialize the stereo block matching object
         stereo = cv2.StereoBM_create()
@@ -561,12 +561,14 @@ class Camera():
         while True:
             imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
             result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
-            
             disparity = result[1]
+
             norm_coeff = 255 / disparity.max()
             disparity_normalized = disparity * norm_coeff / 255
 
-            jpg_image = Image.fromarray(disparity_normalized)
+            jpg_image = Image.fromarray(disparity_normalized*255)
+            jpg_image = jpg_image.convert('RGB')
+
             bytes_array = io.BytesIO()
             jpg_image.save(bytes_array, format='JPEG')
             jpg_image_bytes = bytes_array.getvalue()
