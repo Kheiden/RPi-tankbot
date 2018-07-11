@@ -36,7 +36,7 @@ class Camera():
         self.home_dir = "/home/pi"
         return
 
-    def create_3d_point_cloud(self, imgL, disparity_map):
+    def create_3d_point_cloud(self, imgL, disparity_map, file_num):
         """
         Based on sample code from OpenCV
         """
@@ -57,7 +57,7 @@ class Camera():
         verts = out_points
         colors = out_colors
 
-        fn = '/home/pi/RPi-tankbot/local/frames/out.ply'
+        file_name = "{}/RPi-tankbot/local/frames/out{}.ply".format(self.home_dir, file_num)
         ply_header = '''ply
         format ascii 1.0
         element vertex %(vert_num)d
@@ -73,11 +73,11 @@ class Camera():
         verts = verts.reshape(-1, 3)
         colors = colors.reshape(-1, 3)
         verts = np.hstack([verts, colors])
-        with open(fn, 'wb') as f:
+        with open(file_name, 'wb') as f:
             f.write((ply_header % dict(vert_num=len(verts))).encode('utf-8'))
             np.savetxt(f, verts, fmt='%f %f %f %d %d %d ')
 
-        print('%s saved' % 'out.ply')
+        print("3d cloud point saved to:", file_name)
         return True
 
 

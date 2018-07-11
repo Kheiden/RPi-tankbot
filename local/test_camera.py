@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 
+import movement
 import camera
 import time
 import cv2
@@ -23,6 +24,23 @@ class TestCamera():
         """
         self.c.stop_servos()
 
+    @pytest.mark.skip(reason="Not Yet Passes")
+    def test_create_3d_surroundings(self):
+        """
+        This test will be used to create 8 3d cloud points
+        then stitch them together to form the environment surrounding the robot
+        """
+        res_x = 640
+        res_y = 480
+        npzfile = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
+        for file_num in range(7):
+            imgL, imgR = self.c.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=False)
+            result = self.c.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
+            self.c.create_3d_point_cloud(result[0], result[1], file_num)
+            # It takes about 5 seconds for a full turn, so 5/8 = 0.625 sec
+            self.m.rotate(direction="right", movement_time=0.625)
+        assert True
+
     @pytest.mark.skip(reason="Test Failing.")
     def test_camera_frames(self):
         time_on = 30
@@ -41,7 +59,7 @@ class TestCamera():
         print("frame_counter", frame_counter)
         assert processing_time <= (time_on * 1.05)
         assert frame_counter >= time_on * fps
-        #2.2 seconds per frame
+        #2.2 seconds per frame (14 frames)
 
 
     @pytest.mark.skip(reason="Test Failing.")
