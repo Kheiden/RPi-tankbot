@@ -584,9 +584,9 @@ class Camera():
         res_x = 640
         res_y = 480
         max_queue_size = 900 # 30 seconds at 30 fps
-        while input_queue.qsize() < max_queue_size:
+        while self.input_queue.qsize() < max_queue_size:
             imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
-            input_queue.put((imgL, imgR))
+            self.input_queue.put((imgL, imgR))
 
     def start_disparity_map(self):
         res_x = 640
@@ -605,7 +605,7 @@ class Camera():
         for i in range(4):
             thread = threading.Thread(group=None, target=self.threaded_disparity_map, name="Thread_num{}".format(i), args=(npzfile,))
             thread.start()
-            print("Starting Thread_num", var1)
+            print("Starting Thread_num", i)
 
         # finally, rest the global interperter lock here:
         while True:
