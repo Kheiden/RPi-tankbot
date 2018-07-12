@@ -489,13 +489,14 @@ class Camera():
 
         for i in range(num_photos):
             #This is used to "warm up" the camera before retrieving the photo
-            left.grab()
-            right.grab()
+            ret_left = left.grab()
+            ret_right = right.grab()
         _, rightFrame = right.retrieve()
         _, leftFrame = left.retrieve()
         right.release()
         left.release()
-
+        ret_left or ret_right == False:
+            return (None, None)
         if quick_capture == False:
             imgRGB_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2RGB)
             imgRGB_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2RGB)
