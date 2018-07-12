@@ -25,7 +25,7 @@ class TestCamera():
         self.c.stop_servos()
 
 
-    #@pytest.mark.skip(reason="Not Yet Passed.")
+    #@pytest.mark.skip(reason="Passed.")
     def test_stereo_photo_speed(self):
         """
         I want to take stereo photos as fast as possible
@@ -57,7 +57,7 @@ class TestCamera():
                 left=left,
                 type="image_array",
                 override_warmup=True,
-                quick_capture=False)
+                quick_capture=True)
             type_left = type(imgGRAY_left)
             type_right =type(imgGRAY_right)
             #print(type_left, type_right)

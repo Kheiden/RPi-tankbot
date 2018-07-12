@@ -591,7 +591,13 @@ class Camera():
         res_y = 480
         max_queue_size = 900 # 30 seconds at 30 fps
         while self.input_queue.qsize() < max_queue_size:
-            imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
+            #imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
+            imgGRAY_left, imgGRAY_right = self.c.take_stereo_photo(x_res, y_res,
+                right=right,
+                left=left,
+                type="image_array",
+                override_warmup=True,
+                quick_capture=True)
             print("Putting image in self.input_queue")
             self.input_queue.put((imgL, imgR))
 
