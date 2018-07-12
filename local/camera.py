@@ -495,7 +495,7 @@ class Camera():
         _, leftFrame = left.retrieve()
         right.release()
         left.release()
-        ret_left or ret_right == False:
+        if ret_left or ret_right == False:
             return (None, None)
         if quick_capture == False:
             imgRGB_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2RGB)
