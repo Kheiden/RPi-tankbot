@@ -600,7 +600,7 @@ class Camera():
         thread = threading.Thread(group=None, target=self.threaded_take_stereo_photo, name="Thread_camera")
         thread.start()
         print("Starting Thread_camera")
-
+        time.sleep(0.5)
         # second, start the threads for disparity_map processing
         for i in range(4):
             thread = threading.Thread(group=None, target=self.threaded_disparity_map, name="Thread_num{}".format(i), args=(npzfile,))
