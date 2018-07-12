@@ -595,7 +595,7 @@ class Camera():
         max_queue_size = 900 # 30 seconds at 30 fps
         while self.input_queue.qsize() < max_queue_size:
             #imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
-            imgBGR_left, imgBGR_right = self.c.take_stereo_photo(x_res, y_res,
+            imgBGR_left, imgBGR_right = self.take_stereo_photo(res_x, res_y,
                 right=right,
                 left=left,
                 type="image_array",
@@ -620,7 +620,7 @@ class Camera():
         time.sleep(0.5)
         print("main thread waking up")
         # second, start the threads for disparity_map processing
-        for i in range(8):
+        for i in range(8 ):
             thread = threading.Thread(group=None, target=self.threaded_disparity_map, name="Thread_num{}".format(i), args=(npzfile,))
             print("Starting Thread_num", i)
             thread.start()

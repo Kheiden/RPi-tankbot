@@ -30,8 +30,8 @@ class TestCamera():
         """
         I want to take stereo photos as fast as possible
         """
-        x_res = 640
-        y_res = 480
+        res_x = 640
+        res_y = 480
 
         fps = 15
         time_on = 45
@@ -40,19 +40,19 @@ class TestCamera():
         processing_time01 = cv2.getTickCount()
 
         right = cv2.VideoCapture(1)
-        right.set(cv2.CAP_PROP_FRAME_WIDTH, x_res)
-        right.set(cv2.CAP_PROP_FRAME_HEIGHT, y_res)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
         right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
         left = cv2.VideoCapture(0)
-        left.set(cv2.CAP_PROP_FRAME_WIDTH, x_res)
-        left.set(cv2.CAP_PROP_FRAME_HEIGHT, y_res)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
         left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
         fake_frames = 0
         real_frames = 0
         while True:
-            imgBGR_left, imgBGR_right = self.c.take_stereo_photo(x_res, y_res,
+            imgBGR_left, imgBGR_right = self.c.take_stereo_photo(res_x, res_y,
                 right=right,
                 left=left,
                 type="image_array",
@@ -208,59 +208,59 @@ class TestCamera():
 
     @pytest.mark.skip(reason="Passed.")
     def test_chessboard_photos(self):
-        x_res = 640 #1920
-        y_res = 480 #1080
+        res_x = 640 #1920
+        res_y = 480 #1080
         for i in range(15):
-            width, height = self.c.take_stereo_photo(x_res, y_res, type="separate")
-            assert width == x_res
-            assert height == y_res
+            width, height = self.c.take_stereo_photo(res_x, res_y, type="separate")
+            assert width == res_x
+            assert height == res_y
 
     @pytest.mark.skip(reason="Passed.")
     def test_stereo_photo(self):
-        x_res = 1920
-        y_res = 1080
-        width, height = self.c.take_stereo_photo(x_res, y_res, type="combined")
-        assert width == x_res*2
-        assert height == y_res
+        res_x = 1920
+        res_y = 1080
+        width, height = self.c.take_stereo_photo(res_x, res_y, type="combined")
+        assert width == res_x*2
+        assert height == res_y
 
-        x_res = 1920
-        y_res = 1080
-        width, height = self.c.take_stereo_photo(x_res, y_res, type="separate")
-        assert width == x_res
-        assert height == y_res
+        res_x = 1920
+        res_y = 1080
+        width, height = self.c.take_stereo_photo(res_x, res_y, type="separate")
+        assert width == res_x
+        assert height == res_y
 
     @pytest.mark.skip(reason="Passed.")
     def test_concat_cameras(self):
         # This test will take a single still photo at max resolution with both cameras
-        x_res = 320
-        y_res = 240
-        width, height = self.c.take_stereo_photo(x_res, y_res, type="combined")
-        assert width == x_res*2
-        assert height == y_res
+        res_x = 320
+        res_y = 240
+        width, height = self.c.take_stereo_photo(res_x, res_y, type="combined")
+        assert width == res_x*2
+        assert height == res_y
 
-        x_res = 640
-        y_res = 480
-        width, height = self.c.take_stereo_photo(x_res, y_res, type="combined")
-        assert width == x_res*2
-        assert height == y_res
+        res_x = 640
+        res_y = 480
+        width, height = self.c.take_stereo_photo(res_x, res_y, type="combined")
+        assert width == res_x*2
+        assert height == res_y
 
-        x_res = 1280
-        y_res = 720
-        width, height = self.c.take_stereo_photo(x_res, y_res , type="combined")
-        assert width == x_res*2
-        assert height == y_res
+        res_x = 1280
+        res_y = 720
+        width, height = self.c.take_stereo_photo(res_x, res_y , type="combined")
+        assert width == res_x*2
+        assert height == res_y
 
-        x_res = 1904
-        y_res = 1080
-        width, height = self.c.take_stereo_photo(x_res, y_res , type="combined")
-        assert width == x_res*2
-        assert height == y_res
+        res_x = 1904
+        res_y = 1080
+        width, height = self.c.take_stereo_photo(res_x, res_y , type="combined")
+        assert width == res_x*2
+        assert height == res_y
 
-        x_res = 1920
-        y_res = 1080
-        width, height = self.c.take_stereo_photo(x_res, y_res , type="combined")
-        assert width == x_res*2
-        assert height == y_res
+        res_x = 1920
+        res_y = 1080
+        width, height = self.c.take_stereo_photo(res_x, res_y , type="combined")
+        assert width == res_x*2
+        assert height == res_y
 
     @pytest.mark.skip(reason="Not yet passed.")
     def test_camera_rotation(self):
