@@ -500,8 +500,8 @@ class Camera():
             imgRGB_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2RGB)
             imgRGB_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2RGB)
         elif quick_capture == True:
-            imgRGB_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2GRAY)
-            imgRGB_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2GRAY)
+            imgGRAY_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2GRAY)
+            imgGRAY_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2GRAY)
             return imgGRAY_left, imgGRAY_right
         if type == "separate":
             jpg_image_right = Image.fromarray(imgRGB_right)
