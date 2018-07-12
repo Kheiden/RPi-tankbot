@@ -108,6 +108,7 @@ class Camera():
           res_x: width of the picture to be taken
           res_y: height of the picture to be taken
           npzfile: location to the stereo calibration data
+          save_disparity_image: (bool) Whether or not to save the image as a normalized jpg
         """
         # take two photos
         file_name = "disparity_test"
@@ -645,9 +646,10 @@ class Camera():
 
         # finally, rest the global interperter lock here:
         while True:
-            jpg_image_bytes = self.output_queue.get()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
+            if self.output_queue.empty() is not True:
+                jpg_image_bytes = self.output_queue.get()
+                yield (b'--frame\r\n'
+                    b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
 
     def start_left_camera(self):
         CAMERA_WIDTH = 640
