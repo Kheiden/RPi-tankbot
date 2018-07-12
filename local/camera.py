@@ -593,6 +593,17 @@ class Camera():
         res_x = 640
         res_y = 480
         max_queue_size = 900 # 30 seconds at 30 fps
+        
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
         while self.input_queue.qsize() < max_queue_size:
             #imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
             imgBGR_left, imgBGR_right = self.take_stereo_photo(res_x, res_y,
