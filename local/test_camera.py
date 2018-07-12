@@ -65,14 +65,16 @@ class TestCamera():
                 fake_frames += 1
             if type_right == type(None):
                 fake_frames += 1
-            if (type_left and type_right) != None:
+            if (type_left and type_right) != type(None):
                 real_frames += 2
-            frame_counter += 1
+            frame_counter += 2
 
             processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             if processing_time >= time_on:
                 break
 
+        right.release()
+        left.release()
         print("processing_time:", processing_time)
         print("frame_counter", frame_counter)
         print("frames per second:", (frame_counter/processing_time))
