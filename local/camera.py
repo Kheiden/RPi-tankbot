@@ -495,6 +495,7 @@ class Camera():
         _, leftFrame = left.retrieve()
         right.release()
         left.release()
+        print(ret_left, ret_right)
         if ret_left or ret_right == False:
             return (None, None)
         if quick_capture == False:

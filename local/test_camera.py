@@ -34,7 +34,7 @@ class TestCamera():
         y_res = 480
 
         fps = 5
-        time_on = 30
+        time_on = 2
         frame_counter = 0
 
         processing_time01 = cv2.getTickCount()
