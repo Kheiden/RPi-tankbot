@@ -467,28 +467,22 @@ class Camera():
         self.pwm_x.stop()
         self.pwm_y.stop()
 
-    def take_stereo_photo(self, res_x, res_y, filename=None, type="combined", override_warmup=False):
+    def take_stereo_photo(self, res_x, res_y, right, left, override_warmup, filename=None, type="combined", quick_capture=False):
         """
         type="combined" (or any other value) is a single .JPG file
         type="separate" is two separate .JPG files
+
+        quick_capture is used to take the photos as fast as possible.
+            This returns greyscale photos to be used in the disparity_map_stream
+            along with other speed improvements (might combine with left/right)
         """
         #processing_time01 = cv2.getTickCount()
         CAMERA_HEIGHT = res_y
         CAMERA_WIDTH = res_x
 
-        print("CAMERA_WIDTH: {}, CAMERA_HEIGHT:{}".format(CAMERA_WIDTH, CAMERA_HEIGHT))
+        print("Photo Resolution: res_y: {}, res_x: {}".format(res_y, res_x))
 
-        right = cv2.VideoCapture(1)
-        right.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
-        right.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
-        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
-
-        left = cv2.VideoCapture(0)
-        left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
-        left.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
-        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
-
-        if override_warmup == True:
+        if override_warmup or quick_capture == True:
             num_photos = 1
         else:
             num_photos = 45
@@ -502,8 +496,13 @@ class Camera():
         right.release()
         left.release()
 
-        imgRGB_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2RGB)
-        imgRGB_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2RGB)
+        if quick_capture == False:
+            imgRGB_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2RGB)
+            imgRGB_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2RGB)
+        elif quick_capture == True:
+            imgRGB_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2GRAY)
+            imgRGB_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2GRAY)
+            return imgGRAY_left, imgGRAY_right
         if type == "separate":
             jpg_image_right = Image.fromarray(imgRGB_right)
             jpg_image_left = Image.fromarray(imgRGB_left)

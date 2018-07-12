@@ -38,8 +38,24 @@ class TestCamera():
         frame_counter = 0
 
         processing_time01 = cv2.getTickCount()
+
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
         while True:
-            imgRGB_left, imgRGB_right = self.c.take_stereo_photo(x_res, y_res, type="separate")
+            imgGRAY_left, imgGRAY_right = self.c.take_stereo_photo(x_res, y_res,
+                right=right,
+                left=left,
+                type="image_array",
+                override_warmup=True,
+                quick_capture=True)
             frame_counter += 1
             processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             if processing_time >= time_on:
@@ -50,6 +66,7 @@ class TestCamera():
         print("frames per second:", (frame_counter/processing_time))
         assert processing_time <= (time_on * 1.05)
         assert frame_counter >= time_on * fps
+        #frames per second: 0.2647685324087231
 
     @pytest.mark.skip(reason="Not Yet Passed")
     def test_create_3d_surroundings(self):
