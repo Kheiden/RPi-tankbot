@@ -567,7 +567,10 @@ class Camera():
         time.sleep(1)
         while True:
             print("self.input_queue.qsize():", self.input_queue.qsize())
-            imgL, imgR = self.input_queue.get(timeout=8)
+            imgBGR_left, imgBGR_right = self.input_queue.get(timeout=8)
+
+            imgL = cv2.cvtColor(imgBGR_left,cv2.COLOR_BGR2GRAY)
+            imgR = cv2.cvtColor(imgBGR_right,cv2.COLOR_BGR2GRAY)
 
             result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
             disparity = result[1]
@@ -592,14 +595,14 @@ class Camera():
         max_queue_size = 900 # 30 seconds at 30 fps
         while self.input_queue.qsize() < max_queue_size:
             #imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
-            imgGRAY_left, imgGRAY_right = self.c.take_stereo_photo(x_res, y_res,
+            imgBGR_left, imgBGR_right = self.c.take_stereo_photo(x_res, y_res,
                 right=right,
                 left=left,
                 type="image_array",
                 override_warmup=True,
                 quick_capture=True)
             print("Putting image in self.input_queue")
-            self.input_queue.put((imgL, imgR))
+            self.input_queue.put((imgBGR_left, imgBGR_right))
 
     def start_disparity_map(self):
         res_x = 640
@@ -617,7 +620,7 @@ class Camera():
         time.sleep(0.5)
         print("main thread waking up")
         # second, start the threads for disparity_map processing
-        for i in range(4):
+        for i in range(8):
             thread = threading.Thread(group=None, target=self.threaded_disparity_map, name="Thread_num{}".format(i), args=(npzfile,))
             print("Starting Thread_num", i)
             thread.start()
