@@ -34,7 +34,7 @@ class TestCamera():
         y_res = 480
 
         fps = 5
-        time_on = 3
+        time_on = 30
         frame_counter = 0
 
         processing_time01 = cv2.getTickCount()
@@ -60,13 +60,13 @@ class TestCamera():
                 quick_capture=False)
             type_left = type(imgGRAY_left)
             type_right =type(imgGRAY_right)
-            print(type_left, type_right)
+            #print(type_left, type_right)
             if type_left == type(None):
                 fake_frames += 1
             if type_right == type(None):
                 fake_frames += 1
             if (type_left and type_right) != None:
-                fake_frames += 2
+                real_frames += 2
             frame_counter += 1
 
             processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
