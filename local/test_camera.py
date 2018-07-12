@@ -24,6 +24,33 @@ class TestCamera():
         """
         self.c.stop_servos()
 
+
+    #@pytest.mark.skip(reason="Not Yet Passed.")
+    def test_stereo_photo_speed(self):
+        """
+        I want to take stereo photos as fast as possible
+        """
+        x_res = 640
+        y_res = 480
+
+        fps = 5
+        time_on = 30
+        frame_counter = 0
+
+        processing_time01 = cv2.getTickCount()
+        while True:
+            imgRGB_left, imgRGB_right = self.c.take_stereo_photo(x_res, y_res, type="separate")
+            frame_counter += 1
+            if processing_time >= time_on:
+                break
+        processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
+
+        print("processing_time:", processing_time)
+        print("frame_counter", frame_counter)
+        print("frames per second:", (processing_time/frame_counter))
+        assert processing_time <= (time_on * 1.05)
+        assert frame_counter >= time_on * fps
+
     @pytest.mark.skip(reason="Not Yet Passed")
     def test_create_3d_surroundings(self):
         """
