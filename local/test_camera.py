@@ -34,7 +34,7 @@ class TestCamera():
         y_res = 480
 
         fps = 5
-        time_on = 5
+        time_on = 30
         frame_counter = 0
 
         processing_time01 = cv2.getTickCount()
@@ -80,7 +80,7 @@ class TestCamera():
         print("frames per second:", (frame_counter/processing_time))
         print("fake_frames, real_frames", fake_frames, real_frames)
         assert processing_time <= (time_on * 1.05)
-        assert frame_counter >= time_on * fps
+        assert (frame_counter / 2) >= time_on * fps
         assert fake_frames < 30
         #frames per second: 0.2647685324087231
 
