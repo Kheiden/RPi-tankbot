@@ -41,9 +41,10 @@ class TestCamera():
         while True:
             imgRGB_left, imgRGB_right = self.c.take_stereo_photo(x_res, y_res, type="separate")
             frame_counter += 1
+            processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             if processing_time >= time_on:
                 break
-        processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
+
 
         print("processing_time:", processing_time)
         print("frame_counter", frame_counter)
