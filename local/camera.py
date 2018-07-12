@@ -487,6 +487,7 @@ class Camera():
         else:
             num_photos = 45
 
+        time.sleep(0.5)
         for i in range(num_photos):
             #This is used to "warm up" the camera before retrieving the photo
             ret_left = left.grab()
