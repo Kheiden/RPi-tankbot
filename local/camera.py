@@ -592,6 +592,7 @@ class Camera():
             jpg_image.save(bytes_array, format='JPEG')
             jpg_image_bytes = bytes_array.getvalue()
             self.output_queue.put(jpg_image_bytes)
+            print("~~~putting frame in output queue!")
             if self.input_queue.empty():
                 break
 
@@ -620,6 +621,10 @@ class Camera():
                 override_warmup=True,
                 quick_capture=True)
             print("Putting image in self.input_queue")
+
+            # TODO- remove this sleep command
+            time.sleep(0.5)
+
             self.input_queue.put((imgBGR_left, imgBGR_right))
 
     def start_disparity_map(self):
