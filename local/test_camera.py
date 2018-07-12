@@ -45,10 +45,9 @@ class TestCamera():
             if processing_time >= time_on:
                 break
 
-
         print("processing_time:", processing_time)
         print("frame_counter", frame_counter)
-        print("frames per second:", (processing_time/frame_counter))
+        print("frames per second:", (frame_counter/processing_time))
         assert processing_time <= (time_on * 1.05)
         assert frame_counter >= time_on * fps
 
