@@ -60,6 +60,7 @@ class TestCamera():
                 quick_capture=False)
             type_left = type(imgGRAY_left)
             type_right =type(imgGRAY_right)
+            print(type_left, type_right)
             if type_left == None:
                 fake_frames += 1
             if type_right == None:
