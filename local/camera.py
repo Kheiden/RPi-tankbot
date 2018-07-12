@@ -556,29 +556,28 @@ class Camera():
                    b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
         right.release()
 
-    def threaded_disparity_map(self, npzfile, thread_num):
+    def threaded_disparity_map(self, npzfile):
         res_x = 640
         res_y = 480
         while True:
-            try:
-                imgL, imgR = self.input_queue.get(timeout=8)
+            imgL, imgR = self.input_queue.get(timeout=8)
 
-                result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
-                disparity = result[1]
+            result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
+            disparity = result[1]
 
-                norm_coeff = 255 / disparity.max()
-                disparity_normalized = disparity * norm_coeff / 255
+            norm_coeff = 255 / disparity.max()
+            disparity_normalized = disparity * norm_coeff / 255
 
-                jpg_image = Image.fromarray(disparity_normalized*255)
-                jpg_image = jpg_image.convert('RGB')
+            jpg_image = Image.fromarray(disparity_normalized*255)
+            jpg_image = jpg_image.convert('RGB')
 
-                bytes_array = io.BytesIO()
-                jpg_image.save(bytes_array, format='JPEG')
-                jpg_image_bytes = bytes_array.getvalue()
-                self.output_queue.put(jpg_image_bytes)
-            except queue.Empty:
-                print("Queue is empty.  Shutting down thread_num", thread_num)
+            bytes_array = io.BytesIO()
+            jpg_image.save(bytes_array, format='JPEG')
+            jpg_image_bytes = bytes_array.getvalue()
+            self.output_queue.put(jpg_image_bytes)
+            if self.input_queue.empty():
                 break
+
 
     def threaded_take_stereo_photo(self):
         res_x = 640
@@ -605,7 +604,7 @@ class Camera():
         print("main thread waking up")
         # second, start the threads for disparity_map processing
         for i in range(4):
-            thread = threading.Thread(group=None, target=self.threaded_disparity_map, name="Thread_num{}".format(i), args=(npzfile, thread_num))
+            thread = threading.Thread(group=None, target=self.threaded_disparity_map, name="Thread_num{}".format(i), args=(npzfile,))
             print("Starting Thread_num", i)
             thread.start()
 
