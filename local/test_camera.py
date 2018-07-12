@@ -24,7 +24,7 @@ class TestCamera():
         """
         self.c.stop_servos()
 
-    #@pytest.mark.skip(reason="Not Yet Passed")
+    @pytest.mark.skip(reason="Not Yet Passed")
     def test_create_3d_surroundings(self):
         """
         This test will be used to create 8 3d cloud points

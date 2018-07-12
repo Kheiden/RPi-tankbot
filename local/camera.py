@@ -554,24 +554,60 @@ class Camera():
                    b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
         right.release()
 
+    def threaded_disparity_map(self, npzfile):
+        res_x = 640
+        res_y = 480
+        while True:
+            try:
+                imgL, imgR = self.input_queue.get(timeout=5)
+
+                result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
+                disparity = result[1]
+
+                norm_coeff = 255 / disparity.max()
+                disparity_normalized = disparity * norm_coeff / 255
+
+                jpg_image = Image.fromarray(disparity_normalized*255)
+                jpg_image = jpg_image.convert('RGB')
+
+                bytes_array = io.BytesIO()
+                jpg_image.save(bytes_array, format='JPEG')
+                jpg_image_bytes = bytes_array.getvalue()
+                self.output_queue.put(jpg_image_bytes)
+            except queue.Empty:
+                print("Queue is empty.  Shutting down thread")
+                break
+
+    def threaded_take_stereo_photo(self):
+        res_x = 640
+        res_y = 480
+        max_queue_size = 900 # 30 seconds at 30 fps
+        while input_queue.qsize() < max_queue_size:
+            imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
+            input_queue.put((imgL, imgR))
+
     def start_disparity_map(self):
         res_x = 640
         res_y = 480
         npzfile = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
+
+        self.input_queue = queue.Queue()
+        self.output_queue = queue.Queue()
+
+        # first, start the thread for the camera
+        thread = threading.Thread(group=None, target=self.threaded_take_stereo_photo, name="Thread_camera")
+        thread.start()
+        print("Starting Thread_camera")
+
+        # second, start the threads for disparity_map processing
+        for i in range(4):
+            thread = threading.Thread(group=None, target=self.threaded_disparity_map, name="Thread_num{}".format(i), args=(npzfile,))
+            thread.start()
+            print("Starting Thread_num", var1)
+
+        # finally, rest the global interperter lock here:
         while True:
-            imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
-            result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
-            disparity = result[1]
-
-            norm_coeff = 255 / disparity.max()
-            disparity_normalized = disparity * norm_coeff / 255
-
-            jpg_image = Image.fromarray(disparity_normalized*255)
-            jpg_image = jpg_image.convert('RGB')
-
-            bytes_array = io.BytesIO()
-            jpg_image.save(bytes_array, format='JPEG')
-            jpg_image_bytes = bytes_array.getvalue()
+            jpg_image_bytes = self.output_queue.get()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
 
