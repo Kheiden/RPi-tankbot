@@ -652,9 +652,11 @@ class Camera():
         # finally, rest the global interperter lock here:
         while True:
             if self.output_queue.empty() is not True:
+                print("displaying image!")
                 jpg_image_bytes = self.output_queue.get()
                 yield (b'--frame\r\n'
                     b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
+            time.sleep(0.5)
 
     def start_left_camera(self):
         CAMERA_WIDTH = 640
