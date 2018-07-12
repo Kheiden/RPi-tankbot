@@ -102,6 +102,12 @@ class Camera():
         create_disparity_map takes in two undistorted images from left and right cameras.
         This function will undistort the images by passing each image to undistort_image
 
+        param:
+          imgLeft (gray image only)
+          imgRight (gray image only)
+          res_x: width of the picture to be taken
+          res_y: height of the picture to be taken
+          npzfile: location to the stereo calibration data
         """
         # take two photos
         file_name = "disparity_test"
@@ -135,8 +141,8 @@ class Camera():
             imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_left.jpg".format(file_name), format='JPEG')
             imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_right.jpg".format(file_name), format='JPEG')
 
-        grayLeft = cv2.cvtColor(imgLeft, cv2.COLOR_RGB2GRAY)
-        grayRight = cv2.cvtColor(imgRight, cv2.COLOR_RGB2GRAY)
+        grayLeft = imgLeft
+        grayRight = imgLeft
 
         if save_disparity_image == True:
             imgLeft_jpg = Image.fromarray(grayLeft)
@@ -593,7 +599,7 @@ class Camera():
         res_x = 640
         res_y = 480
         max_queue_size = 900 # 30 seconds at 30 fps
-        
+
         right = cv2.VideoCapture(1)
         right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
         right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
