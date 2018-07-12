@@ -49,6 +49,8 @@ class TestCamera():
         left.set(cv2.CAP_PROP_FRAME_HEIGHT, y_res)
         left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
+        fake_frames = 0
+        real_frames = 0
         while True:
             imgGRAY_left, imgGRAY_right = self.c.take_stereo_photo(x_res, y_res,
                 right=right,
@@ -56,7 +58,16 @@ class TestCamera():
                 type="image_array",
                 override_warmup=True,
                 quick_capture=False)
+            type_left = type(imgGRAY_left)
+            type_right =type(imgGRAY_right)
+            if type_left == None:
+                fake_frames += 1
+            if type_right == None:
+                fake_frames += 1
+            if (type_left and type_right) != None:
+                fake_frames += 2
             frame_counter += 1
+
             processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             if processing_time >= time_on:
                 break
@@ -64,8 +75,10 @@ class TestCamera():
         print("processing_time:", processing_time)
         print("frame_counter", frame_counter)
         print("frames per second:", (frame_counter/processing_time))
+        print("fake_frames, real_frames", fake_frames, real_frames)
         assert processing_time <= (time_on * 1.05)
         assert frame_counter >= time_on * fps
+        assert fake_frames < 30
         #frames per second: 0.2647685324087231
 
     @pytest.mark.skip(reason="Not Yet Passed")
