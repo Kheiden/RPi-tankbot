@@ -480,14 +480,13 @@ class Camera():
         CAMERA_HEIGHT = res_y
         CAMERA_WIDTH = res_x
 
-        print("Photo Resolution: res_y: {}, res_x: {}".format(res_y, res_x))
+        #print("Photo Resolution: res_y: {}, res_x: {}".format(res_y, res_x))
 
         if override_warmup or quick_capture == True:
             num_photos = 1
         else:
             num_photos = 45
 
-        time.sleep(0.5)
         for i in range(num_photos):
             #This is used to "warm up" the camera before retrieving the photo
             ret_left = left.grab()
@@ -495,7 +494,7 @@ class Camera():
         _, rightFrame = right.retrieve()
         _, leftFrame = left.retrieve()
 
-        print(ret_left, ret_right)
+        #print(ret_left, ret_right)
 
         if ret_left == False:
             print("aww man")
@@ -508,9 +507,10 @@ class Camera():
             imgRGB_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2RGB)
             imgRGB_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2RGB)
         elif quick_capture == True:
-            imgGRAY_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2GRAY)
-            imgGRAY_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2GRAY)
-            return imgGRAY_left, imgGRAY_right
+            #imgGRAY_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2GRAY)
+            #imgGRAY_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2GRAY)
+            #return imgGRAY_left, imgGRAY_right
+            return leftFrame, rightFrame
         if type == "separate":
             jpg_image_right = Image.fromarray(imgRGB_right)
             jpg_image_left = Image.fromarray(imgRGB_left)
