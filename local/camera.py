@@ -556,12 +556,12 @@ class Camera():
                    b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
         right.release()
 
-    def threaded_disparity_map(self, npzfile):
+    def threaded_disparity_map(self, npzfile, thread_num):
         res_x = 640
         res_y = 480
         while True:
             try:
-                imgL, imgR = self.input_queue.get(timeout=5)
+                imgL, imgR = self.input_queue.get(timeout=8)
 
                 result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
                 disparity = result[1]
@@ -577,7 +577,7 @@ class Camera():
                 jpg_image_bytes = bytes_array.getvalue()
                 self.output_queue.put(jpg_image_bytes)
             except queue.Empty:
-                print("Queue is empty.  Shutting down thread")
+                print("Queue is empty.  Shutting down thread_num", thread_num)
                 break
 
     def threaded_take_stereo_photo(self):
@@ -598,14 +598,17 @@ class Camera():
 
         # first, start the thread for the camera
         thread = threading.Thread(group=None, target=self.threaded_take_stereo_photo, name="Thread_camera")
-        thread.start()
         print("Starting Thread_camera")
+        thread.start()
+        print("Sleeping main thread...")
         time.sleep(0.5)
+        print("main thread waking up")
         # second, start the threads for disparity_map processing
         for i in range(4):
-            thread = threading.Thread(group=None, target=self.threaded_disparity_map, name="Thread_num{}".format(i), args=(npzfile,))
-            thread.start()
+            thread = threading.Thread(group=None, target=self.threaded_disparity_map, name="Thread_num{}".format(i), args=(npzfile, thread_num))
             print("Starting Thread_num", i)
+            thread.start()
+
 
         # finally, rest the global interperter lock here:
         while True:
