@@ -497,10 +497,8 @@ class Camera():
         #print(ret_left, ret_right)
 
         if ret_left == False:
-            print("aww man")
             return (None, None)
         if ret_right == False:
-            print("aww man2")
             return (None, None)
 
         if quick_capture == False:

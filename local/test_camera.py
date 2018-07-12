@@ -33,7 +33,7 @@ class TestCamera():
         x_res = 640
         y_res = 480
 
-        fps = 30
+        fps = 15
         time_on = 45
         frame_counter = 0
 
@@ -75,12 +75,13 @@ class TestCamera():
 
         right.release()
         left.release()
+
         print("processing_time:", processing_time)
         print("frame_counter", frame_counter)
         print("frames per second:", (frame_counter/processing_time))
         print("fake_frames, real_frames", fake_frames, real_frames)
         assert processing_time <= (time_on * 1.05)
-        assert (frame_counter / 2) >= time_on * fps
+        assert (frame_counter) >= time_on * fps
         assert fake_frames < 30
         #frames per second: 0.2647685324087231
 
