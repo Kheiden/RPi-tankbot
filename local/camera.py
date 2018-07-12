@@ -559,7 +559,9 @@ class Camera():
     def threaded_disparity_map(self, npzfile):
         res_x = 640
         res_y = 480
+        time.sleep(1)
         while True:
+            print("self.input_queue.qsize():", self.input_queue.qsize())
             imgL, imgR = self.input_queue.get(timeout=8)
 
             result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
@@ -585,6 +587,7 @@ class Camera():
         max_queue_size = 900 # 30 seconds at 30 fps
         while self.input_queue.qsize() < max_queue_size:
             imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
+            print("Putting image in self.input_queue")
             self.input_queue.put((imgL, imgR))
 
     def start_disparity_map(self):
