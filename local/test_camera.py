@@ -40,13 +40,13 @@ class TestCamera():
         processing_time01 = cv2.getTickCount()
 
         right = cv2.VideoCapture(1)
-        right.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
-        right.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, x_res)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, y_res)
         right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
         left = cv2.VideoCapture(0)
-        left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
-        left.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, x_res)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, y_res)
         left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
         while True:
