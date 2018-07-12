@@ -61,9 +61,9 @@ class TestCamera():
             type_left = type(imgGRAY_left)
             type_right =type(imgGRAY_right)
             print(type_left, type_right)
-            if type_left == None:
+            if type_left == type(None):
                 fake_frames += 1
-            if type_right == None:
+            if type_right == type(None):
                 fake_frames += 1
             if (type_left and type_right) != None:
                 fake_frames += 2
