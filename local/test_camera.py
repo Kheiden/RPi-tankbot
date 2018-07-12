@@ -55,7 +55,7 @@ class TestCamera():
                 left=left,
                 type="image_array",
                 override_warmup=True,
-                quick_capture=True)
+                quick_capture=False)
             frame_counter += 1
             processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             if processing_time >= time_on:
