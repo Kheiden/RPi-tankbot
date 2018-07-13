@@ -577,9 +577,6 @@ class Camera():
             print("self.input_queue.qsize():", self.input_queue.qsize())
             imgBGR_left, imgBGR_right = self.input_queue.get(timeout=8)
 
-            imgL = cv2.cvtColor(imgBGR_left,cv2.COLOR_BGR2GRAY)
-            imgR = cv2.cvtColor(imgBGR_right,cv2.COLOR_BGR2GRAY)
-
             result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=True)
             disparity = result[1]
 
@@ -588,17 +585,12 @@ class Camera():
 
             jpg_image = Image.fromarray(disparity_normalized*255)
             jpg_image = jpg_image.convert('RGB')
-            #print("Saving disparity map to disk!")
-
-            #jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}.jpg".format(time.time()), format='JPEG')
 
             bytes_array = io.BytesIO()
             jpg_image.save(bytes_array, format='JPEG')
             jpg_image_bytes = bytes_array.getvalue()
             print("~~~putting frame in output queue!")
             self.output_queue.put(jpg_image_bytes)
-
-
 
             if self.input_queue.empty():
                 break
