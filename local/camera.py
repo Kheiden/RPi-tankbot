@@ -572,12 +572,12 @@ class Camera():
     def threaded_disparity_map(self, npzfile):
         res_x = 640
         res_y = 480
-        time.sleep(1)
+        #time.sleep(1)
         while True:
             print("self.input_queue.qsize():", self.input_queue.qsize())
             imgBGR_left, imgBGR_right = self.input_queue.get(timeout=8)
 
-            result = self.create_disparity_map(imgBGR_left, imgBGR_right, res_x, res_y, npzfile=npzfile, save_disparity_image=True)
+            result = self.create_disparity_map(imgBGR_left, imgBGR_right, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
             disparity = result[1]
 
             norm_coeff = 255 / disparity.max()
@@ -642,7 +642,7 @@ class Camera():
         time.sleep(0.5)
         print("main thread waking up")
         # second, start the threads for disparity_map processing
-        for i in range(8 ):
+        for i in range(3):
             thread = threading.Thread(group=None, target=self.threaded_disparity_map, name="Thread_num{}".format(i), args=(npzfile,))
             print("Starting Thread_num", i)
             thread.start()
@@ -655,7 +655,7 @@ class Camera():
                 jpg_image_bytes = self.output_queue.get()
                 yield (b'--frame\r\n'
                     b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
-            time.sleep(3)
+            time.sleep(0.5)
 
     def start_left_camera(self):
         CAMERA_WIDTH = 640
