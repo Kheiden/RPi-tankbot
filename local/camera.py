@@ -135,22 +135,22 @@ class Camera():
         imgLeft = cv2.remap(imgLeft, leftMapX, leftMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
         imgRight = cv2.remap(imgRight, rightMapX, rightMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
 
-        if save_disparity_image == True:
-            imgLeft_jpg = Image.fromarray(imgLeft)
-            imgRight_jpg = Image.fromarray(imgRight)
+        #if save_disparity_image == True:
+        #    imgLeft_jpg = Image.fromarray(imgLeft)
+        #    imgRight_jpg = Image.fromarray(imgRight)
 
-            imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_left.jpg".format(file_name), format='JPEG')
-            imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_right.jpg".format(file_name), format='JPEG')
+        #    imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_left.jpg".format(file_name), format='JPEG')
+        #    imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_right.jpg".format(file_name), format='JPEG')
 
         grayLeft = imgLeft
         grayRight = imgLeft
 
-        if save_disparity_image == True:
-            imgLeft_jpg = Image.fromarray(grayLeft)
-            imgRight_jpg = Image.fromarray(grayRight)
+        #if save_disparity_image == True:
+        #    imgLeft_jpg = Image.fromarray(grayLeft)
+        #    imgRight_jpg = Image.fromarray(grayRight)
 
-            imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_left.jpg".format(file_name), format='JPEG')
-            imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_right.jpg".format(file_name), format='JPEG')
+        #    imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_left.jpg".format(file_name), format='JPEG')
+        #    imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_right.jpg".format(file_name), format='JPEG')
 
         # Initialize the stereo block matching object
         stereo = cv2.StereoBM_create()
@@ -579,16 +579,17 @@ class Camera():
             imgL = cv2.cvtColor(imgBGR_left,cv2.COLOR_BGR2GRAY)
             imgR = cv2.cvtColor(imgBGR_right,cv2.COLOR_BGR2GRAY)
 
-            result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
+            result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=True)
             disparity = result[1]
 
             norm_coeff = 255 / disparity.max()
             disparity_normalized = disparity * norm_coeff / 255
 
             jpg_image = Image.fromarray(disparity_normalized*255)
-            jpg_image = jpg_image.convert('RGB')
-            print("Saving disparity map to disk!")
-            jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}.jpg".format(time.time()), format='JPEG')
+            #jpg_image = jpg_image.convert('RGB')
+            #print("Saving disparity map to disk!")
+
+            #jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}.jpg".format(time.time()), format='JPEG')
 
             bytes_array = io.BytesIO()
             jpg_image.save(bytes_array, format='JPEG')
