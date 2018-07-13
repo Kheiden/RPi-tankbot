@@ -587,12 +587,17 @@ class Camera():
 
             jpg_image = Image.fromarray(disparity_normalized*255)
             jpg_image = jpg_image.convert('RGB')
+            print("Saving disparity map to disk!")
+            jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}.jpg".format(time.time()), format='JPEG')
 
             bytes_array = io.BytesIO()
             jpg_image.save(bytes_array, format='JPEG')
             jpg_image_bytes = bytes_array.getvalue()
-            self.output_queue.put(jpg_image_bytes)
             print("~~~putting frame in output queue!")
+            self.output_queue.put(jpg_image_bytes)
+
+
+
             if self.input_queue.empty():
                 break
 
@@ -656,7 +661,7 @@ class Camera():
                 jpg_image_bytes = self.output_queue.get()
                 yield (b'--frame\r\n'
                     b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
-            time.sleep(0.5)
+            time.sleep(3)
 
     def start_left_camera(self):
         CAMERA_WIDTH = 640
