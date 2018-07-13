@@ -103,8 +103,8 @@ class Camera():
         This function will undistort the images by passing each image to undistort_image
 
         param:
-          imgLeft (gray image only)
-          imgRight (gray image only)
+          imgLeft (BGR image only)
+          imgRight (BGR image only)
           res_x: width of the picture to be taken
           res_y: height of the picture to be taken
           npzfile: location to the stereo calibration data
@@ -131,6 +131,8 @@ class Camera():
         #imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_distorted_right.jpg".format(file_name), format='JPEG')
 
 
+
+
         imgLeft = cv2.remap(imgLeft, leftMapX, leftMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
         imgRight = cv2.remap(imgRight, rightMapX, rightMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
 
@@ -141,8 +143,8 @@ class Camera():
         #    imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_left.jpg".format(file_name), format='JPEG')
         #    imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_right.jpg".format(file_name), format='JPEG')
 
-        grayLeft = imgLeft
-        grayRight = imgLeft
+        grayLeft = cv2.cvtColor(imgLeft,cv2.COLOR_BGR2GRAY)
+        grayRight = cv2.cvtColor(imgRight,cv2.COLOR_BGR2GRAY)
 
         #if save_disparity_image == True:
         #    imgLeft_jpg = Image.fromarray(grayLeft)
