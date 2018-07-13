@@ -110,8 +110,7 @@ class Camera():
           npzfile: location to the stereo calibration data
           save_disparity_image: (bool) Whether or not to save the image as a normalized jpg
         """
-        # take two photos
-        file_name = "disparity_test"
+        #file_name = "disparity_test"
 
         #imgLeft, imgRight = self.take_stereo_photo(res_x, res_y, file_name, "image_array")
         if npzfile is None:
@@ -179,7 +178,7 @@ class Camera():
         if save_disparity_image == True:
             jpg_image = Image.fromarray(disparity_normalized*255)
             jpg_image = jpg_image.convert('RGB')
-            jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_disparity_map.jpg".format(file_name), format='JPEG')
+            jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}.jpg".format(time.time()), format='JPEG')
 
         return imgLeft, disparity
 
@@ -586,7 +585,7 @@ class Camera():
             disparity_normalized = disparity * norm_coeff / 255
 
             jpg_image = Image.fromarray(disparity_normalized*255)
-            #jpg_image = jpg_image.convert('RGB')
+            jpg_image = jpg_image.convert('RGB')
             #print("Saving disparity map to disk!")
 
             #jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}.jpg".format(time.time()), format='JPEG')
