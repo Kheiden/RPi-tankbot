@@ -163,8 +163,8 @@ class TestCamera():
         left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
         left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
-        imgL, imgR = self.c.take_stereo_photo(res_x, res_y, type="image_array")
-        result = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, right=right, left=left, override_warmup=False, save_disparity_image=True)
+        imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, False, type="image_array")
+        result = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
         assert result
 
 
