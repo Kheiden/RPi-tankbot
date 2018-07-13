@@ -577,7 +577,7 @@ class Camera():
             print("self.input_queue.qsize():", self.input_queue.qsize())
             imgBGR_left, imgBGR_right = self.input_queue.get(timeout=8)
 
-            result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=True)
+            result = self.create_disparity_map(imgBGR_left, imgBGR_right, res_x, res_y, npzfile=npzfile, save_disparity_image=True)
             disparity = result[1]
 
             norm_coeff = 255 / disparity.max()
