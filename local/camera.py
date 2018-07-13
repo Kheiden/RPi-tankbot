@@ -622,7 +622,7 @@ class Camera():
             print("Putting image in self.input_queue")
 
             # TODO- remove this sleep command
-            time.sleep(0.5 + (self.input_queue.qsize()/100)
+            time.sleep(0.5 + (self.input_queue.qsize()/100))
 
             self.input_queue.put((imgBGR_left, imgBGR_right))
 
