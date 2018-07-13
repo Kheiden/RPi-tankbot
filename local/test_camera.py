@@ -149,7 +149,7 @@ class TestCamera():
         assert result
 
 
-    @pytest.mark.skip(reason="Passed.")
+    #@pytest.mark.skip(reason="Passed.")
     def test_create_single_disparity_map(self):
         res_x = 640
         res_y = 480
