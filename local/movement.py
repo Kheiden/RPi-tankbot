@@ -32,12 +32,12 @@ class Movement():
                 GPIO.output(self.Motor1A,GPIO.HIGH)
                 GPIO.output(self.Motor1B,GPIO.LOW)
                 GPIO.output(self.Motor1E,GPIO.HIGH)
-                time.sleep(0.1)
+                sleep(0.1)
                 self.stop()
                 GPIO.output(self.Motor2A,GPIO.LOW)
                 GPIO.output(self.Motor2B,GPIO.HIGH)
                 GPIO.output(self.Motor2E,GPIO.HIGH)
-                time.sleep(0.1)
+                sleep(0.1)
                 self.stop()
             elif direction == "left":
                 # TODO: Update this to reflect the code in direction == "right"
