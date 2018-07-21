@@ -21,7 +21,7 @@ class TestMovement():
         self.m.clear_gpio_motor_pins()
 
     #@pytest.mark.skip(reason="Not Yet Passed.")
-    def test_rotate_on_carpet():
+    def test_rotate_on_carpet(self):
         """Issue #68 on GitHub"""
         movement_time = 3
         real_movement_time = self.m.rotate_on_carpet(direction="right", movement_time=movement_time)
