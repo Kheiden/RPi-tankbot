@@ -23,7 +23,7 @@ class TestMovement():
     #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_rotate_on_carpet(self):
         """Issue #68 on GitHub"""
-        movement_time = 3
+        movement_time = 10
         real_movement_time, num_cycles = self.m.rotate_on_carpet(direction="right", movement_time=movement_time)
         # real_movement_time needs to be between 3 and 3*1.05
         assert real_movement_time <= (movement_time * 1.05)
