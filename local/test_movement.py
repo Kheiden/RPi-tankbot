@@ -20,7 +20,7 @@ class TestMovement():
         """
         self.m.clear_gpio_motor_pins()
 
-    #@pytest.mark.skip(reason="Not Yet Passed.")
+    @pytest.mark.skip(reason="Passed.")
     def test_rotate_on_carpet(self):
         """Issue #68 on GitHub"""
         movement_time = 25
@@ -44,11 +44,12 @@ class TestMovement():
         sleep_speed: 0.1
         degrees_rotated: <unknown-(need rotary encoder data)>
 
-        real time: 10 seconds
-        num_cycles: 20
-        sleep_speed: 0.1
+        real time: 25 seconds
+        num_cycles: 50
+        sleep_speed: 0.25
         degrees_rotated: <unknown-(need rotary encoder data)>
-        estimated degrees rotated: estimated to around 90 degrees
+        estimated degrees rotated: estimated to around 270 degrees, but the left
+            track came off of the front left wheel (not the drive wheel)
         """
 
 
