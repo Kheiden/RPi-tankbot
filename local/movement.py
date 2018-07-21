@@ -25,7 +25,14 @@ class Movement():
         GPIO.setup(self.Motor2E,GPIO.OUT)
 
 
-    def rotate_on_carpet(self, direction=None, movement_time=None, sleep_speed=0):
+    def rotate_on_carpet(self, direction=None, movement_time=None, sleep_speed=0.25):
+        """
+        direction: "left" or "right"
+        movement_time: The total duration of movement
+        sleep_speed: used to determine how fast the robot switches between
+            sleeping the motors, effectively determining how long one motor is on
+            before shutting it off and letting the other motor take over
+        """
         processing_time01 = cv2.getTickCount()
         num_cycles = 0
         while True:
@@ -54,9 +61,10 @@ class Movement():
             else:
                 return
             num_cycles += 1
-            processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
-            if processing_time >= movement_time:
-                return (movement_time, num_cycles)
+            if movement_time is not None:
+                processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
+                if processing_time >= movement_time:
+                    return (movement_time, num_cycles)
 
     def rotate(self, direction=None, movement_time=None):
         if direction == "right":

@@ -29,20 +29,20 @@ class TestMovement():
             movement_time=movement_time,
             sleep_speed=sleep_speed)
         # real_movement_time needs to be between 3 and 3*1.05
+        print(real_movement_time)
         assert real_movement_time <= (movement_time * 1.05)
         assert real_movement_time >= movement_time
-        print(real_movement_time)
         # This is the estimated number of cycles that the robot will perform
         # in the given amount of time
-        assert num_cycles >= movement_time * 3
         print(num_cycles)
+        assert num_cycles >= (movement_time / sleep_speed) * 0.95
+
         """
         Results of test:
         real time: 10 seconds
         num_cycles: 50
         sleep_speed: 0.1
         degrees_rotated: <unknown-(need rotary encoder data)>
-        
         """
 
 
