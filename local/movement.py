@@ -146,7 +146,7 @@ class Movement():
         # This function will need to interrupt the previous 3 functions
         GPIO.output(self.Motor1E,GPIO.LOW)
         GPIO.output(self.Motor2E,GPIO.LOW)
-        self.state.stopped == True
+        self.state.stopped = True
 
     def clear_gpio_motor_pins(self):
         GPIO.cleanup()
