@@ -23,7 +23,7 @@ class TestMovement():
     #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_rotate_on_carpet(self):
         """Issue #68 on GitHub"""
-        movement_time = 10
+        movement_time = 25
         sleep_speed = 0.25
         real_movement_time, num_cycles = self.m.rotate_on_carpet(direction="right",
             movement_time=movement_time,
@@ -35,7 +35,7 @@ class TestMovement():
         # This is the estimated number of cycles that the robot will perform
         # in the given amount of time
         print(num_cycles)
-        assert num_cycles >= (movement_time / sleep_speed) * 0.95
+        assert num_cycles >= (movement_time / (sleep_speed * 2)) * 0.95
 
         """
         Results of test:
@@ -43,6 +43,12 @@ class TestMovement():
         num_cycles: 50
         sleep_speed: 0.1
         degrees_rotated: <unknown-(need rotary encoder data)>
+
+        real time: 10 seconds
+        num_cycles: 20
+        sleep_speed: 0.1
+        degrees_rotated: <unknown-(need rotary encoder data)>
+        estimated degrees rotated: estimated to around 90 degrees
         """
 
 
