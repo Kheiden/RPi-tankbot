@@ -25,7 +25,7 @@ class Movement():
         GPIO.setup(self.Motor2E,GPIO.OUT)
 
 
-    def rotate_on_carpet(self, direction=None, movement_time=None):
+    def rotate_on_carpet(self, direction=None, movement_time=None, sleep_speed=sleep_speed):
         processing_time01 = cv2.getTickCount()
         num_cycles = 0
         while True:
@@ -33,22 +33,24 @@ class Movement():
                 GPIO.output(self.Motor1A,GPIO.HIGH)
                 GPIO.output(self.Motor1B,GPIO.LOW)
                 GPIO.output(self.Motor1E,GPIO.HIGH)
-                sleep(0.1)
+                sleep(sleep_speed)
                 self.stop()
                 GPIO.output(self.Motor2A,GPIO.LOW)
                 GPIO.output(self.Motor2B,GPIO.HIGH)
                 GPIO.output(self.Motor2E,GPIO.HIGH)
-                sleep(0.1)
+                sleep(sleep_speed)
                 self.stop()
             elif direction == "left":
-                # TODO: Update this to reflect the code in direction == "right"
                 GPIO.output(self.Motor1A,GPIO.LOW)
                 GPIO.output(self.Motor1B,GPIO.HIGH)
                 GPIO.output(self.Motor1E,GPIO.HIGH)
-
+                sleep(sleep_speed)
+                self.stop()
                 GPIO.output(self.Motor2A,GPIO.HIGH)
                 GPIO.output(self.Motor2B,GPIO.LOW)
                 GPIO.output(self.Motor2E,GPIO.HIGH)
+                sleep(sleep_speed)
+                self.stop()
             else:
                 return
             num_cycles += 1

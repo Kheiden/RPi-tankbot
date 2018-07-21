@@ -24,7 +24,10 @@ class TestMovement():
     def test_rotate_on_carpet(self):
         """Issue #68 on GitHub"""
         movement_time = 10
-        real_movement_time, num_cycles = self.m.rotate_on_carpet(direction="right", movement_time=movement_time)
+        sleep_speed = 0.25
+        real_movement_time, num_cycles = self.m.rotate_on_carpet(direction="right",
+            movement_time=movement_time,
+            sleep_speed=sleep_speed)
         # real_movement_time needs to be between 3 and 3*1.05
         assert real_movement_time <= (movement_time * 1.05)
         assert real_movement_time >= movement_time
@@ -33,6 +36,14 @@ class TestMovement():
         # in the given amount of time
         assert num_cycles >= movement_time * 3
         print(num_cycles)
+        """
+        Results of test:
+        real time: 10 seconds
+        num_cycles: 50
+        sleep_speed: 0.1
+        degrees_rotated: <unknown-(need rotary encoder data)>
+        
+        """
 
 
     @pytest.mark.skip(reason="Passed.")
