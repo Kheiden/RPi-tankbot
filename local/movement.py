@@ -42,7 +42,7 @@ class Movement():
         num_cycles = 0
         while True:
             if direction == "right":
-                if self.state.stopped = True:
+                if self.state.stopped == True:
                     break
                 GPIO.output(self.Motor1A,GPIO.HIGH)
                 GPIO.output(self.Motor1B,GPIO.LOW)
@@ -50,7 +50,7 @@ class Movement():
                 sleep(sleep_speed)
                 GPIO.output(self.Motor1E,GPIO.LOW)
 
-                if self.state.stopped = True:
+                if self.state.stopped == True:
                     break
                 GPIO.output(self.Motor2A,GPIO.LOW)
                 GPIO.output(self.Motor2B,GPIO.HIGH)
@@ -58,7 +58,7 @@ class Movement():
                 sleep(sleep_speed)
                 GPIO.output(self.Motor2E,GPIO.LOW)
             elif direction == "left":
-                if self.state.stopped = True:
+                if self.state.stopped == True:
                     break
                 GPIO.output(self.Motor1A,GPIO.LOW)
                 GPIO.output(self.Motor1B,GPIO.HIGH)
@@ -66,7 +66,7 @@ class Movement():
                 sleep(sleep_speed)
                 GPIO.output(self.Motor1E,GPIO.LOW)
 
-                if self.state.stopped = True:
+                if self.state.stopped == True:
                     break
                 GPIO.output(self.Motor2A,GPIO.HIGH)
                 GPIO.output(self.Motor2B,GPIO.LOW)
