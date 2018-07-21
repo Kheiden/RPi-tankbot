@@ -27,6 +27,7 @@ class Movement():
 
     def rotate_on_carpet(self, direction=None, movement_time=None):
         processing_time01 = cv2.getTickCount()
+        num_cycles = 0
         while True:
             if direction == "right":
                 GPIO.output(self.Motor1A,GPIO.HIGH)
@@ -50,10 +51,10 @@ class Movement():
                 GPIO.output(self.Motor2E,GPIO.HIGH)
             else:
                 return
-
+            num_cycles += 1
             processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             if processing_time >= movement_time:
-                return movement_time
+                return (movement_time, num_cycles)
 
     def rotate(self, direction=None, movement_time=None):
         if direction == "right":
