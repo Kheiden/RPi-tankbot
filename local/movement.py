@@ -1,10 +1,14 @@
 import RPi.GPIO as GPIO
 from time import sleep
+import state
 import cv2
 
 class Movement():
 
     def __init__(self):
+        # Inport the robot's state
+        self.state = state.State()
+
         GPIO.setmode(GPIO.BOARD)
         # Motor1 is the left motor
         self.Motor1A = 16
@@ -26,6 +30,7 @@ class Movement():
 
 
     def rotate_on_carpet(self, direction=None, movement_time=None, sleep_speed=0.25):
+        self.state.stopped = False
         """
         direction: "left" or "right"
         movement_time: The total duration of movement
@@ -37,27 +42,37 @@ class Movement():
         num_cycles = 0
         while True:
             if direction == "right":
+                if self.state.stopped = True:
+                    break
                 GPIO.output(self.Motor1A,GPIO.HIGH)
                 GPIO.output(self.Motor1B,GPIO.LOW)
                 GPIO.output(self.Motor1E,GPIO.HIGH)
                 sleep(sleep_speed)
-                self.stop()
+                GPIO.output(self.Motor1E,GPIO.LOW)
+
+                if self.state.stopped = True:
+                    break
                 GPIO.output(self.Motor2A,GPIO.LOW)
                 GPIO.output(self.Motor2B,GPIO.HIGH)
                 GPIO.output(self.Motor2E,GPIO.HIGH)
                 sleep(sleep_speed)
-                self.stop()
+                GPIO.output(self.Motor2E,GPIO.LOW)
             elif direction == "left":
+                if self.state.stopped = True:
+                    break
                 GPIO.output(self.Motor1A,GPIO.LOW)
                 GPIO.output(self.Motor1B,GPIO.HIGH)
                 GPIO.output(self.Motor1E,GPIO.HIGH)
                 sleep(sleep_speed)
-                self.stop()
+                GPIO.output(self.Motor1E,GPIO.LOW)
+
+                if self.state.stopped = True:
+                    break
                 GPIO.output(self.Motor2A,GPIO.HIGH)
                 GPIO.output(self.Motor2B,GPIO.LOW)
                 GPIO.output(self.Motor2E,GPIO.HIGH)
                 sleep(sleep_speed)
-                self.stop()
+                GPIO.output(self.Motor2E,GPIO.LOW)
             else:
                 return
             num_cycles += 1
@@ -67,6 +82,7 @@ class Movement():
                     return (movement_time, num_cycles)
 
     def rotate(self, direction=None, movement_time=None):
+        self.state.stopped = False
         if direction == "right":
             GPIO.output(self.Motor1A,GPIO.HIGH)
             GPIO.output(self.Motor1B,GPIO.LOW)
@@ -91,7 +107,7 @@ class Movement():
             self.stop()
 
     def forward(self, movement_time=None):
-
+        self.state.stopped = False
         GPIO.output(self.Motor1A,GPIO.HIGH)
         GPIO.output(self.Motor1B,GPIO.LOW)
         GPIO.output(self.Motor1E,GPIO.HIGH)
@@ -109,6 +125,7 @@ class Movement():
             self.stop()
 
     def backward(self, movement_time=None):
+        self.state.stopped = False
         GPIO.output(self.Motor1A,GPIO.LOW)
         GPIO.output(self.Motor1B,GPIO.HIGH)
         GPIO.output(self.Motor1E,GPIO.HIGH)
@@ -129,6 +146,7 @@ class Movement():
         # This function will need to interrupt the previous 3 functions
         GPIO.output(self.Motor1E,GPIO.LOW)
         GPIO.output(self.Motor2E,GPIO.LOW)
+        self.state.stopped == True
 
     def clear_gpio_motor_pins(self):
         GPIO.cleanup()
