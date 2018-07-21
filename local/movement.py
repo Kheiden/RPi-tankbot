@@ -25,7 +25,7 @@ class Movement():
         GPIO.setup(self.Motor2E,GPIO.OUT)
 
 
-    def rotate_on_carpet(self, direction=None, movement_time=None, sleep_speed=sleep_speed):
+    def rotate_on_carpet(self, direction=None, movement_time=None, sleep_speed=0):
         processing_time01 = cv2.getTickCount()
         num_cycles = 0
         while True:
