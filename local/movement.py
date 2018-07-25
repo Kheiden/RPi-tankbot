@@ -139,7 +139,7 @@ class Movement():
         """
         if movement_time != None:
             sleep(movement_time)
-            self.stop()
+            self.stop_motors()
 
     def backward(self, movement_time=None):
         self.state.stopped = False
@@ -159,10 +159,13 @@ class Movement():
             sleep(movement_time)
             self.stop()
 
-    def stop(self):
-        # This function will need to interrupt the previous 3 functions
+    def stop_motors(self):
         GPIO.output(self.Motor1E,GPIO.LOW)
         GPIO.output(self.Motor2E,GPIO.LOW)
+
+    def stop(self):
+        # This function will need to interrupt the previous 3 functions
+        self.stop_motors()
         self.state.stopped = True
 
     def clear_gpio_motor_pins(self):
