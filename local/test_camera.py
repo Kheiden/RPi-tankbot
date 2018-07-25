@@ -54,7 +54,7 @@ class TestCamera():
         # 640*480*0.01 = 30720
         # 5 percent: 4'6" to 4'10" away from target
         # 10 percent: <tbd>
-        num_threshold = 30720
+        num_threshold = 46080
         action = [threshold, num_threshold]
         self.m.forward_slow_thread()
         processing_time, frame_counter, action = self.c.realtime_disparity_map_stream(time_on=time_on, action=action)
