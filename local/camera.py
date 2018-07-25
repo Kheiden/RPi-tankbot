@@ -83,7 +83,7 @@ class Camera():
         return True
 
 
-    def realtime_disparity_map_stream(self, time_on):
+    def realtime_disparity_map_stream(self, time_on, action=None):
         frame_counter = 0
         processing_time01 = cv2.getTickCount()
         res_x = 640
@@ -92,10 +92,27 @@ class Camera():
         while True:
             imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
             result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
+            if action is not None:
+                threshold = action[0]
+                num_threshold = action[1]
+                b = np.where(result[1] > threshold)
+                num_pixels_above_threshold = len(b[0])
+                print("Threshold: {}/255, num_threshold: {}, num_pixels_above_threshold: {}".format(
+                    threshold,
+                    num_threshold,
+                    num_pixels_above_threshold
+                ))
+                if num_pixels_above_threshold >= num_threshold:
+                    # This means that we need to stop the robot ASAP
+                    print("Object detected too close!")
+                    action = 'stop_robot'
+                    return processing_time, frame_counter, action
+
+
             frame_counter += 1
             processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             if processing_time >= time_on:
-                return processing_time, frame_counter
+                return processing_time, frame_counter, None
 
     def create_disparity_map(self, imgLeft, imgRight, res_x=640, res_y=480, npzfile=None, save_disparity_image=False):
         """

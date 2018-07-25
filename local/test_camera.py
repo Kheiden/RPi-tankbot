@@ -25,6 +25,44 @@ class TestCamera():
         self.c.stop_servos()
 
 
+    def test_collision_avoidance(self):
+        """
+        This test will be used to determine if the RPi is about to run into a
+        physical object.  This will be used by the autonomous routine to determine
+        when to stop the robot.
+
+        This test is comprised of a few parts.  First, the RPi takes a disparity
+        map photo.  Second, the RPi checks if the disparity_map has pixels which
+        are above the threshold, effectively proving that there is an object which
+        is too close to the robot. Third, the method will send a shutdown function to
+        the RPi to cease all movement.
+
+        After I'm able to process the collision_avoidance method on a single disparity_map,
+        I'll use it on the disparity_map stream.
+        """
+        # Max time on
+        time_on = 30
+        # Target FPS
+        fps = 2
+        action = "stop_if_close"
+        # Threshold is the value between 0 and 255 that a pixel needs to be above
+        # in order to count as being "too close"
+        threshold = 200
+        # num_threshold is the number of pixels that are above the threshold
+        # 640*480 = 307200
+        # 640*480*0.05 = 15360
+        num_threshold = 15360
+        action = [threshold, num_threshold]
+        self.m.forward()
+        processing_time, frame_counter, action = self.c.realtime_disparity_map_stream(time_on=time_on, action=action)
+        # %5 error tolerance for the stream to be on
+        if action == 'stop_robot':
+            self.m.stop()
+
+        assert action is not None
+
+
+
     @pytest.mark.skip(reason="Passed.")
     def test_stereo_photo_speed(self):
         """
