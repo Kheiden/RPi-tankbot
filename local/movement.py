@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 from time import sleep
 import threading
 import state
+import time
 import cv2
 
 class Movement():
