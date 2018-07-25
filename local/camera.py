@@ -122,6 +122,7 @@ class Camera():
                     # This means that we need to stop the robot ASAP
                     print("Object detected too close!")
                     action = 'stop_robot'
+                    processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
                     return processing_time, frame_counter, action
 
 

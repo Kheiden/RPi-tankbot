@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 from time import sleep
+import threading
 import state
 import cv2
 
@@ -105,6 +106,21 @@ class Movement():
         if movement_time != None:
             sleep(movement_time)
             self.stop()
+
+    def forward_slow_thread(self):
+        thread = threading.Thread(group=None, target=self.forward_slow, name="Thread_num0")
+        thread.start()
+
+
+    def forward_slow(self):
+        movement_time = 0.50
+        sleep_time = 0.50
+        while True:
+            if self.state.stopped == True:
+                break
+            forward(movement_time=movement_time)
+            time.sleep(movement_time)
+
 
     def forward(self, movement_time=None):
         self.state.stopped = False

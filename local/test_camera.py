@@ -53,10 +53,11 @@ class TestCamera():
         # 640*480*0.05 = 15360
         num_threshold = 15360
         action = [threshold, num_threshold]
-        self.m.forward()
+        self.m.forward_slow_thread()
         processing_time, frame_counter, action = self.c.realtime_disparity_map_stream(time_on=time_on, action=action)
         # %5 error tolerance for the stream to be on
         if action == 'stop_robot':
+            print("Stopping robot.")
             self.m.stop()
 
         assert action is not None
