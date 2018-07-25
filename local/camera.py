@@ -89,8 +89,24 @@ class Camera():
         res_x = 640
         res_y = 480
         npzfile = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
+
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
         while True:
-            imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
+            imgL, imgR = self.take_stereo_photo(
+                res_x,
+                res_y,
+                right=right,
+                left=left,
+                type="image_array",
+                override_warmup=True)
             result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
             if action is not None:
                 threshold = action[0]
