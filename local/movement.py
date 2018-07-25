@@ -118,7 +118,7 @@ class Movement():
         while True:
             if self.state.stopped == True:
                 break
-            forward(movement_time=movement_time)
+            self.forward(movement_time=movement_time)
             time.sleep(movement_time)
 
 
