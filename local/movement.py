@@ -108,14 +108,12 @@ class Movement():
             sleep(movement_time)
             self.stop()
 
-    def forward_slow_thread(self):
-        thread = threading.Thread(group=None, target=self.forward_slow, name="Thread_num0")
+    def forward_slow_thread(self, movement_time, sleep_time):
+        thread = threading.Thread(group=None, target=self.forward_slow, name="Thread_num0", args=(movement_time, sleep_time))
         thread.start()
 
 
-    def forward_slow(self):
-        movement_time = 0.50
-        sleep_time = 0.50
+    def forward_slow(self, movement_time, sleep_time):
         while True:
             if self.state.stopped == True:
                 break

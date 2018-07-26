@@ -83,7 +83,7 @@ class Camera():
         return True
 
 
-    def realtime_disparity_map_stream(self, time_on, action=None, save_disparity_image=False):
+    def realtime_disparity_map_stream(self, time_on, action=None, save_disparity_image=False, override_warmup=False):
         frame_counter = 0
         processing_time01 = cv2.getTickCount()
         res_x = 640
@@ -106,8 +106,8 @@ class Camera():
                 right=right,
                 left=left,
                 type="image_array",
-                override_warmup=True)
-            result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
+                override_warmup=override_warmup)
+            result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image)
             if action is not None:
                 threshold = action[0]
                 num_threshold = action[1]
