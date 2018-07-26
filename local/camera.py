@@ -83,7 +83,7 @@ class Camera():
         return True
 
 
-    def realtime_disparity_map_stream(self, time_on, action=None):
+    def realtime_disparity_map_stream(self, time_on, action=None, save_disparity_image=False):
         frame_counter = 0
         processing_time01 = cv2.getTickCount()
         res_x = 640
@@ -215,6 +215,8 @@ class Camera():
             jpg_image = Image.fromarray(disparity_normalized*255)
             jpg_image = jpg_image.convert('RGB')
             jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}.jpg".format(time.time()), format='JPEG')
+            jpg_image = Image.fromarray(imgLeft)
+            jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}_color.jpg".format(time.time()), format='JPEG')
 
         return imgLeft, disparity
 

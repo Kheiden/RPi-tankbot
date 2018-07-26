@@ -54,10 +54,12 @@ class TestCamera():
         # 640*480*0.01 = 30720
         # 5 percent: 4'6" to 4'10" away from target
         # 10 percent: <tbd>
-        num_threshold = 46080
+        num_threshold = 30720
         action = [threshold, num_threshold]
         self.m.forward_slow_thread()
-        processing_time, frame_counter, action = self.c.realtime_disparity_map_stream(time_on=time_on, action=action)
+        processing_time, frame_counter, action = self.c.realtime_disparity_map_stream(time_on=time_on,
+            action=action,
+            save_disparity_image=False)
         # %5 error tolerance for the stream to be on
         if action == 'stop_robot':
             print("Stopping robot.")
