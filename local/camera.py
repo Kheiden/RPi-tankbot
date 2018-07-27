@@ -131,15 +131,18 @@ class Camera():
                 if num_pixels_above_threshold >= num_threshold:
                     # This means that we need to stop the robot ASAP
                     print("Object detected too close!")
-                    #action = 'stop_robot'
-                    processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
-                    #return processing_time, frame_counter, action
-                    #move left or right
-                    direction = random.choice(["right", "left"])
-                    print("Rotating {} to avoid obstacle".format(direction))
-                    self.m.rotate_on_carpet(self, direction=direction,
-                        movement_time=6,
-                        sleep_speed=0.25)
+                    if action[2] == 'stop_if_close':
+                        self.m.stop()
+                        print("Stopping robot to avoid collision")
+                        return None, None, action[2]
+
+                    if action[2] == 'rotate_random':
+                        direction = random.choice(["right", "left"])
+                        print("Rotating {} to avoid obstacle".format(direction))
+                        #move left or right
+                        self.m.rotate_on_carpet(self, direction=direction,
+                            movement_time=6,
+                            sleep_speed=0.25)
                 else:
                     # this means that there are no objects in the way
                     processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()

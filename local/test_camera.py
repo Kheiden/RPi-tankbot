@@ -34,12 +34,25 @@ class TestCamera():
           If the robot detects an object being too close, it will rotate an
           arbritary amount of time either left or right then continue with step 1
         """
+        time_on = 60
+        action = "rotate_random"
+        # Threshold is the value between 0 and 255 that a pixel needs to be above
+        # in order to count as being "too close"
+        threshold = 200
+        # num_threshold is the number of pixels that are above the threshold
+        # 640*480 = 307200
+        # 640*480*0.05 = 15360
+        # 640*480*0.01 = 30720
+        # 5 percent: 4'6" to 4'10" away from target
+        # 10 percent: <tbd>
+        num_threshold = 30720
+        action = [threshold, num_threshold, action]
 
         processing_time, frame_counter, action = self.c.realtime_disparity_map_stream(time_on=time_on,
             action=action,
             save_disparity_image=True,
             override_warmup=False,
-            autonomous_routine="basic")    
+            autonomous_routine="basic")
 
     @pytest.mark.skip(reason="Passed.")
     def test_collision_avoidance(self):
@@ -59,8 +72,6 @@ class TestCamera():
         """
         # Max time on
         time_on = 30
-        # Target FPS
-        fps = 2
         action = "stop_if_close"
         # Threshold is the value between 0 and 255 that a pixel needs to be above
         # in order to count as being "too close"
@@ -76,7 +87,7 @@ class TestCamera():
         movement_time = 0.50
         sleep_time = 2.00
         self.m.forward_slow_thread(movement_time, sleep_time)
-        processing_time, frame_counter, action = self.c.realtime_disparity_map_stream(time_on=time_on,
+        _, _, action = self.c.realtime_disparity_map_stream(time_on=time_on,
             action=action,
             save_disparity_image=True,
             override_warmup=False)
