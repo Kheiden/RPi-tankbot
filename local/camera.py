@@ -106,8 +106,9 @@ class Camera():
         left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
         left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
         left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+        processing_time01 = cv2.getTickCount()
         while True:
-            processing_time01 = cv2.getTickCount()
+            disparity_map_time = cv2.getTickCount()
             # Stop moving
             self.m.stop()
             imgL, imgR = self.take_stereo_photo(
@@ -145,8 +146,8 @@ class Camera():
                             sleep_speed=0.25)
                 else:
                     # this means that there are no objects in the way
-                    processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
-                    print("Disparity map took {} seconds to process".format(processing_time))
+                    disparity_map_time = (cv2.getTickCount() - disparity_map_time)/ cv2.getTickFrequency()
+                    print("Disparity map took {} seconds to process".format(disparity_map_time))
                     # use the threadblocking forward command with the sleep parameter set
                     self.m.forward(1)
 
