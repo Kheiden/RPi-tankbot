@@ -40,13 +40,20 @@ class Server():
 
         @app.route("/turn_right")
         def turn_right():
-            self.m.rotate(direction="right")
+            #self.m.rotate(direction="right")
+            self.m.rotate_on_carpet(direction="right", sleep_speed=0.33)
             return "ok"
 
         @app.route("/turn_left")
         def turn_left():
-            self.m.rotate(direction="left")
+            #self.m.rotate(direction="left")
+            self.m.rotate_on_carpet(direction="left", sleep_speed=0.33)
             return "ok"
+
+        @app.route("/disparity_map_stream")
+        def disparity_map_stream():
+            return Response(self.c.start_disparity_map(),
+                mimetype='multipart/x-mixed-replace; boundary=frame')
 
         @app.route("/left_camera_stream")
         def left_camera_stream():

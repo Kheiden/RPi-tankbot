@@ -55,15 +55,15 @@ img.src="";
 return false;
 }
 
-function start_left_and_right_cam_stream()
+function start_disparity_map_stream()
 {
-var img = document.getElementById("left_and_right_camera_stream");
-img.src="/left_and_right_camera_stream";
+var img = document.getElementById("disparity_map_stream");
+img.src="/disparity_map_stream";
 return false;
 }
-function stop_left_and_right_cam_stream()
+function stop_disparity_map_stream()
 {
-var img = document.getElementById("left_and_right_camera_stream");
+var img = document.getElementById("disparity_map_stream");
 img.src="";
 return false;
 }
@@ -162,8 +162,8 @@ $(document).ready(function(){
         <td style="height:50px"></td>
         <td><button id="b_backwards">Backwards</button></td>
         <td></td>
-        <td width="20%"><button id="b_start_left_and_right" onclick="start_left_and_right_cam_stream();">Start Dual Camera Stream</button></td>
-        <td width="20%"><button id="b_stop_left_and_right" onclick="stop_left_and_right_cam_stream();">Stop Dual Camera Stream</button></td>
+        <td width="20%"><button id="b_start_disparity_map_stream" onclick="start_disparity_map_stream();">Start Disparity Map Stream</button></td>
+        <td width="20%"><button id="b_stop_disparity_map_stream" onclick="stop_disparity_map_stream();">Stop Disparity Map Stream</button></td>
       </tr>
     </table>
 

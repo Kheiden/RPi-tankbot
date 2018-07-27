@@ -2,7 +2,10 @@ import RPi.GPIO as GPIO
 from datetime import datetime
 
 import numpy as np
+import threading
+import movement
 import random
+import queue
 import glob
 import time
 import cv2
@@ -13,6 +16,8 @@ from PIL import Image
 class Camera():
 
     def __init__(self):
+        self.m = movement.Movement()
+
         self.servo_axis_x_pin = 11
         self.servo_axis_y_pin = 13
 
@@ -36,7 +41,7 @@ class Camera():
         self.home_dir = "/home/pi"
         return
 
-    def create_3d_point_cloud(self, imgL, disparity_map):
+    def create_3d_point_cloud(self, imgL, disparity_map, file_num):
         """
         Based on sample code from OpenCV
         """
@@ -57,7 +62,7 @@ class Camera():
         verts = out_points
         colors = out_colors
 
-        fn = '/home/pi/RPi-tankbot/local/frames/out.ply'
+        file_name = "{}/RPi-tankbot/local/cloud_points/out{}.ply".format(self.home_dir, file_num)
         ply_header = '''ply
         format ascii 1.0
         element vertex %(vert_num)d
@@ -73,36 +78,98 @@ class Camera():
         verts = verts.reshape(-1, 3)
         colors = colors.reshape(-1, 3)
         verts = np.hstack([verts, colors])
-        with open(fn, 'wb') as f:
+        with open(file_name, 'wb') as f:
             f.write((ply_header % dict(vert_num=len(verts))).encode('utf-8'))
             np.savetxt(f, verts, fmt='%f %f %f %d %d %d ')
 
-        print('%s saved' % 'out.ply')
+        print("3d cloud point saved to:", file_name)
         return True
 
 
-    def realtime_disparity_map_stream(self, time_on):
+    def realtime_disparity_map_stream(self, time_on, action=None,
+        save_disparity_image=False,
+        override_warmup=False,
+        autonomous_routine=None):
+
         frame_counter = 0
-        processing_time01 = cv2.getTickCount()
+
         res_x = 640
         res_y = 480
         npzfile = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
+
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+        processing_time01 = cv2.getTickCount()
         while True:
-            imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array")
-            result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
-            frame_counter += 1
-            processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
-            if processing_time >= time_on:
-                return processing_time, frame_counter
+            disparity_map_time = cv2.getTickCount()
+            # Stop moving
+            self.m.stop()
+            imgL, imgR = self.take_stereo_photo(
+                res_x,
+                res_y,
+                right=right,
+                left=left,
+                type="image_array",
+                override_warmup=override_warmup)
+            result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=save_disparity_image)
+            if action is not None:
+                threshold = action[0]
+                num_threshold = action[1]
+                b = np.where(result[1] > threshold)
+                num_pixels_above_threshold = len(b[0])
+                print("Threshold: {}/255, num_threshold: {}, num_pixels_above_threshold: {}".format(
+                    threshold,
+                    num_threshold,
+                    num_pixels_above_threshold
+                ))
+                if num_pixels_above_threshold >= num_threshold:
+                    # This means that we need to stop the robot ASAP
+                    print("Object detected too close!")
+                    if action[2] == 'stop_if_close':
+                        self.m.stop()
+                        print("Stopping robot to avoid collision")
+                        return None, None, action[2]
+
+                    if action[2] == 'rotate_random':
+                        direction = random.choice(["right", "left"])
+                        print("Rotating {} to avoid obstacle".format(direction))
+                        #move left or right
+                        self.m.rotate_on_carpet(direction=direction,
+                            movement_time=6,
+                            sleep_speed=0.25)
+                else:
+                    # this means that there are no objects in the way
+                    disparity_map_time = (cv2.getTickCount() - disparity_map_time)/ cv2.getTickFrequency()
+                    print("Disparity map took {} seconds to process".format(disparity_map_time))
+                    # use the threadblocking forward command with the sleep parameter set
+                    self.m.forward(1)
+
+                frame_counter += 1
+                processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
+                if processing_time >= time_on:
+                    return processing_time, frame_counter, None
 
     def create_disparity_map(self, imgLeft, imgRight, res_x=640, res_y=480, npzfile=None, save_disparity_image=False):
         """
         create_disparity_map takes in two undistorted images from left and right cameras.
         This function will undistort the images by passing each image to undistort_image
 
+        param:
+          imgLeft (BGR image only)
+          imgRight (BGR image only)
+          res_x: width of the picture to be taken
+          res_y: height of the picture to be taken
+          npzfile: location to the stereo calibration data
+          save_disparity_image: (bool) Whether or not to save the image as a normalized jpg
         """
-        # take two photos
-        file_name = "disparity_test"
+        #file_name = "disparity_test"
 
         #imgLeft, imgRight = self.take_stereo_photo(res_x, res_y, file_name, "image_array")
         if npzfile is None:
@@ -123,40 +190,42 @@ class Camera():
         #imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_distorted_right.jpg".format(file_name), format='JPEG')
 
 
+
+
         imgLeft = cv2.remap(imgLeft, leftMapX, leftMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
         imgRight = cv2.remap(imgRight, rightMapX, rightMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
 
-        imgLeft_jpg = Image.fromarray(imgLeft)
-        imgRight_jpg = Image.fromarray(imgRight)
+        #if save_disparity_image == True:
+        #    imgLeft_jpg = Image.fromarray(imgLeft)
+        #    imgRight_jpg = Image.fromarray(imgRight)
 
-        imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_left.jpg".format(file_name), format='JPEG')
-        imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_right.jpg".format(file_name), format='JPEG')
+        #    imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_left.jpg".format(file_name), format='JPEG')
+        #    imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_color_right.jpg".format(file_name), format='JPEG')
 
+        grayLeft = cv2.cvtColor(imgLeft,cv2.COLOR_BGR2GRAY)
+        grayRight = cv2.cvtColor(imgRight,cv2.COLOR_BGR2GRAY)
 
-        grayLeft = cv2.cvtColor(imgLeft, cv2.COLOR_RGB2GRAY)
-        grayRight = cv2.cvtColor(imgRight, cv2.COLOR_RGB2GRAY)
+        #if save_disparity_image == True:
+        #    imgLeft_jpg = Image.fromarray(grayLeft)
+        #    imgRight_jpg = Image.fromarray(grayRight)
 
-        imgLeft_jpg = Image.fromarray(grayLeft)
-        imgRight_jpg = Image.fromarray(grayRight)
-
-        imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_left.jpg".format(file_name), format='JPEG')
-        imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_right.jpg".format(file_name), format='JPEG')
-
+        #    imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_left.jpg".format(file_name), format='JPEG')
+        #    imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_right.jpg".format(file_name), format='JPEG')
 
         # Initialize the stereo block matching object
         stereo = cv2.StereoBM_create()
-        stereo.setBlockSize(9) # was 9
+        stereo.setBlockSize(25) # was 9
         stereo.setMinDisparity(0)
         stereo.setNumDisparities(48)
         stereo.setDisp12MaxDiff(2)
-        stereo.setSpeckleRange(0)
-        stereo.setSpeckleWindowSize(0)
+        stereo.setSpeckleRange(3) # was 0
+        stereo.setSpeckleWindowSize(65) # was 0
         #stereo.setROI1(leftROI)
         #stereo.setROI2(rightROI)
-        stereo.setPreFilterCap(63) # was 63
-        stereo.setPreFilterSize(5) # was 15
+        stereo.setPreFilterCap(10) # was 63
+        stereo.setPreFilterSize(5) # was 5
 
-        stereo.setUniquenessRatio(3) # was 0
+        stereo.setUniquenessRatio(4) # was 3
         stereo.setTextureThreshold(0)
 
         # Compute the disparity image
@@ -170,7 +239,10 @@ class Camera():
         if save_disparity_image == True:
             jpg_image = Image.fromarray(disparity_normalized*255)
             jpg_image = jpg_image.convert('RGB')
-            jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_disparity_map.jpg".format(file_name), format='JPEG')
+            timestamp = time.time()
+            jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}.jpg".format(timestamp), format='JPEG')
+            jpg_image = Image.fromarray(imgLeft)
+            jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}_color.jpg".format(timestamp), format='JPEG')
 
         return imgLeft, disparity
 
@@ -465,39 +537,48 @@ class Camera():
         self.pwm_x.stop()
         self.pwm_y.stop()
 
-    def take_stereo_photo(self, res_x, res_y, filename=None, type="combined"):
+    def take_stereo_photo(self, res_x, res_y, right, left, override_warmup, filename=None, type="combined", quick_capture=False):
         """
         type="combined" (or any other value) is a single .JPG file
         type="separate" is two separate .JPG files
+
+        quick_capture is used to take the photos as fast as possible.
+            This returns greyscale photos to be used in the disparity_map_stream
+            along with other speed improvements (might combine with left/right)
         """
         #processing_time01 = cv2.getTickCount()
         CAMERA_HEIGHT = res_y
         CAMERA_WIDTH = res_x
 
-        print("CAMERA_WIDTH: {}, CAMERA_HEIGHT:{}".format(CAMERA_WIDTH, CAMERA_HEIGHT))
+        #print("Photo Resolution: res_y: {}, res_x: {}".format(res_y, res_x))
 
-        right = cv2.VideoCapture(1)
-        right.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
-        right.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
-        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+        if override_warmup or quick_capture == True:
+            num_photos = 1
+        else:
+            num_photos = 45
 
-        left = cv2.VideoCapture(0)
-        left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
-        left.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
-        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
-
-
-        for i in range(45):
+        for i in range(num_photos):
             #This is used to "warm up" the camera before retrieving the photo
-            left.grab()
-            right.grab()
+            ret_left = left.grab()
+            ret_right = right.grab()
         _, rightFrame = right.retrieve()
         _, leftFrame = left.retrieve()
-        right.release()
-        left.release()
 
-        imgRGB_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2RGB)
-        imgRGB_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2RGB)
+        #print(ret_left, ret_right)
+
+        if ret_left == False:
+            return (None, None)
+        if ret_right == False:
+            return (None, None)
+
+        if quick_capture == False:
+            imgRGB_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2RGB)
+            imgRGB_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2RGB)
+        elif quick_capture == True:
+            #imgGRAY_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2GRAY)
+            #imgGRAY_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2GRAY)
+            #return imgGRAY_left, imgGRAY_right
+            return leftFrame, rightFrame
         if type == "separate":
             jpg_image_right = Image.fromarray(imgRGB_right)
             jpg_image_left = Image.fromarray(imgRGB_left)
@@ -549,6 +630,94 @@ class Camera():
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
         right.release()
+
+    def threaded_disparity_map(self, npzfile):
+        res_x = 640
+        res_y = 480
+        #time.sleep(1)
+        while True:
+            print("self.input_queue.qsize():", self.input_queue.qsize())
+            imgBGR_left, imgBGR_right = self.input_queue.get(timeout=8)
+
+            result = self.create_disparity_map(imgBGR_left, imgBGR_right, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
+            disparity = result[1]
+
+            norm_coeff = 255 / disparity.max()
+            disparity_normalized = disparity * norm_coeff / 255
+
+            jpg_image = Image.fromarray(disparity_normalized*255)
+            jpg_image = jpg_image.convert('RGB')
+
+            bytes_array = io.BytesIO()
+            jpg_image.save(bytes_array, format='JPEG')
+            jpg_image_bytes = bytes_array.getvalue()
+            print("~~~putting frame in output queue!")
+            self.output_queue.put(jpg_image_bytes)
+
+            if self.input_queue.empty():
+                break
+
+
+    def threaded_take_stereo_photo(self):
+        res_x = 640
+        res_y = 480
+        max_queue_size = 900 # 30 seconds at 30 fps
+
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        while self.input_queue.qsize() < max_queue_size:
+            #imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
+            imgBGR_left, imgBGR_right = self.take_stereo_photo(res_x, res_y,
+                right=right,
+                left=left,
+                type="image_array",
+                override_warmup=True,
+                quick_capture=True)
+            print("Putting image in self.input_queue")
+
+            # TODO- remove this sleep command
+            time.sleep(0.5 + (self.input_queue.qsize()/100))
+
+            self.input_queue.put((imgBGR_left, imgBGR_right))
+
+    def start_disparity_map(self):
+        res_x = 640
+        res_y = 480
+        npzfile = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
+
+        self.input_queue = queue.Queue()
+        self.output_queue = queue.Queue()
+
+        # first, start the thread for the camera
+        thread = threading.Thread(group=None, target=self.threaded_take_stereo_photo, name="Thread_camera")
+        print("Starting Thread_camera")
+        thread.start()
+        print("Sleeping main thread...")
+        time.sleep(0.5)
+        print("main thread waking up")
+        # second, start the threads for disparity_map processing
+        for i in range(3):
+            thread = threading.Thread(group=None, target=self.threaded_disparity_map, name="Thread_num{}".format(i), args=(npzfile,))
+            print("Starting Thread_num", i)
+            thread.start()
+
+
+        # finally, rest the global interperter lock here:
+        while True:
+            if self.output_queue.empty() is not True:
+                print("displaying image!")
+                jpg_image_bytes = self.output_queue.get()
+                yield (b'--frame\r\n'
+                    b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
+            time.sleep(0.5)
 
     def start_left_camera(self):
         CAMERA_WIDTH = 640

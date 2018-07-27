@@ -21,6 +21,39 @@ class TestMovement():
         self.m.clear_gpio_motor_pins()
 
     @pytest.mark.skip(reason="Passed.")
+    def test_rotate_on_carpet(self):
+        """Issue #68 on GitHub"""
+        movement_time = 25
+        sleep_speed = 0.25
+        real_movement_time, num_cycles = self.m.rotate_on_carpet(direction="right",
+            movement_time=movement_time,
+            sleep_speed=sleep_speed)
+        # real_movement_time needs to be between 3 and 3*1.05
+        print(real_movement_time)
+        assert real_movement_time <= (movement_time * 1.05)
+        assert real_movement_time >= movement_time
+        # This is the estimated number of cycles that the robot will perform
+        # in the given amount of time
+        print(num_cycles)
+        assert num_cycles >= (movement_time / (sleep_speed * 2)) * 0.95
+
+        """
+        Results of test:
+        real time: 10 seconds
+        num_cycles: 50
+        sleep_speed: 0.1
+        degrees_rotated: <unknown-(need rotary encoder data)>
+
+        real time: 25 seconds
+        num_cycles: 50
+        sleep_speed: 0.25
+        degrees_rotated: <unknown-(need rotary encoder data)>
+        estimated degrees rotated: estimated to around 270 degrees, but the left
+            track came off of the front left wheel (not the drive wheel)
+        """
+
+
+    @pytest.mark.skip(reason="Passed.")
     def test_move_robot(self):
         """move forward, turn, then move forward again."""
         self.m.forward(movement_time=3)
