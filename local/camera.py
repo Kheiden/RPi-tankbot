@@ -3,6 +3,7 @@ from datetime import datetime
 
 import numpy as np
 import threading
+import movement
 import random
 import queue
 import glob
@@ -15,6 +16,8 @@ from PIL import Image
 class Camera():
 
     def __init__(self):
+        self.m = movement.Movement()
+
         self.servo_axis_x_pin = 11
         self.servo_axis_y_pin = 13
 
@@ -83,9 +86,13 @@ class Camera():
         return True
 
 
-    def realtime_disparity_map_stream(self, time_on, action=None, save_disparity_image=False, override_warmup=False):
+    def realtime_disparity_map_stream(self, time_on, action=None,
+        save_disparity_image=False,
+        override_warmup=False,
+        autonomous_routine=None):
+
         frame_counter = 0
-        processing_time01 = cv2.getTickCount()
+
         res_x = 640
         res_y = 480
         npzfile = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
@@ -100,6 +107,9 @@ class Camera():
         left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
         left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
         while True:
+            processing_time01 = cv2.getTickCount()
+            # Stop moving
+            self.m.stop()
             imgL, imgR = self.take_stereo_photo(
                 res_x,
                 res_y,
@@ -121,15 +131,26 @@ class Camera():
                 if num_pixels_above_threshold >= num_threshold:
                     # This means that we need to stop the robot ASAP
                     print("Object detected too close!")
-                    action = 'stop_robot'
+                    #action = 'stop_robot'
                     processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
-                    return processing_time, frame_counter, action
+                    #return processing_time, frame_counter, action
+                    #move left or right
+                    direction = random.choice(["right", "left"])
+                    print("Rotating {} to avoid obstacle".format(direction))
+                    self.m.rotate_on_carpet(self, direction=direction,
+                        movement_time=6,
+                        sleep_speed=0.25)
+                else:
+                    # this means that there are no objects in the way
+                    processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
+                    print("Disparity map took {} seconds to process".format(processing_time))
+                    # use the threadblocking forward command with the sleep parameter set
+                    self.m.forward(1)
 
-
-            frame_counter += 1
-            processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
-            if processing_time >= time_on:
-                return processing_time, frame_counter, None
+                frame_counter += 1
+                processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
+                if processing_time >= time_on:
+                    return processing_time, frame_counter, None
 
     def create_disparity_map(self, imgLeft, imgRight, res_x=640, res_y=480, npzfile=None, save_disparity_image=False):
         """
@@ -214,9 +235,10 @@ class Camera():
         if save_disparity_image == True:
             jpg_image = Image.fromarray(disparity_normalized*255)
             jpg_image = jpg_image.convert('RGB')
-            jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}.jpg".format(time.time()), format='JPEG')
+            timestamp = time.time()
+            jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}.jpg".format(timestamp), format='JPEG')
             jpg_image = Image.fromarray(imgLeft)
-            jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}_color.jpg".format(time.time()), format='JPEG')
+            jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}_color.jpg".format(timestamp), format='JPEG')
 
         return imgLeft, disparity
 
