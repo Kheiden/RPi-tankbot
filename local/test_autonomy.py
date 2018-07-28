@@ -28,5 +28,6 @@ class Autonomy():
 
 
     @pytest.mark.skip(reason="Passed.")
+    def test_basic_collision_avoidance(self):
         output = self.a.test_collision_avoidance()
         assert output is not None
