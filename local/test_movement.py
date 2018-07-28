@@ -56,14 +56,20 @@ class TestMovement():
     @pytest.mark.skip(reason="Passed.")
     def test_move_robot(self):
         """move forward, turn, then move forward again."""
+        time_on = 12
+        processing_time01 = cv2.getTickCount()
         self.m.forward(movement_time=3)
         self.m.backward(movement_time=3)
         self.m.rotate(direction="right", movement_time=3)
         self.m.rotate(direction="left", movement_time=3)
+        processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
+        assert processing_time <= (time_on * 1.05)
 
     @pytest.mark.skip(reason="Passed.")
     def test_infinite_motor_movement(self):
         """Move motors without passing movement_time variable"""
+        time_on = 12
+        processing_time01 = cv2.getTickCount()
         self.m.forward()
         time.sleep(3)
         self.m.stop()
@@ -76,3 +82,65 @@ class TestMovement():
         self.m.rotate(direction="left")
         time.sleep(3)
         self.m.stop()
+        processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
+        assert processing_time <= (time_on * 1.05)
+
+    @pytest.mark.skip(reason="Not yet passed.")
+    def test_camera_servo_rotation_horizontal(self):
+        # TODO- Update this test
+        degrees = [-60, -45, -15, 0, 15, 45, 60]
+
+        for degrees in list:
+            output = self.c.take_stereo_photo()
+            undistorted = self.c.undistort(output)
+            location_1 = self.c.check_where_camera_is_pointing()
+
+            self.m.move_servo_to_coords(degrees, 0)
+            output = self.c.take_stereo_photo()
+            undistorted = self.c.undistort(output)
+            location_2 = self.c.check_where_camera_is_pointing()
+
+            result = self.c.calculate_delta(location_1, location_2)
+            assert result == degrees_to_be_rotated
+
+    @pytest.mark.skip(reason="Not yet passed.")
+    def test_camera_servo_rotation_vertical(self):
+        # TODO- Update this test
+        degrees = [-60, -45, -15, 0, 15, 45, 60]
+        
+        for degrees in list:
+            output = self.c.take_stereo_photo()
+            undistorted = self.c.undistort(output)
+            location_1 = self.c.check_where_camera_is_pointing()
+
+            self.m.move_servo_to_coords(0, degrees)
+            output = self.c.take_stereo_photo()
+            undistorted = self.c.undistort(output)
+            location_2 = self.c.check_where_camera_is_pointing()
+
+            result = self.c.calculate_delta(location_1, location_2)
+            assert result == degrees_to_be_rotated
+
+
+    @pytest.mark.skip(reason="Not yet passed.")
+    def test_smooth_rotate(self):
+        """First, center the camera"""
+        self.c.move_camera(0, 0)
+        """Then, move to a certain coordinate"""
+        x_start = 0
+        y_start = 0
+        x_end = 45
+        y_end = 30
+        """Testing Slow speed"""
+        speed = "SLOW"
+        self.c.move_camera_smooth(x_start, y_start, x_end, y_end, speed)
+        """Reset Camera to zero"""
+        self.c.move_camera(0, 0)
+        """Testing fast speed"""
+        speed = "FAST"
+        self.c.move_camera_smooth(x_start, y_start, x_end, y_end, speed)
+
+
+    @pytest.mark.skip(reason="Not yet passed.")
+    def test_zero_camera(self):
+        self.c.move_camera(0, 0)

@@ -8,6 +8,10 @@ import cv2
 class Movement():
 
     def __init__(self):
+        """
+        This class is used for all Robot movement related code, including
+        moving the servos for the camera.
+        """
         # Inport the robot's state
         self.state = state.State()
 
@@ -29,6 +33,27 @@ class Movement():
         GPIO.setup(self.Motor2A,GPIO.OUT)
         GPIO.setup(self.Motor2B,GPIO.OUT)
         GPIO.setup(self.Motor2E,GPIO.OUT)
+
+        # Related to the unimplemented X and Y camera servos
+        self.servo_axis_x_pin = 11
+        self.servo_axis_y_pin = 13
+
+        x_axis_degrees = 0
+        y_axis_degrees = 0
+        # x_axis
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(11,GPIO.OUT)
+        self.pwm_x=GPIO.PWM(self.servo_axis_x_pin,50)
+        self.pwm_x.start(1/18*(x_axis_degrees+90)+2)
+
+        # y_axis
+        GPIO.setup(13,GPIO.OUT)
+        self.pwm_y=GPIO.PWM(self.servo_axis_y_pin,50)
+        self.pwm_y.start(1/18*(y_axis_degrees+90)+2)
+
+        time.sleep(1)
+        self.pwm_x.stop()
+        self.pwm_y.stop()
 
 
     def rotate_on_carpet(self, direction=None, movement_time=None, sleep_speed=0.25):
@@ -156,6 +181,51 @@ class Movement():
         if movement_time != None:
             sleep(movement_time)
             self.stop()
+
+    def move_camera(self, x_axis_degrees=None, y_axis_degrees=None):
+        """
+        # input in degrees, output in DutyCycle
+        # pwm_x 0 is neutral, 90 is to the right, -90 is to the left
+        # pwm_y 0 is neutral, 90 is up, -90 is down
+        """
+        if x_axis_degrees != None:
+            self.pwm_x=GPIO.PWM(self.servo_axis_x_pin,50)
+            self.pwm_x.start(1/18*((x_axis_degrees*-1)+90)+2)
+        if y_axis_degrees != None:
+            self.pwm_y=GPIO.PWM(self.servo_axis_y_pin,50)
+            self.pwm_y.start(1/18*((y_axis_degrees*-1)+90)+2)
+        """GPIO movement is not thread-blocking, so we must sleep thread"""
+        time.sleep(0.75)
+        self.stop_servos()
+
+    def move_camera_smooth(self, x_start, y_start, x_end, y_end, speed):
+        """
+        First move x_axis, then move y_axis
+        TODO: Refactor this to move both axises at the same time.
+        """
+        speed_dict = {
+            "SLOW": 0.1,
+            "FAST": 0.01
+        }
+        timesleep = speed_dict[speed]
+
+        for i in range(x_start, x_end, 2):
+            self.move_camera(i, None)
+            time.sleep(timesleep)
+            self.stop_servos()
+            time.sleep(timesleep)
+
+        for i in range(y_start, y_end, 2):
+            self.move_camera(None, i)
+            time.sleep(timesleep)
+            self.stop_servos()
+            time.sleep(timesleep)
+
+        self.stop_servos()
+
+    def stop_servos(self):
+        self.pwm_x.stop()
+        self.pwm_y.stop()
 
     def stop_motors(self):
         GPIO.output(self.Motor1E,GPIO.LOW)

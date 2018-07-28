@@ -24,81 +24,6 @@ class TestCamera():
         """
         self.c.stop_servos()
 
-    def test_basic_autonomous_routine(self):
-        """
-        This test is used to run a basic autonomous routine which will perform
-        the following:
-          1) Capture disparity map
-          2) Move forward
-          3) Repeat
-          If the robot detects an object being too close, it will rotate an
-          arbritary amount of time either left or right then continue with step 1
-        """
-        time_on = 60
-        action = "rotate_random"
-        # Threshold is the value between 0 and 255 that a pixel needs to be above
-        # in order to count as being "too close"
-        threshold = 200
-        # num_threshold is the number of pixels that are above the threshold
-        # 640*480 = 307200
-        # 640*480*0.05 = 15360
-        # 640*480*0.01 = 30720
-        # 5 percent: 4'6" to 4'10" away from target
-        # 10 percent: <tbd>
-        num_threshold = 30720
-        action = [threshold, num_threshold, action]
-
-        processing_time, frame_counter, action = self.c.realtime_disparity_map_stream(time_on=time_on,
-            action=action,
-            save_disparity_image=True,
-            override_warmup=False,
-            autonomous_routine="basic")
-
-    @pytest.mark.skip(reason="Passed.")
-    def test_collision_avoidance(self):
-        """
-        This test will be used to determine if the RPi is about to run into a
-        physical object.  This will be used by the autonomous routine to determine
-        when to stop the robot.
-
-        This test is comprised of a few parts.  First, the RPi takes a disparity
-        map photo.  Second, the RPi checks if the disparity_map has pixels which
-        are above the threshold, effectively proving that there is an object which
-        is too close to the robot. Third, the method will send a shutdown function to
-        the RPi to cease all movement.
-
-        After I'm able to process the collision_avoidance method on a single disparity_map,
-        I'll use it on the disparity_map stream.
-        """
-        # Max time on
-        time_on = 30
-        action = "stop_if_close"
-        # Threshold is the value between 0 and 255 that a pixel needs to be above
-        # in order to count as being "too close"
-        threshold = 200
-        # num_threshold is the number of pixels that are above the threshold
-        # 640*480 = 307200
-        # 640*480*0.05 = 15360
-        # 640*480*0.01 = 30720
-        # 5 percent: 4'6" to 4'10" away from target
-        # 10 percent: <tbd>
-        num_threshold = 30720
-        action = [threshold, num_threshold]
-        movement_time = 0.50
-        sleep_time = 2.00
-        self.m.forward_slow_thread(movement_time, sleep_time)
-        _, _, action = self.c.realtime_disparity_map_stream(time_on=time_on,
-            action=action,
-            save_disparity_image=True,
-            override_warmup=False)
-        # %5 error tolerance for the stream to be on
-        if action == 'stop_robot':
-            print("Stopping robot.")
-            self.m.stop()
-
-        assert action is not None
-
-
 
     @pytest.mark.skip(reason="Passed.")
     def test_stereo_photo_speed(self):
@@ -266,41 +191,6 @@ class TestCamera():
             assert (result2[0]*1000 < threshold_miliseconds)
             cv2.imwrite('{}/input_output/{}/output_right.jpg'.format(self.home_dir, resolution), np.hstack((img, result2[1])))
 
-    @pytest.mark.skip(reason="Passed.")
-    def test_calibrate_stereo_camera(self):
-        threshold_seconds = 30
-        result1 = self.c.calibrate_camera(cam_num=0)
-        print(result1)
-        assert (result1 < threshold_seconds)
-        result2 = self.c.calibrate_camera(cam_num=1)
-        print(result2)
-        assert (result2 < threshold_seconds)
-        result3 = self.c.calibrate_stereo_cameras()
-
-
-    @pytest.mark.skip(reason="Passed.")
-    def test_calibrate_cameras(self):
-        """
-        # Calibration takes about half an hour for each camera
-        # if the calibration data exists, then the method will return
-        """
-        threshold_seconds = 1800
-        result1 = self.c.calibrate_camera(cam_num=0, res_x=1920, res_y=1080)
-        print(result1)
-        assert (result1 < threshold_seconds)
-        result2 = self.c.calibrate_camera(cam_num=1, res_x=1920, res_y=1080)
-        print(result2)
-        assert (result2 < threshold_seconds)
-
-
-    @pytest.mark.skip(reason="Passed.")
-    def test_chessboard_photos(self):
-        res_x = 640 #1920
-        res_y = 480 #1080
-        for i in range(15):
-            width, height = self.c.take_stereo_photo(res_x, res_y, type="separate")
-            assert width == res_x
-            assert height == res_y
 
     @pytest.mark.skip(reason="Passed.")
     def test_stereo_photo(self):
@@ -348,51 +238,3 @@ class TestCamera():
         width, height = self.c.take_stereo_photo(res_x, res_y , type="combined")
         assert width == res_x*2
         assert height == res_y
-
-    @pytest.mark.skip(reason="Not yet passed.")
-    def test_camera_rotation(self):
-        for i in range(-90, 91, 10):
-            print("Moving camera to {}".format(i))
-            self.c.move_camera(i, i)
-            time.sleep(0.5)
-            print("Stopping servos...")
-            self.c.stop_servos()
-            time.sleep(0.5)
-        self.assertTrue(True)
-
-    @pytest.mark.skip(reason="Not yet passed.")
-    def test_degree(self):
-        x_axis_degrees = 0
-        y_axis_degrees = 0
-
-        print("Moving x_axis to {} and y_axis to {}".format(
-            x_axis_degrees,
-            y_axis_degrees))
-        self.c.move_camera(x_axis_degrees, y_axis_degrees)
-
-
-    @pytest.mark.skip(reason="Not yet passed.")
-    def test_smooth_rotate(self):
-        """First, center the camera"""
-        self.c.move_camera(0, 0)
-        """Then, move to a certain coordinate"""
-        x_start = 0
-        y_start = 0
-        x_end = 45
-        y_end = 30
-        """Testing Slow speed"""
-        speed = "SLOW"
-        self.c.move_camera_smooth(x_start, y_start, x_end, y_end, speed)
-        """Reset Camera to zero"""
-        self.c.move_camera(0, 0)
-        """Testing fast speed"""
-        speed = "FAST"
-        self.c.move_camera_smooth(x_start, y_start, x_end, y_end, speed)
-
-    @pytest.mark.skip(reason="Not yet passed.")
-    def test_zero_camera(self):
-        self.c.move_camera(0, 0)
-
-
-if __name__ == '__main__':
-    main()
