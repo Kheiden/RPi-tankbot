@@ -22,7 +22,7 @@ class TestCamera():
         """ teardown any state that was previously setup with a call to
         setup_class.
         """
-        self.c.stop_servos()
+        self.m.stop()
 
 
     @pytest.mark.skip(reason="Test Failing")
@@ -109,9 +109,25 @@ class TestCamera():
         fps = 2
         res_x = 640
         res_y = 480
+
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
         processing_time01 = cv2.getTickCount()
         while True:
-            result = self.c.take_stereo_photo(res_x, res_y, type="image_array", override_warmup=True)
+            _, _ = self.c.take_stereo_photo(res_x, res_y,
+                right=right,
+                left=left,
+                type="image_array",
+                override_warmup=True,
+                quick_capture=True)
             processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             frame_counter += 1
             if processing_time >= time_on:
@@ -143,7 +159,24 @@ class TestCamera():
     def test_create_3d_point_cloud(self):
         res_x = 640
         res_y = 480
-        imgL, imgR = self.c.take_stereo_photo(res_x, res_y, type="image_array")
+
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        imgL, imgR = self.c.take_stereo_photo(res_x, res_y,
+                right=right,
+                left=left,
+                type="image_array",
+                override_warmup=True,
+                quick_capture=True)
+
         imgLeft, disparity_map = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
         result = self.c.create_3d_point_cloud(imgLeft, disparity_map)
         assert result
@@ -211,7 +244,8 @@ class TestCamera():
         assert width == res_x*2
         assert height == res_y
 
-        width, height = self.c.take_stereo_photo(res_x, res_y, right, left, type="separate")
+        width, height = self.c.take_stereo_photo(res_x, res_y,
+            right, left, override_warmup=False, type="separate")
         assert width == res_x
         assert height == res_y
 
