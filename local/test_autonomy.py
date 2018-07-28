@@ -1,8 +1,9 @@
-from camera import Camera
-
+import autonomy
 import movement
+import camera
+import pytest
 
-class Autonomy():
+class TestAutonomy():
 
     @classmethod
     def setup_class(self):
