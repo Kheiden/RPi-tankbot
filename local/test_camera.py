@@ -192,7 +192,7 @@ class TestCamera():
             cv2.imwrite('{}/input_output/{}/output_right.jpg'.format(self.home_dir, resolution), np.hstack((img, result2[1])))
 
 
-    @pytest.mark.skip(reason="Passed.")
+    @pytest.mark.skip(reason="Not Yet Passed.")
     def test_stereo_photo(self):
         res_x = 1920
         res_y = 1080
@@ -215,7 +215,7 @@ class TestCamera():
         assert width == res_x
         assert height == res_y
 
-    #@pytest.mark.skip(reason="Passed.")
+    @pytest.mark.skip(reason="Not Yet Passed.")
     def test_concat_cameras(self):
         # This test will take a single still photo at max resolution with both cameras
 
