@@ -192,49 +192,48 @@ class TestCamera():
             cv2.imwrite('{}/input_output/{}/output_right.jpg'.format(self.home_dir, resolution), np.hstack((img, result2[1])))
 
 
-    #@pytest.mark.skip(reason="Passed.")
+    @pytest.mark.skip(reason="Passed.")
     def test_stereo_photo(self):
         res_x = 1920
         res_y = 1080
-        width, height = self.c.take_stereo_photo(res_x, res_y, type="combined")
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        width, height = self.c.take_stereo_photo(res_x, res_y,
+            right, left, override_warmup=False, type="combined")
         assert width == res_x*2
         assert height == res_y
 
-        res_x = 1920
-        res_y = 1080
-        width, height = self.c.take_stereo_photo(res_x, res_y, type="separate")
+        width, height = self.c.take_stereo_photo(res_x, res_y, right, left, type="separate")
         assert width == res_x
         assert height == res_y
 
     #@pytest.mark.skip(reason="Passed.")
     def test_concat_cameras(self):
         # This test will take a single still photo at max resolution with both cameras
-        res_x = 320
-        res_y = 240
-        width, height = self.c.take_stereo_photo(res_x, res_y, type="combined")
-        assert width == res_x*2
-        assert height == res_y
 
-        res_x = 640
-        res_y = 480
-        width, height = self.c.take_stereo_photo(res_x, res_y, type="combined")
-        assert width == res_x*2
-        assert height == res_y
+        resolutions = [(320, 240), (640, 480), (1280, 720),
+            (1904, 1080), (1920, 1080)]
 
-        res_x = 1280
-        res_y = 720
-        width, height = self.c.take_stereo_photo(res_x, res_y , type="combined")
-        assert width == res_x*2
-        assert height == res_y
+        for res in resolutions:
+            right = cv2.VideoCapture(1)
+            right.set(cv2.CAP_PROP_FRAME_WIDTH, res[0])
+            right.set(cv2.CAP_PROP_FRAME_HEIGHT, res[1])
+            right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
-        res_x = 1904
-        res_y = 1080
-        width, height = self.c.take_stereo_photo(res_x, res_y , type="combined")
-        assert width == res_x*2
-        assert height == res_y
+            left = cv2.VideoCapture(0)
+            left.set(cv2.CAP_PROP_FRAME_WIDTH, res[0])
+            left.set(cv2.CAP_PROP_FRAME_HEIGHT, res[1])
+            left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
-        res_x = 1920
-        res_y = 1080
-        width, height = self.c.take_stereo_photo(res_x, res_y , type="combined")
-        assert width == res_x*2
-        assert height == res_y
+            width, height = self.c.take_stereo_photo(res[0], res[1],
+                right, left, override_warmup=False, type="combined")
+            assert width == res_x*2
+            assert height == res_y
