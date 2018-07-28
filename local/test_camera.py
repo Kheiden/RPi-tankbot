@@ -25,7 +25,7 @@ class TestCamera():
         self.c.stop_servos()
 
 
-    @pytest.mark.skip(reason="Passed.")
+    #@pytest.mark.skip(reason="Passed.")
     def test_stereo_photo_speed(self):
         """
         I want to take stereo photos as fast as possible
@@ -85,7 +85,7 @@ class TestCamera():
         assert fake_frames < 30
         #frames per second: 0.2647685324087231
 
-    @pytest.mark.skip(reason="Not Yet Passed")
+    #@pytest.mark.skip(reason="Not Yet Passed")
     def test_create_3d_surroundings(self):
         """
         This test will be used to create 8 3d cloud points
@@ -102,7 +102,7 @@ class TestCamera():
             self.m.rotate(direction="right", movement_time=0.625)
         assert True
 
-    @pytest.mark.skip(reason="Test Failing.")
+    #@pytest.mark.skip(reason="Test Failing.")
     def test_camera_frames(self):
         time_on = 30
         frame_counter = 0
@@ -123,7 +123,7 @@ class TestCamera():
         #2.2 seconds per frame (14 frames)
 
 
-    @pytest.mark.skip(reason="Test Failing.")
+    #@pytest.mark.skip(reason="Test Failing.")
     def test_realtime_disparity_map_stream(self):
         # specify the amount of time that the stream is open for
         time_on = 30
@@ -139,7 +139,7 @@ class TestCamera():
         #3) 4.46 seconds per frame (7 frames)
         #4) 3.36 frames per second (9 frames)
 
-    @pytest.mark.skip(reason="Passed.")
+    #@pytest.mark.skip(reason="Passed.")
     def test_create_3d_point_cloud(self):
         res_x = 640
         res_y = 480
@@ -149,7 +149,7 @@ class TestCamera():
         assert result
 
 
-    @pytest.mark.skip(reason="Passed.")
+    #@pytest.mark.skip(reason="Passed.")
     def test_create_single_disparity_map(self):
         res_x = 640
         res_y = 480
@@ -170,7 +170,7 @@ class TestCamera():
             assert result
 
 
-    @pytest.mark.skip(reason="Passed.")
+    #@pytest.mark.skip(reason="Passed.")
     def test_undistort_image_multiple_resolution(self):
         """
         # I want to be able to undistort an image in less than 1 second
@@ -192,7 +192,7 @@ class TestCamera():
             cv2.imwrite('{}/input_output/{}/output_right.jpg'.format(self.home_dir, resolution), np.hstack((img, result2[1])))
 
 
-    @pytest.mark.skip(reason="Passed.")
+    #@pytest.mark.skip(reason="Passed.")
     def test_stereo_photo(self):
         res_x = 1920
         res_y = 1080
@@ -206,7 +206,7 @@ class TestCamera():
         assert width == res_x
         assert height == res_y
 
-    @pytest.mark.skip(reason="Passed.")
+    #@pytest.mark.skip(reason="Passed.")
     def test_concat_cameras(self):
         # This test will take a single still photo at max resolution with both cameras
         res_x = 320

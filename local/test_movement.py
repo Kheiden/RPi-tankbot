@@ -20,7 +20,7 @@ class TestMovement():
         """
         self.m.clear_gpio_motor_pins()
 
-    @pytest.mark.skip(reason="Passed.")
+    #@pytest.mark.skip(reason="Passed.")
     def test_rotate_on_carpet(self):
         """Issue #68 on GitHub"""
         movement_time = 25
@@ -53,7 +53,7 @@ class TestMovement():
         """
 
 
-    @pytest.mark.skip(reason="Passed.")
+    #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_move_robot(self):
         """move forward, turn, then move forward again."""
         time_on = 12
@@ -65,7 +65,7 @@ class TestMovement():
         processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
         assert processing_time <= (time_on * 1.05)
 
-    @pytest.mark.skip(reason="Passed.")
+    #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_infinite_motor_movement(self):
         """Move motors without passing movement_time variable"""
         time_on = 12
@@ -107,7 +107,7 @@ class TestMovement():
     def test_camera_servo_rotation_vertical(self):
         # TODO- Update this test
         degrees = [-60, -45, -15, 0, 15, 45, 60]
-        
+
         for degrees in list:
             output = self.c.take_stereo_photo()
             undistorted = self.c.undistort(output)

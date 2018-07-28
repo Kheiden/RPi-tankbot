@@ -1,9 +1,9 @@
-from camera import Camera
+import camera
 
 class Autonomy():
 
     def __init__(self):
-        self.c = Camera()
+        self.c = camera.Camera()
 
     def basic_autonomous_routine(self):
         """
@@ -20,7 +20,7 @@ class Autonomy():
         # Threshold is the value between 0 and 255 that a pixel needs to be above
         # in order to count as being "too close"
         #Default threshold = 200
-        threshold = 225
+        threshold = 220
         # num_threshold is the number of pixels that are above the threshold
         # 640*480 = 307200
         # 640*480*0.05 = 15360
