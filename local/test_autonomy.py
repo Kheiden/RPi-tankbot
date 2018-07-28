@@ -1,4 +1,5 @@
-from camera
+from camera import Camera
+
 import movement
 
 class Autonomy():
