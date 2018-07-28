@@ -53,7 +53,7 @@ class TestMovement():
         """
 
 
-    #@pytest.mark.skip(reason="Test Failing")
+    @pytest.mark.skip(reason="Passed.")
     def test_move_robot(self):
         """move forward, turn, then move forward again."""
         time_on = 12
@@ -63,10 +63,10 @@ class TestMovement():
         self.m.rotate(direction="right", movement_time=3)
         self.m.rotate(direction="left", movement_time=3)
         processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
-        print(processing_time)
+        #print(processing_time)
         assert processing_time <= (time_on * 1.05)
 
-    #@pytest.mark.skip(reason="Test Failing.")
+    @pytest.mark.skip(reason="Passed.")
     def test_infinite_motor_movement(self):
         """Move motors without passing movement_time variable"""
         time_on = 12
@@ -84,7 +84,7 @@ class TestMovement():
         time.sleep(3)
         self.m.stop()
         processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
-        print(processing_time)
+        #print(processing_time)
         assert processing_time <= (time_on * 1.05)
 
     @pytest.mark.skip(reason="Not yet passed.")
