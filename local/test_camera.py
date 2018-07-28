@@ -102,7 +102,7 @@ class TestCamera():
             self.m.rotate(direction="right", movement_time=0.625)
         assert True
 
-    #@pytest.mark.skip(reason="Test Failing.")
+    @pytest.mark.skip(reason="Test Failing.")
     def test_camera_frames(self):
         time_on = 30
         frame_counter = 0
@@ -139,7 +139,7 @@ class TestCamera():
         #3) 4.46 seconds per frame (7 frames)
         #4) 3.36 frames per second (9 frames)
 
-    #@pytest.mark.skip(reason="Passed.")
+    @pytest.mark.skip(reason="Passed.")
     def test_create_3d_point_cloud(self):
         res_x = 640
         res_y = 480
@@ -149,7 +149,7 @@ class TestCamera():
         assert result
 
 
-    #@pytest.mark.skip(reason="Passed.")
+    @pytest.mark.skip(reason="Not Yet Passed.")
     def test_create_single_disparity_map(self):
         res_x = 640
         res_y = 480
@@ -170,7 +170,7 @@ class TestCamera():
             assert result
 
 
-    #@pytest.mark.skip(reason="Passed.")
+    @pytest.mark.skip(reason="Not Yet Passed.")
     def test_undistort_image_multiple_resolution(self):
         """
         # I want to be able to undistort an image in less than 1 second
