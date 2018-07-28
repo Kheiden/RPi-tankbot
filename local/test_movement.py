@@ -1,7 +1,7 @@
-import pytest
-
-import time
 import movement
+import pytest
+import time
+import cv2
 
 class TestMovement():
 
