@@ -294,8 +294,10 @@ class Camera():
         #print(ret_left, ret_right)
 
         if ret_left == False:
+            print("Left Camera Not Working")
             return (None, None)
         if ret_right == False:
+            print("Right Camera Not Working")
             return (None, None)
 
         if quick_capture == False:
