@@ -238,9 +238,10 @@ class Camera():
         """
         # Takes an image in as a numpy array and undistorts it
         """
+        print("Successful 1")
         processing_time01 = cv2.getTickCount()
         right_or_left = ["_right" if cam_num==1 else "_left"][0]
-
+        print("Successful 2")
         h, w = img.shape[:2]
         print("Undistorting picture with (width, height):", (w, h))
         try:

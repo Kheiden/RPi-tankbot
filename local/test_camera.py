@@ -222,6 +222,7 @@ class TestCamera():
         for resolution in ['480p']:
             img = cv2.imread('{}/input_output/{}/input_left.jpg'.format(self.home_dir, resolution))
             threshold_miliseconds = 1000
+            print("Successful 0")
             result1 = self.c.undistort_image(img=img, cam_num=0)
             print(result1[0]*1000)
             assert (result1[0]*1000 < threshold_miliseconds)
