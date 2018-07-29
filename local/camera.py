@@ -230,7 +230,7 @@ class Camera():
             jpg_image = Image.fromarray(imgLeft)
             jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}_color.jpg".format(timestamp), format='JPEG')
             print("Successful 6")
-            
+
         return imgLeft, disparity
 
 
@@ -334,7 +334,7 @@ class Camera():
             #processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             return imgRGB_left, imgRGB_right
         else:
-            return
+            raise AttributeError
 
 
     def threaded_disparity_map(self, npzfile):
