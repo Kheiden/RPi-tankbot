@@ -135,6 +135,10 @@ class TestCamera():
                 break
         self.log.debug("processing_time:", processing_time)
         self.log.debug("frame_counter", frame_counter)
+
+        right.release()
+        left.release()
+
         assert processing_time <= (time_on * 1.05)
         assert frame_counter >= time_on * fps
         #2.2 seconds per frame (14 frames)
@@ -180,6 +184,10 @@ class TestCamera():
 
         imgLeft, disparity_map = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
         result = self.c.create_3d_point_cloud(imgLeft, disparity_map)
+
+        right.release()
+        left.release()
+
         assert result
 
 
@@ -210,6 +218,10 @@ class TestCamera():
         imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, False, type="image_array", quick_capture=True)
         self.log.debug("Successful 1")
         imgLeft, disparity_map = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
+
+        right.release()
+        left.release()
+
         assert disparity_map is not None
 
 
@@ -253,6 +265,7 @@ class TestCamera():
 
         width, height = self.c.take_stereo_photo(res_x, res_y,
             right, left, override_warmup=False, type="combined")
+
         assert width == res_x*2
         assert height == res_y
 
@@ -260,6 +273,10 @@ class TestCamera():
             right, left, override_warmup=False, type="separate")
         assert width == res_x
         assert height == res_y
+
+        right.release()
+        left.release()
+
 
     #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_concat_cameras(self):
@@ -284,3 +301,6 @@ class TestCamera():
                 right, left, override_warmup=False, type="combined")
             assert width == res[0]*2
             assert height == res[1]
+
+            right.release()
+            left.release()
