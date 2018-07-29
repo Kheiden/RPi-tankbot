@@ -199,6 +199,7 @@ class TestCamera():
 
         # Below images are BGR
         imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, False, type="image_array", quick_capture=True)
+        print("Successful 1")
         imgLeft, disparity_map = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
         assert disparity_map is not None
 

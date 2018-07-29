@@ -175,7 +175,7 @@ class Camera():
 
 
 
-
+        print("Successful 2")
         imgLeft = cv2.remap(imgLeft, leftMapX, leftMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
         imgRight = cv2.remap(imgRight, rightMapX, rightMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
 
@@ -212,14 +212,16 @@ class Camera():
         stereo.setUniquenessRatio(4) # was 3
         stereo.setTextureThreshold(0)
 
+        print("Successful 3")
         # Compute the disparity image
         disparity = stereo.compute(grayLeft, grayRight)
+        print("Successful 4")
         # Normalize the image for representation
         norm_coeff = 255 / disparity.max()
         disparity_normalized = disparity * norm_coeff / 255
         # No clue why but the above normalization changes the imgL, so I need to readjust it
         #imgLeft = imgLeft / 255
-
+        print("Successful 5")
         if save_disparity_image == True:
             jpg_image = Image.fromarray(disparity_normalized*255)
             jpg_image = jpg_image.convert('RGB')
@@ -227,7 +229,8 @@ class Camera():
             jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}.jpg".format(timestamp), format='JPEG')
             jpg_image = Image.fromarray(imgLeft)
             jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}_color.jpg".format(timestamp), format='JPEG')
-
+            print("Successful 6")
+            
         return imgLeft, disparity
 
 
