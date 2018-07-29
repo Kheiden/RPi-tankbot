@@ -245,7 +245,7 @@ class Camera():
         right_or_left = ["_right" if cam_num==1 else "_left"][0]
         self.log.debug("Determining height and width of image...")
         h, w = img.shape[:2]
-        self.log.debug("Undistorting picture with (width, height):", (w, h))
+        self.log.debug("Undistorting picture with (width, height): {},{}".format(w, h))
         try:
             npz_file = np.load('{}/calibration_data/{}p/camera_calibration{}.npz'.format(self.home_dir, h, right_or_left))
             if 'map1' and 'map2' in npz_file.files:
