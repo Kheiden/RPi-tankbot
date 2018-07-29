@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 from datetime import datetime
 from PIL import Image
+from tankbot_logs import RobotLog
 
 import numpy as np
 import threading
@@ -21,6 +22,7 @@ class Camera():
         - moving the camera servos
         - calibrating the cameras
         """
+        self.log = RobotLog()
         self.m = movement.Movement()
         self.home_dir = "/home/pi"
 
@@ -238,12 +240,12 @@ class Camera():
         """
         # Takes an image in as a numpy array and undistorts it
         """
-        print("Successful 1")
+        self.log.debug("Starting Timer...")
         processing_time01 = cv2.getTickCount()
         right_or_left = ["_right" if cam_num==1 else "_left"][0]
-        print("Successful 2")
+        self.log.debug("Determining height and width of image...")
         h, w = img.shape[:2]
-        print("Undistorting picture with (width, height):", (w, h))
+        self.log.debug("Undistorting picture with (width, height):", (w, h))
         try:
             npz_file = np.load('{}/calibration_data/{}p/camera_calibration{}.npz'.format(self.home_dir, h, right_or_left))
             if 'map1' and 'map2' in npz_file.files:
@@ -251,10 +253,10 @@ class Camera():
                 map1 = npz_file['map1']
                 map2 = npz_file['map2']
             else:
-                print("Camera data file found but data corrupted.")
+                self.log.debug("Camera data file found but data corrupted.")
                 return False
         except:
-            print("Camera calibration data not found in cache.")
+            self.log.debug("Camera calibration data not found in cache.")
             return False
 
         undistorted_img = cv2.remap(img, map1, map2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
