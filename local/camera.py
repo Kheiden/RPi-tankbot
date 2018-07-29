@@ -1,4 +1,4 @@
-import RPi.GPIO as GPIO
+self.log.debug(import RPi.GPIO as GPIO
 from datetime import datetime
 from PIL import Image
 from tankbot_logs import RobotLog
@@ -31,7 +31,7 @@ class Camera():
         """
         Based on sample code from OpenCV
         """
-        print('generating 3d point cloud...',)
+        self.log.debug('generating 3d point cloud...')
         h, w = imgL.shape[:2]
         f = 0.8*w                          # guess for focal length
         Q = np.float32([[1, 0, 0, -0.5*w],
@@ -68,7 +68,7 @@ class Camera():
             f.write((ply_header % dict(vert_num=len(verts))).encode('utf-8'))
             np.savetxt(f, verts, fmt='%f %f %f %d %d %d ')
 
-        print("3d cloud point saved to:", file_name)
+        self.log.debug("3d cloud point saved to:", file_name)
         return True
 
 
@@ -110,22 +110,22 @@ class Camera():
                 num_threshold = action[1]
                 b = np.where(result[1] > threshold)
                 num_pixels_above_threshold = len(b[0])
-                print("Threshold: {}/255, num_threshold: {}, num_pixels_above_threshold: {}".format(
+                self.log.debug("Threshold: {}/255, num_threshold: {}, num_pixels_above_threshold: {}".format(
                     threshold,
                     num_threshold,
                     num_pixels_above_threshold
                 ))
                 if num_pixels_above_threshold >= num_threshold:
                     # This means that we need to stop the robot ASAP
-                    print("Object detected too close!")
+                    self.log.debug("Object detected too close!")
                     if action[2] == 'stop_if_close':
                         self.m.stop()
-                        print("Stopping robot to avoid collision")
+                        self.log.debug("Stopping robot to avoid collision")
                         return None, None, action[2]
 
                     if action[2] == 'rotate_random':
                         direction = random.choice(["right", "left"])
-                        print("Rotating {} to avoid obstacle".format(direction))
+                        self.log.debug("Rotating {} to avoid obstacle".format(direction))
                         #move left or right
                         self.m.rotate_on_carpet(direction=direction,
                             movement_time=6,
@@ -133,7 +133,7 @@ class Camera():
                 else:
                     # this means that there are no objects in the way
                     disparity_map_time = (cv2.getTickCount() - disparity_map_time)/ cv2.getTickFrequency()
-                    print("Disparity map took {} seconds to process".format(disparity_map_time))
+                    self.log.debug("Disparity map took {} seconds to process".format(disparity_map_time))
                     # use the threadblocking forward command with the sleep parameter set
                     self.m.forward(1)
 
@@ -177,7 +177,7 @@ class Camera():
 
 
 
-        print("Successful 2")
+        self.log.debug("Successful 2")
         imgLeft = cv2.remap(imgLeft, leftMapX, leftMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
         imgRight = cv2.remap(imgRight, rightMapX, rightMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
 
@@ -214,16 +214,16 @@ class Camera():
         stereo.setUniquenessRatio(4) # was 3
         stereo.setTextureThreshold(0)
 
-        print("Successful 3")
+        self.log.debug("Successful 3")
         # Compute the disparity image
         disparity = stereo.compute(grayLeft, grayRight)
-        print("Successful 4")
+        self.log.debug("Successful 4")
         # Normalize the image for representation
         norm_coeff = 255 / disparity.max()
         disparity_normalized = disparity * norm_coeff / 255
         # No clue why but the above normalization changes the imgL, so I need to readjust it
         #imgLeft = imgLeft / 255
-        print("Successful 5")
+        self.log.debug("Successful 5")
         if save_disparity_image == True:
             jpg_image = Image.fromarray(disparity_normalized*255)
             jpg_image = jpg_image.convert('RGB')
@@ -231,7 +231,7 @@ class Camera():
             jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}.jpg".format(timestamp), format='JPEG')
             jpg_image = Image.fromarray(imgLeft)
             jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}_color.jpg".format(timestamp), format='JPEG')
-            print("Successful 6")
+            self.log.debug("Successful 6")
 
         return imgLeft, disparity
 
@@ -249,7 +249,7 @@ class Camera():
         try:
             npz_file = np.load('{}/calibration_data/{}p/camera_calibration{}.npz'.format(self.home_dir, h, right_or_left))
             if 'map1' and 'map2' in npz_file.files:
-                #print("Camera calibration data has been found in cache.")
+                #self.log.debug("Camera calibration data has been found in cache.")
                 map1 = npz_file['map1']
                 map2 = npz_file['map2']
             else:
@@ -280,7 +280,7 @@ class Camera():
         CAMERA_HEIGHT = res_y
         CAMERA_WIDTH = res_x
 
-        #print("Photo Resolution: res_y: {}, res_x: {}".format(res_y, res_x))
+        #self.log.debug("Photo Resolution: res_y: {}, res_x: {}".format(res_y, res_x))
 
         if override_warmup or quick_capture == True:
             num_photos = 1
@@ -294,13 +294,13 @@ class Camera():
         _, rightFrame = right.retrieve()
         _, leftFrame = left.retrieve()
 
-        #print(ret_left, ret_right)
+        #self.log.debug(ret_left, ret_right)
 
         if ret_left == False:
-            print("Left Camera Not Working")
+            self.log.debug("Left Camera Not Working")
             return (None, None)
         if ret_right == False:
-            print("Right Camera Not Working")
+            self.log.debug("Right Camera Not Working")
             return (None, None)
 
         if quick_capture == False:
@@ -339,7 +339,7 @@ class Camera():
             #processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             return imgRGB_left, imgRGB_right
         else:
-            print("Incorrect Parameter set for `type`")
+            self.log.debug("Incorrect Parameter set for `type`")
             raise AttributeError
 
 
@@ -348,7 +348,7 @@ class Camera():
         res_y = 480
         #time.sleep(1)
         while True:
-            print("self.input_queue.qsize():", self.input_queue.qsize())
+            self.log.debug("self.input_queue.qsize(): {}".format(self.input_queue.qsize()))
             imgBGR_left, imgBGR_right = self.input_queue.get(timeout=8)
 
             result = self.create_disparity_map(imgBGR_left, imgBGR_right, res_x, res_y, npzfile=npzfile, save_disparity_image=False)
@@ -363,7 +363,7 @@ class Camera():
             bytes_array = io.BytesIO()
             jpg_image.save(bytes_array, format='JPEG')
             jpg_image_bytes = bytes_array.getvalue()
-            print("~~~putting frame in output queue!")
+            self.log.debug("~~~putting frame in output queue!")
             self.output_queue.put(jpg_image_bytes)
 
             if self.input_queue.empty():
@@ -393,7 +393,7 @@ class Camera():
                 type="image_array",
                 override_warmup=True,
                 quick_capture=True)
-            print("Putting image in self.input_queue")
+            self.log.debug("Putting image in self.input_queue")
 
             # TODO- remove this sleep command
             time.sleep(0.5 + (self.input_queue.qsize()/100))
@@ -410,21 +410,21 @@ class Camera():
 
         # first, start the thread for the camera
         thread = threading.Thread(group=None, target=self.threaded_take_stereo_photo, name="Thread_camera")
-        print("Starting Thread_camera")
+        self.log.debug("Starting Thread_camera")
         thread.start()
-        print("Sleeping main thread...")
+        self.log.debug("Sleeping main thread...")
         time.sleep(0.5)
-        print("main thread waking up")
+        self.log.debug("main thread waking up")
         # second, start the threads for disparity_map processing
         for i in range(3):
             thread = threading.Thread(group=None, target=self.threaded_disparity_map, name="Thread_num{}".format(i), args=(npzfile,))
-            print("Starting Thread_num", i)
+            self.log.debug("Starting Thread_num {}".format(i))
             thread.start()
 
         # finally, rest the global interperter lock here:
         while True:
             if self.output_queue.empty() is not True:
-                print("displaying image!")
+                self.log.debug("displaying image!")
                 jpg_image_bytes = self.output_queue.get()
                 yield (b'--frame\r\n'
                     b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
@@ -494,7 +494,7 @@ class Camera():
 
         while(True):
             if not (left.grab() and right.grab()):
-                print("No more frames")
+                self.log.debug("No more frames")
                 break
 
             _, leftFrame = left.retrieve()
