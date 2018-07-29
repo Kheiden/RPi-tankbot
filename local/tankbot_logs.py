@@ -8,8 +8,6 @@ class RobotLog:
     """
     def __init__(self):
         log_path = "/home/pi/RPi-tankbot/logs/robot.log"
-        if not os.path.exists(os.path.dirname(log_path)):
-            os.makedirs(os.path.dirname(log_path))
         logging.basicConfig(
             filename=os.path.abspath(log_path),
             level=logging.DEBUG,
@@ -26,8 +24,6 @@ class ServerLog:
 
     def __init__(self):
         log_path = "/home/pi/RPi-tankbot/logs/server.log"
-        if not os.path.exists(os.path.dirname(log_path)):
-            os.makedirs(os.path.dirname(log_path))
         logging.basicConfig(
             filename=os.path.abspath(log_path),
             level=logging.DEBUG,

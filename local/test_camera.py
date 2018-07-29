@@ -61,7 +61,7 @@ class TestCamera():
                 quick_capture=True)
             type_left = type(imgBGR_left)
             type_right =type(imgBGR_right)
-            #print(type_left, type_right)
+            #self.log.debug(type_left, type_right)
             if type_left == type(None):
                 fake_frames += 1
             if type_right == type(None):
@@ -77,10 +77,10 @@ class TestCamera():
         right.release()
         left.release()
 
-        print("processing_time:", processing_time)
-        print("frame_counter", frame_counter)
-        print("frames per second:", (frame_counter/processing_time))
-        print("fake_frames, real_frames", fake_frames, real_frames)
+        self.log.debug("processing_time:", processing_time)
+        self.log.debug("frame_counter", frame_counter)
+        self.log.debug("frames per second:", (frame_counter/processing_time))
+        self.log.debug("fake_frames, real_frames", fake_frames, real_frames)
         assert processing_time <= (time_on * 1.05)
         assert (frame_counter) >= time_on * fps
         assert fake_frames < 30
@@ -133,8 +133,8 @@ class TestCamera():
             frame_counter += 1
             if processing_time >= time_on:
                 break
-        print("processing_time:", processing_time)
-        print("frame_counter", frame_counter)
+        self.log.debug("processing_time:", processing_time)
+        self.log.debug("frame_counter", frame_counter)
         assert processing_time <= (time_on * 1.05)
         assert frame_counter >= time_on * fps
         #2.2 seconds per frame (14 frames)
@@ -148,7 +148,7 @@ class TestCamera():
         fps = 2
         processing_time, frame_counter = self.c.realtime_disparity_map_stream(time_on=time_on)
         # %5 error tolerance for the stream to be on
-        print("Processing time:{} number of frames:{}".format(processing_time, frame_counter))
+        self.log.debug("Processing time:{} number of frames:{}".format(processing_time, frame_counter))
         assert processing_time <= (time_on * 1.05)
         assert frame_counter >= time_on * fps
         #1) 6.18 seconds per frame (1 frame)
@@ -187,28 +187,28 @@ class TestCamera():
     def test_create_single_disparity_map(self):
         res_x = 640
         res_y = 480
-        print("Successful -1")
+        self.log.debug("Successful -1")
         right = cv2.VideoCapture(1)
-        print("Successful -1.1")
+        self.log.debug("Successful -1.1")
         right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
-        print("Successful -1.2")
+        self.log.debug("Successful -1.2")
         right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
-        print("Successful -1.3")
+        self.log.debug("Successful -1.3")
         right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
-        print("Successful -1.4")
+        self.log.debug("Successful -1.4")
 
         left = cv2.VideoCapture(0)
-        print("Successful -1.5")
+        self.log.debug("Successful -1.5")
         left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
-        print("Successful -1.6")
+        self.log.debug("Successful -1.6")
         left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
-        print("Successful -1.7")
+        self.log.debug("Successful -1.7")
         left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
         # Below images are BGR
-        print("Successful 0")
+        self.log.debug("Successful 0")
         imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, False, type="image_array", quick_capture=True)
-        print("Successful 1")
+        self.log.debug("Successful 1")
         imgLeft, disparity_map = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
         assert disparity_map is not None
 
@@ -220,19 +220,19 @@ class TestCamera():
         """
         #['270p', "540p", "1080p"]
         for resolution in ['480p']:
-            print("Successful -1")
+            self.log.debug("Successful -1")
             img = cv2.imread('{}/input_output/{}/input_left.jpg'.format(self.home_dir, resolution))
             threshold_miliseconds = 1000
-            print("Successful 0")
+            self.log.debug("Successful 0")
             result1 = self.c.undistort_image(img=img, cam_num=0)
-            print(result1[0]*1000)
+            self.log.debug(result1[0]*1000)
             assert (result1[0]*1000 < threshold_miliseconds)
             cv2.imwrite('{}/input_output/{}/output_left.jpg'.format(self.home_dir, resolution), np.hstack((img, result1[1])))
 
             img = cv2.imread('{}/input_output/{}/input_right.jpg'.format(self.home_dir, resolution))
             assert (result1[0]*1000 < threshold_miliseconds)
             result2 = self.c.undistort_image(img=img, cam_num=1)
-            print(result2[0]*1000)
+            self.log.debug(result2[0]*1000)
             assert (result2[0]*1000 < threshold_miliseconds)
             cv2.imwrite('{}/input_output/{}/output_right.jpg'.format(self.home_dir, resolution), np.hstack((img, result2[1])))
 
