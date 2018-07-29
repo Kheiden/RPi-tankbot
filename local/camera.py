@@ -1,4 +1,4 @@
-self.log.debug(import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 from datetime import datetime
 from PIL import Image
 from tankbot_logs import RobotLog
