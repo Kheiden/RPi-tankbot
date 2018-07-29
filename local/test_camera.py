@@ -220,6 +220,7 @@ class TestCamera():
         """
         #['270p', "540p", "1080p"]
         for resolution in ['480p']:
+            print("Successful -1")
             img = cv2.imread('{}/input_output/{}/input_left.jpg'.format(self.home_dir, resolution))
             threshold_miliseconds = 1000
             print("Successful 0")
@@ -264,8 +265,9 @@ class TestCamera():
     def test_concat_cameras(self):
         # This test will take a single still photo at max resolution with both cameras
 
-        resolutions = [(320, 240), (640, 480), (1280, 720),
-            (1904, 1080), (1920, 1080)]
+        resolutions = [(640, 480)]
+        #resolutions = [(320, 240), (640, 480), (1280, 720),
+        #    (1904, 1080), (1920, 1080)]
 
         for res in resolutions:
             right = cv2.VideoCapture(1)
