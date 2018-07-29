@@ -186,7 +186,7 @@ class TestCamera():
     def test_create_single_disparity_map(self):
         res_x = 640
         res_y = 480
-
+        print("Successful -1")
         right = cv2.VideoCapture(1)
         right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
         right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
@@ -198,6 +198,7 @@ class TestCamera():
         left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
         # Below images are BGR
+        print("Successful 0")
         imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, False, type="image_array", quick_capture=True)
         print("Successful 1")
         imgLeft, disparity_map = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
