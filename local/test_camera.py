@@ -188,13 +188,20 @@ class TestCamera():
         res_y = 480
         print("Successful -1")
         right = cv2.VideoCapture(1)
+        print("Successful -1.1")
         right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        print("Successful -1.2")
         right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        print("Successful -1.3")
         right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+        print("Successful -1.4")
 
         left = cv2.VideoCapture(0)
+        print("Successful -1.5")
         left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        print("Successful -1.6")
         left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        print("Successful -1.7")
         left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
         # Below images are BGR
