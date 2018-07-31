@@ -7,10 +7,11 @@ class RobotLog:
     Used to debug issues with the Robot platform
     """
     def __init__(self):
-        log_path = "/home/pi/RPi-tankbot/logs/robot.log"
-        self.filename = os.path.abspath(log_path)
+        log_path = "../logs/robot.log"
+        if not os.path.exists(os.path.dirname(log_path)):
+            os.makedirs(os.path.dirname(log_path))
         logging.basicConfig(
-            filename=self.filename,
+            filename=os.path.abspath(log_path),
             level=logging.DEBUG,
             format='%(asctime)s %(message)s')
 
@@ -26,7 +27,9 @@ class ServerLog:
     """
 
     def __init__(self):
-        log_path = "/home/pi/RPi-tankbot/logs/server.log"
+        log_path = "../logs/server.log"
+        if not os.path.exists(os.path.dirname(log_path)):
+            os.makedirs(os.path.dirname(log_path))
         logging.basicConfig(
             filename=os.path.abspath(log_path),
             level=logging.DEBUG,
