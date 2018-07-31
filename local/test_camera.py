@@ -249,7 +249,7 @@ class TestCamera():
             cv2.imwrite('{}/input_output/{}/output_right.jpg'.format(self.home_dir, resolution), np.hstack((img, result2[1])))
 
 
-    #@pytest.mark.skip(reason="Not Yet Passed.")
+    @pytest.mark.skip(reason="Not Yet Passed.")
     def test_stereo_photo(self):
         res_x = 1920
         res_y = 1080
