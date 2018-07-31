@@ -7,7 +7,7 @@ class RobotLog:
     Used to debug issues with the Robot platform
     """
     def __init__(self):
-        log_path = "../logs/robot.log"
+        log_path = "/home/pi/RPi-tankbot/logs/robot.log"
         self.abs_path = os.path.abspath(log_path)
         if not os.path.exists(os.path.dirname(self.abs_path)):
             os.makedirs(os.path.dirname(self.abs_path))
