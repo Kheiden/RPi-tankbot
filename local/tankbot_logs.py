@@ -1,4 +1,4 @@
-import os
+import os.path
 import logging
 
 
@@ -8,12 +8,15 @@ class RobotLog:
     """
     def __init__(self):
         log_path = "/home/pi/RPi-tankbot/logs/robot.log"
+        self.filename = os.path.abspath(log_path)
         logging.basicConfig(
-            filename=os.path.abspath(log_path),
+            filename=self.filename,
             level=logging.DEBUG,
             format='%(asctime)s %(message)s')
 
     def debug(self, message):
+        print("Saving '{}' to {}".format(message, self.filename))
+
         logging.debug(message)
         return True
 
