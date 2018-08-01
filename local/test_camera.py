@@ -299,6 +299,9 @@ class TestCamera():
 
             width, height = self.c.take_stereo_photo(res[0], res[1],
                 right, left, override_warmup=False, type="combined")
+            if width or height is None:
+                # Fail test
+                assert False
             assert width == res[0]*2
             assert height == res[1]
 
