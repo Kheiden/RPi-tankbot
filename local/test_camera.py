@@ -278,7 +278,7 @@ class TestCamera():
         left.release()
 
 
-    @pytest.mark.skip(reason="Not Yet Passed.")
+    #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_concat_cameras(self):
         # This test will take a single still photo at max resolution with both cameras
 
