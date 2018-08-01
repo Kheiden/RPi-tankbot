@@ -1,4 +1,5 @@
 import tankbot_logs
+import pytest
 
 class TestCamera():
 
