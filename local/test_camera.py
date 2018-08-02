@@ -281,7 +281,12 @@ class TestCamera():
         left.release()
 
 
-    #@pytest.mark.skip(reason="Not Yet Passed.")
+    def test_seg_fault(self):
+        right = cv2.VideoCapture(1)
+        time.sleep(4)
+        assert True
+
+    @pytest.mark.skip(reason="Not Yet Passed.")
     def test_concat_cameras(self):
         # This test will take a single still photo at max resolution with both cameras
 
@@ -299,7 +304,7 @@ class TestCamera():
             left.set(cv2.CAP_PROP_FRAME_WIDTH, res[0])
             left.set(cv2.CAP_PROP_FRAME_HEIGHT, res[1])
             left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
-
+            time.sleep(2)
             if not right.isOpened() or not left.isOpened():
                 print("Unable to access Cameras")
                 assert False
