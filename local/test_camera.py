@@ -281,13 +281,13 @@ class TestCamera():
         right.release()
         left.release()
 
-
+    @pytest.mark.skip(reason="Unreliable: Sometimes Passing")
     def test_seg_fault(self):
         right = cv2.VideoCapture(1)
         time.sleep(4)
         assert True
 
-    @pytest.mark.skip(reason="Not Yet Passed.")
+    #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_concat_cameras(self):
         # This test will take a single still photo at max resolution with both cameras
 
