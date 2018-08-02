@@ -300,7 +300,7 @@ class TestCamera():
             left.set(cv2.CAP_PROP_FRAME_HEIGHT, res[1])
             left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
-            if right or left is None:
+            if not right.isOpened() or not left.isOpened():
                 print("Unable to access Cameras")
                 assert False
 
