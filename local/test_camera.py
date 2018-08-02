@@ -19,6 +19,7 @@ class TestCamera():
         self.c = camera.Camera()
         self.home_dir = "/home/pi"
         faulthandler.enable(file=sys.stderr, all_threads=True)
+        faulthandler.dump_traceback_later(10, repeat=False, file=sys.stderr, exit=False)
 
     @classmethod
     def teardown_class(self):
