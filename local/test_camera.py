@@ -300,6 +300,10 @@ class TestCamera():
             left.set(cv2.CAP_PROP_FRAME_HEIGHT, res[1])
             left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
+            if right or left is None:
+                print("Unable to access Cameras")
+                assert False
+
             width, height = self.c.take_stereo_photo(res[0], res[1],
                 right, left, override_warmup=False, type="combined")
             if width or height is None:
