@@ -1,10 +1,12 @@
 import numpy as np
-import pytest
 
+import faulthandler
 import movement
 import camera
+import pytest
 import time
 import cv2
+import sys
 
 class TestCamera():
 
@@ -16,6 +18,7 @@ class TestCamera():
         self.m = movement.Movement()
         self.c = camera.Camera()
         self.home_dir = "/home/pi"
+        faulthandler.enable(file=sys.stderr, all_threads=True)
 
     @classmethod
     def teardown_class(self):
