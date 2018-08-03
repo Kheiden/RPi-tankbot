@@ -615,7 +615,7 @@ class Camera():
             else:
                 # This shouldn't happen.  If it does, error out.
                 return 0, 0
-        elif type == "together":
+        elif type == "combined":
             imgRGB_combined = np.concatenate((imgRGB_left, imgRGB_right), axis=1)
             jpg_image = Image.fromarray(imgRGB_combined)
             if filename == None:
@@ -628,7 +628,7 @@ class Camera():
             #processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             return imgRGB_left, imgRGB_right
         else:
-            return
+            return (None, None)
 
     def start_right_camera(self):
         CAMERA_WIDTH = 640
