@@ -6,7 +6,7 @@ class Autonomy():
     def __init__(self):
         self.c = camera.Camera()
         self.m = movement.Movement()
-    def basic_autonomous_routine(self):
+    def autonomous_routine_basic(self):
         """
         This test is used to run a basic autonomous routine which will perform
         the following:
@@ -40,7 +40,7 @@ class Autonomy():
         return True
 
 
-    def test_collision_avoidance(self):
+    def collision_avoidance_basic(self):
         """
         This test will be used to determine if the RPi is about to run into a
         physical object.  This will be used by the autonomous routine to determine
