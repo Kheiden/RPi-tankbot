@@ -33,6 +33,8 @@ class TestCamera():
           3) Repeat
           If the robot detects an object being too close, it will rotate an
           arbritary amount of time either left or right then continue with step 1
+
+          Testing to see if SegFault occurrs
         """
         time_on = 60
         action = "rotate_random"
