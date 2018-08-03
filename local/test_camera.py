@@ -365,7 +365,7 @@ class TestCamera():
             assert height == res[1]
 
             right.release()
-left.release()
+            left.release()
 
 
     @pytest.mark.skip(reason="Not yet passed.")
