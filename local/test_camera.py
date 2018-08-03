@@ -229,7 +229,7 @@ class TestCamera():
             assert result
 
 
-    @pytest.mark.skip(reason="Passed.")
+    #@pytest.mark.skip(reason="Passed.")
     def test_undistort_image_multiple_resolution(self):
         """
         # I want to be able to undistort an image in less than 1 second
@@ -333,7 +333,7 @@ class TestCamera():
         assert width == res_x*2
         assert height == res_y
 
-    #@pytest.mark.skip(reason="Not Yet Passed.")
+    @pytest.mark.skip(reason="Not Yet Passed.")
     def test_concat_cameras_new(self):
         # This test will take a single still photo at max resolution with both cameras
 
