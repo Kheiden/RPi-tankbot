@@ -342,22 +342,8 @@ class TestCamera():
         #    (1904, 1080), (1920, 1080)]
 
         for res in resolutions:
-            right = cv2.VideoCapture(1)
-            right.set(cv2.CAP_PROP_FRAME_WIDTH, res[0])
-            right.set(cv2.CAP_PROP_FRAME_HEIGHT, res[1])
-            right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
-
-            left = cv2.VideoCapture(0)
-            left.set(cv2.CAP_PROP_FRAME_WIDTH, res[0])
-            left.set(cv2.CAP_PROP_FRAME_HEIGHT, res[1])
-            left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
-
-            if not right.isOpened() or not left.isOpened():
-                print("Unable to access Cameras")
-                assert False
-
             width, height = self.c.take_stereo_photo(res[0], res[1],
-                right, left, override_warmup=False, type="combined")
+                override_warmup=False, type="combined")
             if width or height is None:
                 # Fail test
                 assert False

@@ -545,7 +545,9 @@ class Camera():
         self.pwm_x.stop()
         self.pwm_y.stop()
 
-    def take_stereo_photo(self, res_x, res_y, right, left, override_warmup, filename=None, type="combined", quick_capture=False):
+    def take_stereo_photo(self, res_x, res_y, override_warmup,
+                        right=None, left=None, filename=None,
+                        type="combined", quick_capture=False):
         """
         type="combined" (or any other value) is a single .JPG file
         type="separate" is two separate .JPG files
@@ -554,6 +556,17 @@ class Camera():
             This returns greyscale photos to be used in the disparity_map_stream
             along with other speed improvements (might combine with left/right)
         """
+        if (right == None) or (left == None):
+            right = cv2.VideoCapture(1)
+            right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+            right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+            right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+            left = cv2.VideoCapture(0)
+            left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+            left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+            left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
         #processing_time01 = cv2.getTickCount()
         CAMERA_HEIGHT = res_y
         CAMERA_WIDTH = res_x
