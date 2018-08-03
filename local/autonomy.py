@@ -1,10 +1,11 @@
+import movement
 import camera
 
 class Autonomy():
 
     def __init__(self):
         self.c = camera.Camera()
-
+        self.m = movement.Movement()
     def basic_autonomous_routine(self):
         """
         This test is used to run a basic autonomous routine which will perform
