@@ -144,6 +144,14 @@ class Camera():
                         self.m.rotate_on_carpet(direction=direction,
                             movement_time=6,
                             sleep_speed=0.25)
+
+                    if action[2] == 'rotate_right':
+                        direction = "right"
+                        print("Rotating {} to avoid obstacle".format(direction))
+                        #move left or right
+                        self.m.rotate_on_carpet(direction=direction,
+                            movement_time=6,
+                            sleep_speed=0.25)
                 else:
                     # this means that there are no objects in the way
                     disparity_map_time = (cv2.getTickCount() - disparity_map_time)/ cv2.getTickFrequency()

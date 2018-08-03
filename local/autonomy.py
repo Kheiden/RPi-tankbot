@@ -62,11 +62,11 @@ class Autonomy():
         # 5 percent: 4'6" to 4'10" away from target
         # 10 percent: <tbd>
         num_threshold = 30720
-        action = [threshold, num_threshold]
+        action = [threshold, num_threshold, action]
         movement_time = 0.50
         sleep_time = 2.00
         self.m.forward_slow_thread(movement_time, sleep_time)
         _, _, action = self.c.realtime_disparity_map_stream(time_on=time_on,
             action=action,
             save_disparity_image=True,
-override_warmup=False)
+            override_warmup=False)
