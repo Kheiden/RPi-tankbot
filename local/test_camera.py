@@ -84,7 +84,7 @@ class TestCamera():
 
 
 
-    @pytest.mark.skip(reason="Passed.")
+    #@pytest.mark.skip(reason="Passed.")
     def test_stereo_photo_speed(self):
         """
         I want to take stereo photos as fast as possible
@@ -229,7 +229,7 @@ class TestCamera():
             assert result
 
 
-    #@pytest.mark.skip(reason="Passed.")
+    @pytest.mark.skip(reason="Passed.")
     def test_undistort_image_multiple_resolution(self):
         """
         # I want to be able to undistort an image in less than 1 second
