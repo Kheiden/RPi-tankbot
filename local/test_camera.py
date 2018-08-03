@@ -26,8 +26,9 @@ class TestCamera():
         """ teardown any state that was previously setup with a call to
         setup_class.
         """
-        self.m.stop()
-        self.m.clear_gpio_motor_pins()
+        #self.m.stop()
+        #self.m.clear_gpio_motor_pins()
+        pass
 
 
     @pytest.mark.skip(reason="Test Failing")
