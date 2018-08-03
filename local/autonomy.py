@@ -72,5 +72,6 @@ class Autonomy():
             action=action,
             save_disparity_image=True,
             override_warmup=False)
+        self.m.stop()
 
         return True
