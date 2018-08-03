@@ -36,7 +36,7 @@ class TestCamera():
 
           Testing to see if SegFault occurrs
         """
-        time_on = 60
+        time_on = 5
         action = "rotate_random"
         # Threshold is the value between 0 and 255 that a pixel needs to be above
         # in order to count as being "too close"
