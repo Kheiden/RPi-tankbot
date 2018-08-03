@@ -37,6 +37,8 @@ class Autonomy():
             override_warmup=False,
             autonomous_routine="basic")
 
+        return True
+
 
     def test_collision_avoidance(self):
         """
@@ -70,3 +72,5 @@ class Autonomy():
             action=action,
             save_disparity_image=True,
             override_warmup=False)
+
+        return True
