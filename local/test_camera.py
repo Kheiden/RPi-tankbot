@@ -333,6 +333,41 @@ class TestCamera():
         assert width == res_x*2
         assert height == res_y
 
+    #@pytest.mark.skip(reason="Not Yet Passed.")
+    def test_concat_cameras_new(self):
+        # This test will take a single still photo at max resolution with both cameras
+
+        resolutions = [(640, 480)]
+        #resolutions = [(320, 240), (640, 480), (1280, 720),
+        #    (1904, 1080), (1920, 1080)]
+
+        for res in resolutions:
+            right = cv2.VideoCapture(1)
+            right.set(cv2.CAP_PROP_FRAME_WIDTH, res[0])
+            right.set(cv2.CAP_PROP_FRAME_HEIGHT, res[1])
+            right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+            left = cv2.VideoCapture(0)
+            left.set(cv2.CAP_PROP_FRAME_WIDTH, res[0])
+            left.set(cv2.CAP_PROP_FRAME_HEIGHT, res[1])
+            left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+            if not right.isOpened() or not left.isOpened():
+                print("Unable to access Cameras")
+                assert False
+
+            width, height = self.c.take_stereo_photo(res[0], res[1],
+                right, left, override_warmup=False, type="combined")
+            if width or height is None:
+                # Fail test
+                assert False
+            assert width == res[0]*2
+            assert height == res[1]
+
+            right.release()
+left.release()
+
+
     @pytest.mark.skip(reason="Not yet passed.")
     def test_camera_rotation(self):
         for i in range(-90, 91, 10):

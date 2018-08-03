@@ -18,13 +18,13 @@ class TestAutonomy():
         pass
 
 
-    #@pytest.mark.skip(reason="Not Yet Passed.")
+    @pytest.mark.skip(reason="Passed.")
     def test_basic_autonomous_routine(self):
         output = self.a.basic_autonomous_routine()
         assert output is True
 
 
-    #@pytest.mark.skip(reason="Not Yet Passed.")
+    @pytest.mark.skip(reason="Passed.")
     def test_basic_collision_avoidance(self):
         output = self.a.test_collision_avoidance()
         assert output is not None
