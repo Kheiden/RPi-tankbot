@@ -585,6 +585,7 @@ class Camera():
         _, rightFrame = right.retrieve()
         _, leftFrame = left.retrieve()
 
+
         #print(ret_left, ret_right)
 
         if ret_left == False:
@@ -615,15 +616,6 @@ class Camera():
             else:
                 # This shouldn't happen.  If it does, error out.
                 return 0, 0
-        elif type == "combined":
-            imgRGB_combined = np.concatenate((imgRGB_left, imgRGB_right), axis=1)
-            jpg_image = Image.fromarray(imgRGB_combined)
-            if filename == None:
-                filename = datetime.now().strftime("%F_%H-%M-%S.%f")
-            jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_combined.jpg".format(filename), format='JPEG')
-
-            width, height = jpg_image.size
-            return width, height
         elif type == "image_array":
             #processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             return imgRGB_left, imgRGB_right

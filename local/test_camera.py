@@ -84,7 +84,7 @@ class TestCamera():
 
 
 
-    #@pytest.mark.skip(reason="Passed.")
+    @pytest.mark.skip(reason="Passed.")
     def test_stereo_photo_speed(self):
         """
         I want to take stereo photos as fast as possible
@@ -299,59 +299,6 @@ class TestCamera():
         width, height = self.c.take_stereo_photo(res_x, res_y, type="separate")
         assert width == res_x
         assert height == res_y
-
-    @pytest.mark.skip(reason="Passed.")
-    def test_concat_cameras(self):
-        # This test will take a single still photo at max resolution with both cameras
-        res_x = 320
-        res_y = 240
-        width, height = self.c.take_stereo_photo(res_x, res_y, type="combined")
-        assert width == res_x*2
-        assert height == res_y
-
-        res_x = 640
-        res_y = 480
-        width, height = self.c.take_stereo_photo(res_x, res_y, type="combined")
-        assert width == res_x*2
-        assert height == res_y
-
-        res_x = 1280
-        res_y = 720
-        width, height = self.c.take_stereo_photo(res_x, res_y , type="combined")
-        assert width == res_x*2
-        assert height == res_y
-
-        res_x = 1904
-        res_y = 1080
-        width, height = self.c.take_stereo_photo(res_x, res_y , type="combined")
-        assert width == res_x*2
-        assert height == res_y
-
-        res_x = 1920
-        res_y = 1080
-        width, height = self.c.take_stereo_photo(res_x, res_y , type="combined")
-        assert width == res_x*2
-        assert height == res_y
-
-    @pytest.mark.skip(reason="Not Yet Passed.")
-    def test_concat_cameras_new(self):
-        # This test will take a single still photo at max resolution with both cameras
-
-        resolutions = [(640, 480)]
-        #resolutions = [(320, 240), (640, 480), (1280, 720),
-        #    (1904, 1080), (1920, 1080)]
-
-        for res in resolutions:
-            width, height = self.c.take_stereo_photo(res[0], res[1],
-                override_warmup=False, type="combined")
-            if width or height is None:
-                # Fail test
-                assert False
-            assert width == res[0]*2
-            assert height == res[1]
-
-            right.release()
-            left.release()
 
 
     @pytest.mark.skip(reason="Not yet passed.")
