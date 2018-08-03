@@ -24,17 +24,10 @@ class TestCamera():
         """
         self.c.stop_servos()
 
+    @pytest.mark.skip(reason="Passed.")
     def test_basic_autonomous_routine(self):
         """
-        This test is used to run a basic autonomous routine which will perform
-        the following:
-          1) Capture disparity map
-          2) Move forward
-          3) Repeat
-          If the robot detects an object being too close, it will rotate an
-          arbritary amount of time either left or right then continue with step 1
-
-          Testing to see if SegFault occurrs
+        DEPRICATED: Use autonomy.py instead
         """
         time_on = 5
         action = "rotate_random"
@@ -59,18 +52,7 @@ class TestCamera():
     @pytest.mark.skip(reason="Passed.")
     def test_collision_avoidance(self):
         """
-        This test will be used to determine if the RPi is about to run into a
-        physical object.  This will be used by the autonomous routine to determine
-        when to stop the robot.
-
-        This test is comprised of a few parts.  First, the RPi takes a disparity
-        map photo.  Second, the RPi checks if the disparity_map has pixels which
-        are above the threshold, effectively proving that there is an object which
-        is too close to the robot. Third, the method will send a shutdown function to
-        the RPi to cease all movement.
-
-        After I'm able to process the collision_avoidance method on a single disparity_map,
-        I'll use it on the disparity_map stream.
+        DEPRICATED: Use autonomy.py instead
         """
         # Max time on
         time_on = 30
