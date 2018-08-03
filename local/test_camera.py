@@ -1,7 +1,7 @@
 import numpy as np
 
 import faulthandler
-import movement
+#import movement
 import camera
 import pytest
 import time
@@ -15,7 +15,7 @@ class TestCamera():
         """ setup any state specific to the execution of the given class (which
         usually contains tests).
         """
-        self.m = movement.Movement()
+        #self.m = movement.Movement()
         self.c = camera.Camera()
         self.home_dir = "/home/pi"
         faulthandler.enable(file=sys.stderr, all_threads=True)
