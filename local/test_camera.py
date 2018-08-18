@@ -231,6 +231,8 @@ class TestCamera():
             result = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
             assert result
 
+        right.release()
+        left.release()
 
     @pytest.mark.skip(reason="Passed.")
     def test_undistort_image_multiple_resolution(self):

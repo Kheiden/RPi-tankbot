@@ -587,6 +587,9 @@ class Camera():
         _, rightFrame = right.retrieve()
         _, leftFrame = left.retrieve()
 
+        if (right == None) or (left == None):
+            right.release()
+            left.release()
 
         #print(ret_left, ret_right)
 
