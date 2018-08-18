@@ -225,6 +225,9 @@ class TestCamera():
         for i in range(45):
             # Below images are BGR
             imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="image_array", quick_capture=True)
+            if imgL or imgR is None:
+                print("Problem taking image")
+                assert False
             result = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
             assert result
 
