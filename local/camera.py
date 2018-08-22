@@ -552,7 +552,7 @@ class Camera():
                         left=None,
                         filename=None,
                         type="combined",
-                        override_warmup,
+                        override_warmup=False,
                         quick_capture=False):
         """
         type="combined" (or any other value) is a single .JPG file
