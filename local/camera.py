@@ -547,9 +547,13 @@ class Camera():
         self.pwm_x.stop()
         self.pwm_y.stop()
 
-    def take_stereo_photo(self, res_x, res_y, override_warmup,
-                        right=None, left=None, filename=None,
-                        type="combined", quick_capture=False):
+    def take_stereo_photo(self, res_x, res_y,
+                        right=None,
+                        left=None,
+                        filename=None,
+                        type="combined",
+                        override_warmup,
+                        quick_capture=False):
         """
         type="combined" (or any other value) is a single .JPG file
         type="separate" is two separate .JPG files
