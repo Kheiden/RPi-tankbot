@@ -293,6 +293,7 @@ class TestCamera():
 
 
     def test_take_picture(self):
+        right = cv2.VideoCapture(1)
         right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
         right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
         right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
