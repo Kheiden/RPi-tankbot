@@ -291,7 +291,7 @@ class TestCamera():
             assert width == res_x
             assert height == res_y
 
-    @pytest.mark.skip(reason="Not yet Passed.")
+    #@pytest.mark.skip(reason="Not yet Passed.")
     def test_stereo_photo_new(self):
         res_x = 640
         res_y = 480
