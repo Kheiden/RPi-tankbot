@@ -590,6 +590,7 @@ class Camera():
         if (right == None) or (left == None):
             right.release()
             left.release()
+            return (None, None)
 
         #print(ret_left, ret_right)
 
