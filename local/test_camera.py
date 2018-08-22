@@ -24,17 +24,12 @@ class TestCamera():
         """
         self.c.stop_servos()
 
+    @pytest.mark.skip(reason="Passed.")
     def test_basic_autonomous_routine(self):
         """
-        This test is used to run a basic autonomous routine which will perform
-        the following:
-          1) Capture disparity map
-          2) Move forward
-          3) Repeat
-          If the robot detects an object being too close, it will rotate an
-          arbritary amount of time either left or right then continue with step 1
+        DEPRICATED: Use autonomy.py instead
         """
-        time_on = 60
+        time_on = 5
         action = "rotate_random"
         # Threshold is the value between 0 and 255 that a pixel needs to be above
         # in order to count as being "too close"
@@ -57,18 +52,7 @@ class TestCamera():
     @pytest.mark.skip(reason="Passed.")
     def test_collision_avoidance(self):
         """
-        This test will be used to determine if the RPi is about to run into a
-        physical object.  This will be used by the autonomous routine to determine
-        when to stop the robot.
-
-        This test is comprised of a few parts.  First, the RPi takes a disparity
-        map photo.  Second, the RPi checks if the disparity_map has pixels which
-        are above the threshold, effectively proving that there is an object which
-        is too close to the robot. Third, the method will send a shutdown function to
-        the RPi to cease all movement.
-
-        After I'm able to process the collision_avoidance method on a single disparity_map,
-        I'll use it on the disparity_map stream.
+        DEPRICATED: Use autonomy.py instead
         """
         # Max time on
         time_on = 30
@@ -224,7 +208,7 @@ class TestCamera():
         assert result
 
 
-    @pytest.mark.skip(reason="Passed.")
+    @pytest.mark.skip(reason="Failing.")
     def test_create_single_disparity_map(self):
         res_x = 640
         res_y = 480
@@ -240,10 +224,15 @@ class TestCamera():
 
         for i in range(45):
             # Below images are BGR
-            imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, False, type="image_array", quick_capture=True)
+            imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="image_array", quick_capture=True)
+            if imgL or imgR is None:
+                print("Problem taking image")
+                assert False
             result = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
             assert result
 
+        right.release()
+        left.release()
 
     @pytest.mark.skip(reason="Passed.")
     def test_undistort_image_multiple_resolution(self):
@@ -302,6 +291,55 @@ class TestCamera():
             assert width == res_x
             assert height == res_y
 
+
+    def test_take_picture(self):
+        res_x = 640
+        res_y = 480
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        ret_left = left.grab()
+        ret_right = right.grab()
+        _, rightFrame = right.retrieve()
+        _, leftFrame = left.retrieve()
+
+        assert ret_left
+        assert ret_right
+
+        right.release()
+        left.release()
+
+    #@pytest.mark.skip(reason="Not yet Passed.")
+    def test_stereo_photo_new(self):
+        res_x = 640
+        res_y = 480
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+            # Below images are BGR
+        imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="image_array", quick_capture=True)
+
+        assert imgL is not None
+        assert imgR is not None
+
+        right.release()
+        left.release()
+
+
     @pytest.mark.skip(reason="Passed.")
     def test_stereo_photo(self):
         res_x = 1920
@@ -315,83 +353,6 @@ class TestCamera():
         width, height = self.c.take_stereo_photo(res_x, res_y, type="separate")
         assert width == res_x
         assert height == res_y
-
-    @pytest.mark.skip(reason="Passed.")
-    def test_concat_cameras(self):
-        # This test will take a single still photo at max resolution with both cameras
-        res_x = 320
-        res_y = 240
-        width, height = self.c.take_stereo_photo(res_x, res_y, type="combined")
-        assert width == res_x*2
-        assert height == res_y
-
-        res_x = 640
-        res_y = 480
-        width, height = self.c.take_stereo_photo(res_x, res_y, type="combined")
-        assert width == res_x*2
-        assert height == res_y
-
-        res_x = 1280
-        res_y = 720
-        width, height = self.c.take_stereo_photo(res_x, res_y , type="combined")
-        assert width == res_x*2
-        assert height == res_y
-
-        res_x = 1904
-        res_y = 1080
-        width, height = self.c.take_stereo_photo(res_x, res_y , type="combined")
-        assert width == res_x*2
-        assert height == res_y
-
-        res_x = 1920
-        res_y = 1080
-        width, height = self.c.take_stereo_photo(res_x, res_y , type="combined")
-        assert width == res_x*2
-        assert height == res_y
-
-    @pytest.mark.skip(reason="Not yet passed.")
-    def test_camera_rotation(self):
-        for i in range(-90, 91, 10):
-            print("Moving camera to {}".format(i))
-            self.c.move_camera(i, i)
-            time.sleep(0.5)
-            print("Stopping servos...")
-            self.c.stop_servos()
-            time.sleep(0.5)
-        self.assertTrue(True)
-
-    @pytest.mark.skip(reason="Not yet passed.")
-    def test_degree(self):
-        x_axis_degrees = 0
-        y_axis_degrees = 0
-
-        print("Moving x_axis to {} and y_axis to {}".format(
-            x_axis_degrees,
-            y_axis_degrees))
-        self.c.move_camera(x_axis_degrees, y_axis_degrees)
-
-
-    @pytest.mark.skip(reason="Not yet passed.")
-    def test_smooth_rotate(self):
-        """First, center the camera"""
-        self.c.move_camera(0, 0)
-        """Then, move to a certain coordinate"""
-        x_start = 0
-        y_start = 0
-        x_end = 45
-        y_end = 30
-        """Testing Slow speed"""
-        speed = "SLOW"
-        self.c.move_camera_smooth(x_start, y_start, x_end, y_end, speed)
-        """Reset Camera to zero"""
-        self.c.move_camera(0, 0)
-        """Testing fast speed"""
-        speed = "FAST"
-        self.c.move_camera_smooth(x_start, y_start, x_end, y_end, speed)
-
-    @pytest.mark.skip(reason="Not yet passed.")
-    def test_zero_camera(self):
-        self.c.move_camera(0, 0)
 
 
 if __name__ == '__main__':

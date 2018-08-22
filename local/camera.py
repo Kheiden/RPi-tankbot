@@ -144,6 +144,14 @@ class Camera():
                         self.m.rotate_on_carpet(direction=direction,
                             movement_time=6,
                             sleep_speed=0.25)
+
+                    if action[2] == 'rotate_right':
+                        direction = "right"
+                        print("Rotating {} to avoid obstacle".format(direction))
+                        #move left or right
+                        self.m.rotate_on_carpet(direction=direction,
+                            movement_time=6,
+                            sleep_speed=0.25)
                 else:
                     # this means that there are no objects in the way
                     disparity_map_time = (cv2.getTickCount() - disparity_map_time)/ cv2.getTickFrequency()
@@ -189,8 +197,10 @@ class Camera():
         #imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_distorted_left.jpg".format(file_name), format='JPEG')
         #imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_distorted_right.jpg".format(file_name), format='JPEG')
 
-
-
+        width_left, height_left = imgLeft.size
+        width_right, height_right = imgRight.size
+        if 0 in [width_left, height_left, width_right, height_right]:
+            print("Error: Can't remap image.")
 
         imgLeft = cv2.remap(imgLeft, leftMapX, leftMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
         imgRight = cv2.remap(imgRight, rightMapX, rightMapY, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
@@ -537,7 +547,13 @@ class Camera():
         self.pwm_x.stop()
         self.pwm_y.stop()
 
-    def take_stereo_photo(self, res_x, res_y, right, left, override_warmup, filename=None, type="combined", quick_capture=False):
+    def take_stereo_photo(self, res_x, res_y,
+                        right=None,
+                        left=None,
+                        filename=None,
+                        type="combined",
+                        override_warmup=False,
+                        quick_capture=False):
         """
         type="combined" (or any other value) is a single .JPG file
         type="separate" is two separate .JPG files
@@ -546,6 +562,17 @@ class Camera():
             This returns greyscale photos to be used in the disparity_map_stream
             along with other speed improvements (might combine with left/right)
         """
+        if (right == None) or (left == None):
+            right = cv2.VideoCapture(1)
+            right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+            right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+            right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+            left = cv2.VideoCapture(0)
+            left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+            left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+            left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
         #processing_time01 = cv2.getTickCount()
         CAMERA_HEIGHT = res_y
         CAMERA_WIDTH = res_x
@@ -563,6 +590,11 @@ class Camera():
             ret_right = right.grab()
         _, rightFrame = right.retrieve()
         _, leftFrame = left.retrieve()
+
+        if (right == None) or (left == None):
+            right.release()
+            left.release()
+            return (None, None)
 
         #print(ret_left, ret_right)
 
@@ -594,20 +626,11 @@ class Camera():
             else:
                 # This shouldn't happen.  If it does, error out.
                 return 0, 0
-        elif type == "together":
-            imgRGB_combined = np.concatenate((imgRGB_left, imgRGB_right), axis=1)
-            jpg_image = Image.fromarray(imgRGB_combined)
-            if filename == None:
-                filename = datetime.now().strftime("%F_%H-%M-%S.%f")
-            jpg_image.save("/home/pi/RPi-tankbot/local/frames/{}_combined.jpg".format(filename), format='JPEG')
-
-            width, height = jpg_image.size
-            return width, height
         elif type == "image_array":
             #processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
             return imgRGB_left, imgRGB_right
         else:
-            return
+            return (None, None)
 
     def start_right_camera(self):
         CAMERA_WIDTH = 640
