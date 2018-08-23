@@ -197,11 +197,11 @@ class Camera():
         #imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_distorted_left.jpg".format(file_name), format='JPEG')
         #imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_distorted_right.jpg".format(file_name), format='JPEG')
 
-        print(imgLeft.shape)
-        print(imgRight.shape)
-        
-        width_left, height_left = imgLeft.shape
-        width_right, height_right = imgRight.shape
+        print(imgLeftimgLeft.shape[:2])
+        print(imgRight.shape[:2])
+
+        width_left, height_left = imgLeft.shape[:2]
+        width_right, height_right = imgRight.shape[:2]
         if 0 in [width_left, height_left, width_right, height_right]:
             print("Error: Can't remap image.")
 
@@ -622,8 +622,8 @@ class Camera():
             jpg_image_right.save("/home/pi/RPi-tankbot/local/frames/{}_right.jpg".format(filename), format='JPEG')
             jpg_image_left.save("/home/pi/RPi-tankbot/local/frames/{}_left.jpg".format(filename), format='JPEG')
 
-            width_right, height_right = jpg_image_right.shape
-            width_left, height_left = jpg_image_left.shape
+            width_right, height_right = jpg_image_right.shape[:2]
+            width_left, height_left = jpg_image_left.shape[:2]
             if ((width_right == width_left) and (height_right == height_left)):
                 return width_right, height_right
             else:
