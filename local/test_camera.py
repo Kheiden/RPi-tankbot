@@ -234,7 +234,8 @@ class TestCamera():
         # Look for the backup calib data
         all_calib_data = glob.glob('{}/backup_calibration_data/{}p/stereo_camera_calibration*.npz'.format(self.home_dir, res_y))
 
-        for npzfile in all_calib_data:
+        for calib_data in all_calib_data:
+            npzfile = np.load(calib_data)
             for i in range(number_of_pictures):
                 imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="image_array", quick_capture=False)
                 if type(imgL) is type(None):
