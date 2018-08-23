@@ -186,7 +186,7 @@ class Camera():
         imageSize = tuple(npzfile['imageSize'])
         leftMapX = npzfile['leftMapX']
         leftMapY = npzfile['leftMapY']
-    0    #leftROI = tuple(npzfile['leftROI'])
+        #leftROI = tuple(npzfile['leftROI'])
         rightMapX = npzfile['rightMapX']
         rightMapY = npzfile['rightMapY']
         #rightROI = tuple(npzfile['rightROI'])
