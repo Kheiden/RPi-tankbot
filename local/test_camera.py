@@ -225,6 +225,9 @@ class TestCamera():
 
         # Below images are BGR
         imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="image_array", quick_capture=False)
+        print(type(imgL))
+        print(type(imgR))
+
         if type(imgL) or type(imgR) is type(None):
             print("Problem taking image")
             assert False
