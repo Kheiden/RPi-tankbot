@@ -207,8 +207,53 @@ class TestCamera():
         result = self.c.create_3d_point_cloud(imgLeft, disparity_map)
         assert result
 
+    def test_create_multiple_disparity_maps(self):
+        """
+        This test is used to create multiple disparity maps from different
+        camera calibration datasets.
 
-    #@pytest.mark.skip(reason="Failing.")
+        The ultimate goal is to determine how effective the camera calibration is
+        with the quality of the disparity map.
+        """
+        res_x = 640
+        res_y = 480
+        # Used to denote how many disparity maps will be taken for each calib data
+        number_of_pictures = 3
+
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        # Look for the backup calib data
+        all_calib_data = glob.glob('{}/backup_calibration_data/{}p/stereo_camera_calibration*.npz'.format(self.home_dir, res_y))
+
+        for npzfile in all_calib_data:
+            for i in range(number_of_pictures):
+                imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="image_array", quick_capture=False)
+                if type(imgL) is type(None):
+                    print("Problem taking image")
+                    assert False
+
+                if type(imgR) is type(None):
+                    print("Problem taking image")
+                    assert False
+
+                result = self.c.create_disparity_map(imgL, imgR, res_x=640,
+                                                    res_y=480,
+                                                    save_disparity_image=True,
+                                                    npzfile=npzfile)
+                assert result
+
+        right.release()
+        left.release()
+
+    @pytest.mark.skip(reason="Passed.")
     def test_create_single_disparity_map(self):
         res_x = 640
         res_y = 480
@@ -245,15 +290,15 @@ class TestCamera():
         """
         # I want to be able to undistort an image in less than 1 second
         """
+        threshold_miliseconds = 1000
         #['270p', "540p", "1080p"]
         for resolution in ['480p']:
             img = cv2.imread('{}/input_output/{}/input_left.jpg'.format(self.home_dir, resolution))
-            threshold_miliseconds = 1000
+
             result1 = self.c.undistort_image(img=img, cam_num=0)
             print(result1[0]*1000)
             assert (result1[0]*1000 < threshold_miliseconds)
             cv2.imwrite('{}/input_output/{}/output_left.jpg'.format(self.home_dir, resolution), np.hstack((img, result1[1])))
-
             img = cv2.imread('{}/input_output/{}/input_right.jpg'.format(self.home_dir, resolution))
             assert (result1[0]*1000 < threshold_miliseconds)
             result2 = self.c.undistort_image(img=img, cam_num=1)

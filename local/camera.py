@@ -197,8 +197,6 @@ class Camera():
         #imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_distorted_left.jpg".format(file_name), format='JPEG')
         #imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_distorted_right.jpg".format(file_name), format='JPEG')
 
-        print(imgLeft.shape[:2])
-        print(imgRight.shape[:2])
 
         width_left, height_left = imgLeft.shape[:2]
         width_right, height_right = imgRight.shape[:2]
