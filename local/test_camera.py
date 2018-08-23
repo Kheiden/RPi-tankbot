@@ -208,7 +208,7 @@ class TestCamera():
         assert result
 
 
-    @pytest.mark.skip(reason="Failing.")
+    #@pytest.mark.skip(reason="Failing.")
     def test_create_single_disparity_map(self):
         res_x = 640
         res_y = 480
@@ -222,14 +222,14 @@ class TestCamera():
         left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
         left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
-        for i in range(45):
-            # Below images are BGR
-            imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="image_array", quick_capture=True)
-            if imgL or imgR is None:
-                print("Problem taking image")
-                assert False
-            result = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
-            assert result
+
+        # Below images are BGR
+        imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="image_array", quick_capture=False)
+        if imgL or imgR is None:
+            print("Problem taking image")
+            assert False
+        result = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
+        assert result
 
         right.release()
         left.release()
@@ -291,7 +291,7 @@ class TestCamera():
             assert width == res_x
             assert height == res_y
 
-
+    @pytest.mark.skip(reason="Passed.")
     def test_take_picture(self):
         res_x = 640
         res_y = 480
@@ -316,7 +316,7 @@ class TestCamera():
         right.release()
         left.release()
 
-    #@pytest.mark.skip(reason="Not yet Passed.")
+    @pytest.mark.skip(reason="Passed.")
     def test_stereo_photo_new(self):
         res_x = 640
         res_y = 480
