@@ -228,10 +228,9 @@ class TestCamera():
         left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
         left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
         # Look for the calib data
-        calib_data = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
+        npzfile = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
 
         for calib_data in range(number_of_pictures):
-            npzfile = np.load(calib_data)
             for i in range(number_of_pictures):
                 imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="image_array", quick_capture=False)
                 if type(imgL) is type(None):
