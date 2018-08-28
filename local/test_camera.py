@@ -208,8 +208,7 @@ class TestCamera():
         result = self.c.create_3d_point_cloud(imgLeft, disparity_map)
         assert result
 
-
-    def create_multiple_disparity_maps(self):
+    def test_create_multiple_disparity_maps(self):
         """
         This test is used to create multiple disparity maps so that I can
         average them all into a single disparity map
