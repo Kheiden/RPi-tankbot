@@ -208,7 +208,53 @@ class TestCamera():
         result = self.c.create_3d_point_cloud(imgLeft, disparity_map)
         assert result
 
-    def test_create_multiple_disparity_maps(self):
+
+    def create_multiple_disparity_maps(self):
+        """
+        This test is used to create multiple disparity maps so that I can
+        average them all into a single disparity map
+        """
+        res_x = 640
+        res_y = 480
+        # Used to denote how many disparity maps will be taken
+        number_of_pictures = 25
+
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+        # Look for the calib data
+        calib_data = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
+
+        for calib_data in range(number_of_pictures):
+            npzfile = np.load(calib_data)
+            for i in range(number_of_pictures):
+                imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="image_array", quick_capture=False)
+                if type(imgL) is type(None):
+                    print("Problem taking image")
+                    assert False
+
+                if type(imgR) is type(None):
+                    print("Problem taking image")
+                    assert False
+
+                result = self.c.create_disparity_map(imgL, imgR, res_x=640,
+                                                    res_y=480,
+                                                    save_disparity_image=True,
+                                                    npzfile=npzfile)
+                assert result
+
+        right.release()
+        left.release()
+
+
+    @pytest.mark.skip(reason="Passed.")
+    def test_create_disparity_maps_with_multiple_calib_data(self):
         """
         This test is used to create multiple disparity maps from different
         camera calibration datasets.
