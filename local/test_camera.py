@@ -231,15 +231,14 @@ class TestCamera():
         npzfile = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
 
         for calib_data in range(number_of_pictures):
-            for i in range(number_of_pictures):
-                imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="image_array", quick_capture=False)
-                if type(imgL) is type(None):
-                    print("Problem taking image")
-                    assert False
+            imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="image_array", quick_capture=False)
+            if type(imgL) is type(None):
+                print("Problem taking image")
+                assert False
 
-                if type(imgR) is type(None):
-                    print("Problem taking image")
-                    assert False
+            if type(imgR) is type(None):
+                print("Problem taking image")
+                assert False
 
                 result = self.c.create_disparity_map(imgL, imgR, res_x=640,
                                                     res_y=480,
