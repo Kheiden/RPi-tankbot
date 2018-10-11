@@ -7,16 +7,10 @@ class TestMovement():
 
     @classmethod
     def setup_class(self):
-        """ setup any state specific to the execution of the given class (which
-        usually contains tests).
-        """
         self.m = movement.Movement()
 
     @classmethod
     def teardown_class(self):
-        """ teardown any state that was previously setup with a call to
-        setup_class.
-        """
         self.m.clear_gpio_motor_pins()
 
     @pytest.mark.skip(reason="Passed.")

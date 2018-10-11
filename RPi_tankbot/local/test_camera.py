@@ -1,3 +1,5 @@
+import robot_brain
+
 import numpy as np
 import pytest
 
@@ -11,18 +13,13 @@ class TestCamera():
 
     @classmethod
     def setup_class(self):
-        """ setup any state specific to the execution of the given class (which
-        usually contains tests).
-        """
         self.m = movement.Movement()
         self.c = camera.Camera()
         self.home_dir = "/home/pi"
+        self.brain = robot_brain.RobotBrain()
 
     @classmethod
     def teardown_class(self):
-        """ teardown any state that was previously setup with a call to
-        setup_class.
-        """
         self.c.stop_servos()
 
     @pytest.mark.skip(reason="Passed.")
@@ -208,6 +205,7 @@ class TestCamera():
         result = self.c.create_3d_point_cloud(imgLeft, disparity_map)
         assert result
 
+    @pytest.mark.skip(reason="Not Yet Passed.")
     def test_create_multiple_disparity_maps(self):
         """
         This test is used to create multiple disparity maps so that I can

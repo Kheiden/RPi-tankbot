@@ -5,16 +5,10 @@ class TestAutonomy():
 
     @classmethod
     def setup_class(self):
-        """ setup any state specific to the execution of the given class (which
-        usually contains tests).
-        """
         self.a = autonomy.Autonomy()
 
     @classmethod
     def teardown_class(self):
-        """ teardown any state that was previously setup with a call to
-        setup_class.
-        """
         pass
 
 

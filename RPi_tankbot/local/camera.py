@@ -1,9 +1,10 @@
 import RPi.GPIO as GPIO
 from datetime import datetime
-
+import robot_brain
 import numpy as np
 import threading
 import movement
+import requests
 import random
 import queue
 import glob
@@ -39,7 +40,7 @@ class Camera():
         self.pwm_y.stop()
 
         self.home_dir = "/home/pi"
-        return
+        self.brain = robot_brain.RobotBrain()
 
     def create_3d_point_cloud(self, imgL, disparity_map, file_num):
         """
@@ -85,6 +86,39 @@ class Camera():
         print("3d cloud point saved to:", file_name)
         return True
 
+
+    def server_compute_disparity_map(self):
+        """ This is used to compute disparity maps on the server.
+
+        Since the server can compute disparity maps faster than the RPi, we want
+        to take a photo with L and R cameras then send it to the server for
+        processing.
+
+        Returns:
+          processing_time [The amount of time that it took the server to
+                            compute the disparity map]
+        """
+        # Step 1- Take L and R photos.
+        res_x, res_y = (640, 480)
+
+        imgRGB_left, imgRGB_right = self.take_stereo_photo(res_x, res_y,
+                                                           right=None,
+                                                           left=None,
+                                                           filename=None,
+                                                           type="combined",
+                                                           override_warmup=True,
+                                                           quick_capture=False)
+
+        payload = {'imgRGB_left': imgRGB_left, 'imgRGB_right': imgRGB_right}
+        # Now we want to start the timer to see how long it takes to process the
+        # disparity map on the server
+        time01 = cv2.getTickCount()
+        # send the two images to the server, return the disparity map
+        disparity_map = self.brain.disparity_map(data=payload)
+        time02 = cv2.getTickCount()
+        processing_time = (time02 - time01)/ cv2.getTickFrequency()
+
+        return processing_time, disparity_map
 
     def realtime_disparity_map_stream(self, time_on, action=None,
         save_disparity_image=False,
@@ -556,13 +590,29 @@ class Camera():
                         type="combined",
                         override_warmup=False,
                         quick_capture=False):
-        """
-        type="combined" (or any other value) is a single .JPG file
-        type="separate" is two separate .JPG files
+        """ This is used to take a stereo photo.
 
-        quick_capture is used to take the photos as fast as possible.
+        Args:
+          res_x: integer [x-axis resolution]
+          res_y: integer [y-axis resolution]
+          right: VideoCapture object [for the right camera]
+          left: VideoCapture object [for the left camera]
+          filename:
+          type: "combined" [a single .JPG file]
+          type: "separate" [two separate .JPG files]
+          type: "image_array" [two Numpy image arrays]
+          override_warmup: Boolean
+          quick_capture: Boolean [is used to take the photos as fast as possible.
             This returns greyscale photos to be used in the disparity_map_stream
-            along with other speed improvements (might combine with left/right)
+            along with other speed improvements (might combine with left/right)]
+
+        Returns: (imgRGB_left, imgRGB_right) if "image_array" is specified in
+                the "type" parameter, then this function will return the
+                data in a tuple of left and right Numpy arrays. Otherwise, this
+                will return the tuple (None, None). It can also return a tuple
+                (width_right, height_right) as well as erroring out with a tuple
+                (0, 0). TODO: Need to refactor the return values on this
+                function.
         """
         if (right == None) or (left == None):
             right = cv2.VideoCapture(1)
@@ -598,22 +648,24 @@ class Camera():
             left.release()
             return (None, None)
 
-        #print(ret_left, ret_right)
-
         if ret_left == False:
             return (None, None)
         if ret_right == False:
             return (None, None)
 
-        if quick_capture == False:
+        if quick_capture == True:
+            imgGRAY_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2GRAY)
+            imgGRAY_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2GRAY)
+            return imgGRAY_left, imgGRAY_right
+
+        elif quick_capture == False:
             imgRGB_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2RGB)
             imgRGB_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2RGB)
-        elif quick_capture == True:
-            #imgGRAY_right=cv2.cvtColor(rightFrame,cv2.COLOR_BGR2GRAY)
-            #imgGRAY_left=cv2.cvtColor(leftFrame,cv2.COLOR_BGR2GRAY)
-            #return imgGRAY_left, imgGRAY_right
-            return leftFrame, rightFrame
-        if type == "separate":
+
+        if type == "image_array":
+            return imgRGB_left, imgRGB_right
+
+        elif type == "separate":
             jpg_image_right = Image.fromarray(imgRGB_right)
             jpg_image_left = Image.fromarray(imgRGB_left)
             if filename == None:
@@ -628,9 +680,6 @@ class Camera():
             else:
                 # This shouldn't happen.  If it does, error out.
                 return 0, 0
-        elif type == "image_array":
-            #processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()
-            return imgRGB_left, imgRGB_right
         else:
             return (None, None)
 

@@ -15,6 +15,10 @@ class Server():
     def clear_gpio_motor_pins(self):
         self.m.clear_gpio_motor_pins()
 
+    """
+    The below code is used to start the Robot's webserver. It is run locally on
+    the RPi itself.
+    """
     def start_webserver(self):
         print("Initializing Server")
         app = Flask(__name__)
