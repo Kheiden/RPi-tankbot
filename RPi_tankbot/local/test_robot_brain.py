@@ -1,5 +1,6 @@
-import camera
+import numyp as np
 import robot_brain
+import camera
 
 class TestBrain():
 
@@ -44,5 +45,8 @@ class TestBrain():
             list_of_results.append(processing_time)
 
         print("list_of_results:", list_of_results)
+        print("type(disparity_map)", type(disparity_map))
+        assert type(disparity_map) == type(np.eye(3))
         # Below test fails if any of the results are above the threshold
-        assert any([i for i in list_of_results if i > threshold])
+        # If test is less than threshold then True, else False
+        assert any([i for i in list_of_results if i < threshold])
