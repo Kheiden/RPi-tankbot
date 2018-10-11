@@ -31,7 +31,7 @@ class TestBrain():
         result = self.brain.server_alive()
         assert result.status_code == 200
 
-        list_of_results = 0
+        list_of_results = []
         number_of_tests = 10
         threshold = 1
 
@@ -41,6 +41,7 @@ class TestBrain():
             # map
             processing_time, disparity_map = self.c.server_compute_disparity_map()
             print("server_compute_disparity_map() processing_time:", processing_time)
+            list_of_results.append(processing_time)
 
         print("list_of_results:", list_of_results)
         # Below test fails if any of the results are above the threshold
