@@ -87,6 +87,8 @@ class Server():
         def server_online():
             return "ok"
 
+        return app
+
     """
     def process_video_stream(self):
         # Step 1) retrieve RGB data for two photos (left and right)
