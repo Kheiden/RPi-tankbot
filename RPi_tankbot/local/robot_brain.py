@@ -15,7 +15,7 @@ class RobotBrain ():
     def server_alive(self):
         """ This function is used to determine if the server is online or not.
         """
-        result = requests.get("http://{ip}:{port}}/v1/serveronline".format(
+        result = requests.get("http://{ip}:{port}/v1/serveronline".format(
             ip=self.server_ip_address,
             port=self.server_port
         ))
