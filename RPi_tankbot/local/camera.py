@@ -114,7 +114,7 @@ class Camera():
         # disparity map on the server
         time01 = cv2.getTickCount()
         # send the two images to the server, return the disparity map
-        disparity_map = self.brain.disparity_map(data=payload)
+        disparity_map = self.brain.disparity_map(payload=payload)
         time02 = cv2.getTickCount()
         processing_time = (time02 - time01)/ cv2.getTickFrequency()
 
