@@ -1,4 +1,4 @@
-import numypy as np
+import numpy as np
 import robot_brain
 import camera
 
