@@ -32,6 +32,6 @@ class RobotBrain ():
             ip=self.server_ip_address,
             port=self.server_port
             ), data=payload)
-
+        print(response.text)
         disparity_map = pickle.loads(response.text.read())
         return disparity_map
