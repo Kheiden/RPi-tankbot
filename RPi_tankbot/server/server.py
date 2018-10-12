@@ -74,7 +74,7 @@ class Server():
         print("Initializing Server")
         app = Flask(__name__)
 
-        @app.route("/{}/disparitymap".format(self.api_version))
+        @app.route("/{}/disparitymap".format(self.api_version), methods=['POST'])
         def disparitymap():
             if request.method == 'POST':
                 imgRGB_left = request.form['imgRGB_left']
