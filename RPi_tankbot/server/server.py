@@ -7,7 +7,7 @@ class Server():
 
     def __init__(self):
         self.api_version = "v1"
-        self.home_dir = "/home/server"
+        self.home_dir = "/home/kheiden"
 
     def create_disparity_map(self, imgLeft, imgRight, res_x=640, res_y=480, npzfile=None, ):
         """
