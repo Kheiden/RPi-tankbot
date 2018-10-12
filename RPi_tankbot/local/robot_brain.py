@@ -33,5 +33,5 @@ class RobotBrain ():
             port=self.server_port
             ), data=payload)
 
-        disparity_map = pickle.loads(response.read())
+        disparity_map = pickle.loads(response.text.read())
         return disparity_map
