@@ -1,6 +1,8 @@
-from flask import Flask, request
+from flask import Flask, request, send_file
 import numpy as np
+import pickle
 import cv2
+import io
 
 
 class Server():
@@ -82,7 +84,8 @@ class Server():
 
                 response = Response(disparity, status=200,
                                     mimetype='application/octet-stream')
-                return response
+                disparity_pickled_file_obj = io.BytesIO(pickle.dumps(disparity))
+                return disparity_pickled_file_obj
             else:
                 return "Request needs to be POST"
 
