@@ -76,18 +76,16 @@ class Server():
 
         @app.route("/{}/disparitymap".format(self.api_version), methods=['POST'])
         def disparitymap():
-            if request.method == 'POST':
-                imgRGB_left = request.form['imgRGB_left']
-                imgRGB_right = request.form['imgRGB_right']
-                _, disparity = self.create_disparity_map(imgRGB_left,
-                                                                imgRGB_right)
+            imgRGB_left = request.form['imgRGB_left']
+            imgRGB_right = request.form['imgRGB_right']
+            _, disparity = self.create_disparity_map(imgRGB_left,
+                                                            imgRGB_right)
 
-                response = Response(disparity, status=200,
-                                    mimetype='application/octet-stream')
-                disparity_pickled_file_obj = io.BytesIO(pickle.dumps(disparity))
-                return disparity_pickled_file_obj
-            else:
-                return "Request needs to be POST"
+            response = Response(disparity, status=200,
+                                mimetype='application/octet-stream')
+            disparity_pickled_file_obj = io.BytesIO(pickle.dumps(disparity))
+            return disparity_pickled_file_obj
+
 
         @app.route("/{}/serveronline".format(self.api_version))
         def server_online():
