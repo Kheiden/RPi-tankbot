@@ -79,7 +79,10 @@ class Server():
                 imgRGB_right = request.form['imgRGB_right']
                 _, disparity = self.create_disparity_map(imgRGB_left,
                                                                 imgRGB_right)
-                return disparity
+
+                response = Response(disparity, status=200,
+                                    mimetype='application/octet-stream')
+                return response
             else:
                 return "Request needs to be POST"
 
