@@ -35,7 +35,7 @@ class TestBrain():
         assert result.status_code == 200
 
         list_of_results = []
-        number_of_tests = 10
+        number_of_tests = 1
         processing_speed_threshold = 1
 
         time_on = 5
@@ -52,7 +52,8 @@ class TestBrain():
         num_threshold = 30720
         action = [threshold, num_threshold, action]
 
-        self.m.forward_slow(1, 1)
+        print("Pretending to move the robot forward")
+        #self.m.forward_slow(1, 1)
         # Running the test a number of times to get the computation times
         for i in range(number_of_tests):
             # Now that we know that the server is online, we can compute a disparity
