@@ -111,6 +111,12 @@ class Camera():
                                                            type="combined",
                                                            override_warmup=True,
                                                            quick_capture=False)
+        left_shape = imgRGB_left.shape
+        right_shape = imgRGB_right.shape
+
+        if left_shape != right_shape:
+            print("The Left and Right photos should have the same shape")
+            assert False
 
         payload = {
                     'imgRGB_left': imgRGB_left,

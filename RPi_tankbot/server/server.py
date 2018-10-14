@@ -111,9 +111,10 @@ class Server():
 
         @app.route("/{}/disparitymap".format(self.api_version), methods=['POST'])
         def disparitymap():
-            imgRGB_left = request.form['imgRGB_left']
-            imgRGB_right = request.form['imgRGB_right']
-            action = request.form['action']
+            payload = request.get_json(force=True)
+            imgRGB_left = payload['imgRGB_left']
+            imgRGB_right = payload['imgRGB_right']
+            action = payload['action']
             _, disparity = self.create_disparity_map(imgRGB_left,
                                                             imgRGB_right)
             self.move_robot(action)
