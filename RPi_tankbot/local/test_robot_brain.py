@@ -1,5 +1,6 @@
 import numpy as np
 import robot_brain
+import movement
 import camera
 
 class TestBrain():
