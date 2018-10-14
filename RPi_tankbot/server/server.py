@@ -1,5 +1,6 @@
 from flask import Flask, request, send_file
 import numpy as np
+import movement
 import pickle
 import cv2
 import io
@@ -10,6 +11,7 @@ class Server():
     def __init__(self):
         self.api_version = "v1"
         self.home_dir = "/home/kheiden"
+        self.m = movement.Movement()
 
     def create_disparity_map(self, imgLeft, imgRight, res_x=640, res_y=480, npzfile=None, ):
         """
@@ -69,6 +71,39 @@ class Server():
 
         return imgLeft, disparity
 
+    def move_robot(self, action):
+        threshold = action[0]
+        num_threshold = action[1]
+        b = np.where(result[1] > threshold)
+        num_pixels_above_threshold = len(b[0])
+        print("Threshold: {}/255, num_threshold: {}, num_pixels_above_threshold: {}".format(
+            threshold,
+            num_threshold,
+            num_pixels_above_threshold
+        ))
+        if num_pixels_above_threshold >= num_threshold:
+            # This means that we need to stop the robot ASAP
+            print("Object detected too close!")
+            if action[2] == 'stop_if_close':
+                self.m.stop()
+                print("Stopping robot to avoid collision")
+                return None, None, action[2]
+
+            if action[2] == 'rotate_random':
+                direction = random.choice(["right", "left"])
+                print("Rotating {} to avoid obstacle".format(direction))
+                #move left or right
+                self.m.rotate_on_carpet(direction=direction,
+                    movement_time=6,
+                    sleep_speed=0.25)
+
+            if action[2] == 'rotate_right':
+                direction = "right"
+                print("Rotating {} to avoid obstacle".format(direction))
+                #move left or right
+                self.m.rotate_on_carpet(direction=direction,
+                    movement_time=6,
+                    sleep_speed=0.25)
 
     def start_webserver(self):
         print("Initializing Server")
@@ -78,13 +113,11 @@ class Server():
         def disparitymap():
             imgRGB_left = request.form['imgRGB_left']
             imgRGB_right = request.form['imgRGB_right']
+            action = request.form['action']
             _, disparity = self.create_disparity_map(imgRGB_left,
                                                             imgRGB_right)
-
-            response = Response(disparity, status=200,
-                                mimetype='application/octet-stream')
-            disparity_pickled_file_obj = io.BytesIO(pickle.dumps(disparity))
-            return disparity_pickled_file_obj
+            self.move_robot(action)
+            return "ok"
 
 
         @app.route("/{}/serveronline".format(self.api_version))

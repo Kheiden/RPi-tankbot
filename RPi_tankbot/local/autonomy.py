@@ -4,10 +4,15 @@ import camera
 class Autonomy():
 
     def __init__(self):
+        """ DEPRICATED. This function and module will be implemented on the server
+        """
+
         self.c = camera.Camera()
         self.m = movement.Movement()
+
     def autonomous_routine_basic(self):
-        """
+        """ DEPRICATED. This function and module will be implemented on the server
+
         This test is used to run a basic autonomous routine which will perform
         the following:
           1) Capture disparity map
@@ -41,7 +46,9 @@ class Autonomy():
 
 
     def collision_avoidance_basic(self):
-        """
+        """ DEPRICATED. This function and module will be implemented on the server
+
+
         This test will be used to determine if the RPi is about to run into a
         physical object.  This will be used by the autonomous routine to determine
         when to stop the robot.

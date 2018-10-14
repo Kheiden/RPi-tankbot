@@ -87,12 +87,15 @@ class Camera():
         return True
 
 
-    def server_compute_disparity_map(self):
+    def server_compute_disparity_map(self, action):
         """ This is used to compute disparity maps on the server.
 
         Since the server can compute disparity maps faster than the RPi, we want
         to take a photo with L and R cameras then send it to the server for
         processing.
+
+        Args:
+          action: 'stop_if_close' - stops the robot if close to an object
 
         Returns:
           processing_time [The amount of time that it took the server to
@@ -109,16 +112,22 @@ class Camera():
                                                            override_warmup=True,
                                                            quick_capture=False)
 
-        payload = {'imgRGB_left': imgRGB_left, 'imgRGB_right': imgRGB_right}
+        payload = {
+                    'imgRGB_left': imgRGB_left,
+                    'imgRGB_right': imgRGB_right,
+                    'action': action
+                  }
         # Now we want to start the timer to see how long it takes to process the
         # disparity map on the server
         time01 = cv2.getTickCount()
         # send the two images to the server, return the disparity map
-        disparity_map = self.brain.disparity_map(payload=payload)
+        status_code = self.brain.disparity_map(payload=payload)
         time02 = cv2.getTickCount()
         processing_time = (time02 - time01)/ cv2.getTickFrequency()
-
-        return processing_time, disparity_map
+        if status_code != 200:
+            # This means that there was a problem POSTing to the server.
+            print("Problem calculating disparity map on server")
+        return processing_time
 
     def realtime_disparity_map_stream(self, time_on, action=None,
         save_disparity_image=False,
