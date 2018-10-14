@@ -111,6 +111,11 @@ class Camera():
                                                            type="combined",
                                                            override_warmup=True,
                                                            quick_capture=False)
+
+        if imgRGB_left or imgRGB_right is None:
+            print("Error Taking photos")
+            assert False
+
         left_shape = imgRGB_left.shape
         right_shape = imgRGB_right.shape
 
