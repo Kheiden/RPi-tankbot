@@ -4,7 +4,8 @@ import camera
 class Autonomy():
 
     def __init__(self):
-        """ DEPRICATED. This function and module will be implemented on the server
+        """ DEPRICATED. This function and module will be implemented on
+        server/ not local/
         """
 
         self.c = camera.Camera()

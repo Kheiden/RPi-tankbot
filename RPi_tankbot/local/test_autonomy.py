@@ -5,6 +5,8 @@ class TestAutonomy():
 
     @classmethod
     def setup_class(self):
+        """ DEPRICATED. Please move this code to server/autonomy
+        """
         self.a = autonomy.Autonomy()
 
     @classmethod
