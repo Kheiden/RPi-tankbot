@@ -173,7 +173,9 @@ class Camera():
                 type="image_array",
                 override_warmup=override_warmup)
             result = self.create_disparity_map(imgL, imgR, res_x, res_y, npzfile=npzfile, save_disparity_image=save_disparity_image)
-            if action is not None:
+            if action is None:
+                return (None, None)
+            else:
                 threshold = action[0]
                 num_threshold = action[1]
                 b = np.where(result[1] > threshold)
