@@ -39,7 +39,7 @@ class Camera():
         self.pwm_x.stop()
         self.pwm_y.stop()
 
-        self.home_dir = "/home/pi"
+        self.home_dir = "/home/pi/RPi-tankbot"
         self.brain = robot_brain.RobotBrain()
 
     def create_3d_point_cloud(self, imgL, disparity_map, file_num):
@@ -307,7 +307,7 @@ class Camera():
             jpg_image = Image.fromarray(disparity_normalized*255)
             jpg_image = jpg_image.convert('RGB')
             timestamp = time.time()
-            jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}.jpg".format(timestamp), format='JPEG')
+            jpg_image.save("{}RPi-tankbot/local/frames/disparity_map_{}.jpg".format(self.home_dir, timestamp), format='JPEG')
             # Uncomment below to save the color image (left)
             #jpg_image = Image.fromarray(imgLeft)
             #jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}_color.jpg".format(timestamp), format='JPEG')
@@ -692,8 +692,8 @@ class Camera():
             jpg_image_left = Image.fromarray(imgRGB_left)
             if filename == None:
                 filename = datetime.now().strftime("%F_%H-%M-%S.%f")
-            jpg_image_right.save("/home/pi/RPi-tankbot/local/frames/{}_right.jpg".format(filename), format='JPEG')
-            jpg_image_left.save("/home/pi/RPi-tankbot/local/frames/{}_left.jpg".format(filename), format='JPEG')
+            jpg_image_right.save("{}/RPi-tankbot/local/frames/{}_right.jpg".format(self.home_dir, filename), format='JPEG')
+            jpg_image_left.save("{}/RPi-tankbot/local/frames/{}_left.jpg".format(self.home_dir, filename), format='JPEG')
 
             width_right, height_right = jpg_image_right.shape[:2]
             width_left, height_left = jpg_image_left.shape[:2]
