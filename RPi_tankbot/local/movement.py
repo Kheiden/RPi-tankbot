@@ -19,7 +19,7 @@ class Movement():
 
         # Motor2 is the right motor
         self.Motor2A = 23
-        self.Motor2B = 21
+        self.Motor2B = 15 # to 15 (new) from 21 (old)
         self.Motor2E = 19
 
         GPIO.setup(self.Motor1A,GPIO.OUT)
@@ -127,9 +127,9 @@ class Movement():
         GPIO.output(self.Motor1B,GPIO.LOW)
         GPIO.output(self.Motor1E,GPIO.HIGH)
 
-        GPIO.output(self.Motor2A,GPIO.HIGH)
-        GPIO.output(self.Motor2B,GPIO.LOW)
-        GPIO.output(self.Motor2E,GPIO.HIGH)
+        GPIO.output(self.Motor2A,GPIO.HIGH) # ok
+        GPIO.output(self.Motor2B,GPIO.LOW) # not ok
+        GPIO.output(self.Motor2E,GPIO.HIGH) #ok
 
         """
         If movement_time is specified, then shut down motors after the

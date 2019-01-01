@@ -67,10 +67,8 @@ var img = document.getElementById("disparity_map_stream");
 img.src="";
 return false;
 }
+
 </script>
-
-
-
 <script>
 $(document).ready(function(){
     $("#b_forwards").mousedown(function(){
@@ -133,9 +131,16 @@ $(document).ready(function(){
     });
 });
 $(document).ready(function(){
-    $("#b_stop").mousedown(function(){
-        $.get("stop", function(data, status){
-            console.log("stopping motors!")
+    $("#b_take_stereo_photo").mousedown(function(){
+        $.get("take_stereo_photo", function(data, status){
+            console.log("Taking Stero Photo")
+        });
+    });
+});
+$(document).ready(function(){
+    $("#b_capture_cloud_point").mousedown(function(){
+        $.get("capture_cloud_point", function(data, status){
+            console.log("Capturing 3D cloud point")
         });
     });
 });
@@ -164,6 +169,13 @@ $(document).ready(function(){
         <td></td>
         <td width="20%"><button id="b_start_disparity_map_stream" onclick="start_disparity_map_stream();">Start Disparity Map Stream</button></td>
         <td width="20%"><button id="b_stop_disparity_map_stream" onclick="stop_disparity_map_stream();">Stop Disparity Map Stream</button></td>
+      </tr>
+      <tr>
+        <td style="height:50px" button id="b_take_stereo_photo" onclick=take_stereo_photo();>Auto Forward 1</td>
+        <td><button id="b_backwards">Placeholder</button></td>
+        <td></td>
+        <td width="20%"><button id="b_take_stereo_photo" onclick=take_stereo_photo();>Take Stereo Photo</button></td>
+        <td width="20%"><button id="b_capture_cloud_point" onclick=capture_cloud_point();>Capture 3D Cloud Point</button></td>
       </tr>
     </table>
 
