@@ -80,5 +80,11 @@ if __name__ == '__main__':
     s = Server()
     app = s.start_webserver()
     app.debug=True
-    app.run(host='0.0.0.0', port=5000)
-    s.clear_gpio_motor_pins()
+    print("Starting up server...")
+    try:
+        app.run(host='0.0.0.0', port=5000)
+    except KeyboardInterrupt:
+        print("Interrupt Signal Sent.")
+    finally:
+        print("Shutting down server...")
+        s.clear_gpio_motor_pins()

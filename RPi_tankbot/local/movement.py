@@ -19,7 +19,7 @@ class Movement():
 
         # Motor2 is the right motor
         self.Motor2A = 23
-        self.Motor2B = 15 # to 15 (new) from 21 (old)
+        self.Motor2B = 21 # to 15 (new) from 21 (old)
         self.Motor2E = 19
 
         GPIO.setup(self.Motor1A,GPIO.OUT)
@@ -146,7 +146,7 @@ class Movement():
         GPIO.output(self.Motor1E,GPIO.HIGH)
 
         GPIO.output(self.Motor2A,GPIO.LOW)
-        GPIO.output(self.Motor2B,GPIO.HIGH)
+        GPIO.output(self.Motor2B,GPIO.HIGH)  # not ok
         GPIO.output(self.Motor2E,GPIO.HIGH)
 
         """
