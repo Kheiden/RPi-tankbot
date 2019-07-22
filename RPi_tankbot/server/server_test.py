@@ -1,2 +1,2 @@
 import unittest
-from  unittest.mock import mock
+from  unittest import mock
