@@ -139,4 +139,4 @@ if __name__ == '__main__':
     s = Server()
     app = s.start_webserver()
     app.debug=True
-    app.run(host='0.0.0.0', port=7842)
+    app.run(host='0.0.0.0', port=8080)
