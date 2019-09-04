@@ -13,6 +13,12 @@ class TestMovement():
     def teardown_class(self):
         self.m.clear_gpio_motor_pins()
 
+
+    def test_red_robot_motors(self):
+      """Used to figure out which GPIO pins control the PWM for the motor"""
+      output = self.m.run_through_gpios()
+      self.assertTrue(output)
+
     @pytest.mark.skip(reason="Passed.")
     def test_rotate_on_carpet(self):
         """Issue #68 on GitHub"""

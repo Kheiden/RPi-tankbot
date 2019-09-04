@@ -13,14 +13,14 @@ class Movement():
 
         GPIO.setmode(GPIO.BOARD)
         # Motor1 is the left motor
-        self.Motor1A = 16
-        self.Motor1B = 18
-        self.Motor1E = 22
+        self.Motor1A = 13
+        self.Motor1B = 19
+        self.Motor1E = 26
 
         # Motor2 is the right motor
-        self.Motor2A = 23
-        self.Motor2B = 21 # to 15 (new) from 21 (old)
-        self.Motor2E = 19
+        self.Motor2A = 16
+        self.Motor2B = 20 # to 15 (new) from 21 (old)
+        self.Motor2E = 21
 
         GPIO.setup(self.Motor1A,GPIO.OUT)
         GPIO.setup(self.Motor1B,GPIO.OUT)
@@ -30,6 +30,8 @@ class Movement():
         GPIO.setup(self.Motor2B,GPIO.OUT)
         GPIO.setup(self.Motor2E,GPIO.OUT)
 
+    def run_through_gpios(self):
+      return False
 
     def rotate_on_carpet(self, direction=None, movement_time=None, sleep_speed=0.25):
         self.state.stopped = False
