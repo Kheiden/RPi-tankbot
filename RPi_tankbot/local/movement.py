@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO
+import pigpio
 from time import sleep
 import threading
 import state
@@ -32,23 +33,21 @@ class Movement():
 
     def run_through_gpios(self):
       print("Debugging GPIO Pins")
-      print("First, let's turn all to LOW")
-      GPIO.output(self.Motor1A,GPIO.LOW)
-      GPIO.output(self.Motor1B,GPIO.LOW)
-      GPIO.output(self.Motor1E,GPIO.LOW)
+      pi = pigpio.pi()
+      frequency = 16000
+      pwm_range = 100
+      pi.set_PWM_range(self.Motor1A, pwm_range)
+      pi.set_PWM_range(self.Motor1B, pwm_range)
+      pi.set_PWM_range(self.Motor1E, pwm_range)
 
-      GPIO.output(self.Motor2A,GPIO.LOW)
-      GPIO.output(self.Motor2B,GPIO.LOW)
-      GPIO.output(self.Motor2E,GPIO.LOW)
-      time.sleep(2)
-      print("Then set them all to High")
-      GPIO.output(self.Motor1A,GPIO.HIGH)
-      GPIO.output(self.Motor1B,GPIO.HIGH)
-      GPIO.output(self.Motor1E,GPIO.HIGH)
+      pi.set_PWM_frequency(self.Motor1A, frequency)
+      pi.set_PWM_frequency(self.Motor1B, frequency)
+      pi.set_PWM_frequency(self.Motor1E, frequency)
+      for dutycycle in range(pwm_range, 1, 0):
+        pi.set_PWM_dutycycle(self.Motor1A, dutycycle)
+        pi.set_PWM_dutycycle(self.Motor1B, dutycycle)
+        pi.set_PWM_dutycycle(self.Motor1E, dutycycle)
 
-      GPIO.output(self.Motor2A,GPIO.HIGH)
-      GPIO.output(self.Motor2B,GPIO.HIGH)
-      GPIO.output(self.Motor2E,GPIO.HIGH)
       print("Any Change?")
       return True
 
