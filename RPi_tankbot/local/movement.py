@@ -31,7 +31,26 @@ class Movement():
         GPIO.setup(self.Motor2E,GPIO.OUT)
 
     def run_through_gpios(self):
-      return False
+      print("Debugging GPIO Pins")
+      print("First, let's turn all to LOW")
+      GPIO.output(self.Motor1A,GPIO.LOW)
+      GPIO.output(self.Motor1B,GPIO.LOW)
+      GPIO.output(self.Motor1E,GPIO.LOW)
+
+      GPIO.output(self.Motor2A,GPIO.LOW)
+      GPIO.output(self.Motor2B,GPIO.LOW)
+      GPIO.output(self.Motor2E,GPIO.LOW)
+      time.sleep(2)
+      print("Then set them all to High")
+      GPIO.output(self.Motor1A,GPIO.HIGH)
+      GPIO.output(self.Motor1B,GPIO.HIGH)
+      GPIO.output(self.Motor1E,GPIO.HIGH)
+
+      GPIO.output(self.Motor2A,GPIO.HIGH)
+      GPIO.output(self.Motor2B,GPIO.HIGH)
+      GPIO.output(self.Motor2E,GPIO.HIGH)
+      print("Any Change?")
+      return True
 
     def rotate_on_carpet(self, direction=None, movement_time=None, sleep_speed=0.25):
         self.state.stopped = False
