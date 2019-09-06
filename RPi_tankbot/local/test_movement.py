@@ -16,6 +16,7 @@ class TestMovement():
 
     def test_red_robot_motors(self):
       """Used to figure out which GPIO pins control the PWM for the motor"""
+      self.m.clear_gpio_motor_pins()
       output = self.m.run_through_gpios()
       assert output
 
