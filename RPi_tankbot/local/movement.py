@@ -13,14 +13,14 @@ class Movement():
 
         GPIO.setmode(GPIO.BOARD)
         # Motor1 is the right motor
-        self.Motor1A = 13
-        self.Motor1B = 19
-        self.Motor1E = 26
+        self.Motor1A = 33
+        self.Motor1B = 35
+        self.Motor1E = 37
 
         # Motor2 is the left motor
-        self.Motor2A = 16
-        self.Motor2B = 20
-        self.Motor2E = 21
+        self.Motor2A = 36
+        self.Motor2B = 38
+        self.Motor2E = 40
 
         GPIO.setup(self.Motor1A,GPIO.OUT)
         GPIO.setup(self.Motor1B,GPIO.OUT)
