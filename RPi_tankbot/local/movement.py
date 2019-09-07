@@ -54,7 +54,13 @@ class Movement():
       self.pi.set_PWM_frequency(self.Motor1A, frequency)
       self.pi.set_PWM_frequency(self.Motor1B, frequency)
       self.pi.set_PWM_frequency(self.Motor1E, frequency)
-      for dutycycle in range(0, pwm_range, 1):
+      # The below list counts up from `start_number` to `stop_number` then down
+      # to `start_number` again. It steps in increments of `increment`.
+      start_number = 0
+      stop_number = 25
+      increment = 1
+      create_list = [i for i in range(start_number, stop_number, increment)] + [i for i in range(stop_number, start_number-1, -increment)]
+      for dutycycle in create_list:
         self.pi.set_PWM_dutycycle(self.Motor1A, dutycycle)
         self.pi.set_PWM_dutycycle(self.Motor1B, dutycycle)
         self.pi.set_PWM_dutycycle(self.Motor1E, dutycycle)
