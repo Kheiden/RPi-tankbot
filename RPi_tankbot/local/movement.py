@@ -54,7 +54,7 @@ class Movement():
       self.pi.set_PWM_frequency(self.Motor1A, frequency)
       self.pi.set_PWM_frequency(self.Motor1B, frequency)
       self.pi.set_PWM_frequency(self.Motor1E, frequency)
-      for dutycycle in range(pwm_range, 1, 0):
+      for dutycycle in range(0, pwm_range, 1):
         self.pi.set_PWM_dutycycle(self.Motor1A, dutycycle)
         self.pi.set_PWM_dutycycle(self.Motor1B, dutycycle)
         self.pi.set_PWM_dutycycle(self.Motor1E, dutycycle)
