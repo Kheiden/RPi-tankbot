@@ -194,4 +194,4 @@ class Movement():
     def clear_gpio_motor_pins(self):
       # Not needed for pigpio tests
         #GPIO.cleanup()
-        return true
+        return True
