@@ -20,7 +20,7 @@ class TestMovement():
       output = self.m.run_through_gpios()
       assert output
 
-    @pytest.mark.skip(reason="Passed.")
+    @pytest.mark.skip(reason="Not Yet Passed.")
     def test_rotate_on_carpet(self):
         """Issue #68 on GitHub"""
         movement_time = 25
@@ -53,7 +53,7 @@ class TestMovement():
         """
 
 
-    @pytest.mark.skip(reason="Passed.")
+    @pytest.mark.skip(reason="Not Yet Passed.")
     def test_move_robot(self):
         """move forward, turn, then move forward again."""
         self.m.forward(movement_time=3)
@@ -61,7 +61,7 @@ class TestMovement():
         self.m.rotate(direction="right", movement_time=3)
         self.m.rotate(direction="left", movement_time=3)
 
-    @pytest.mark.skip(reason="Passed.")
+    @pytest.mark.skip(reason="Not Yet Passed.")
     def test_infinite_motor_movement(self):
         """Move motors without passing movement_time variable"""
         self.m.forward()

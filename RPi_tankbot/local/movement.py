@@ -1,4 +1,4 @@
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 import pigpio
 from time import sleep
 import threading
@@ -11,8 +11,8 @@ class Movement():
     def __init__(self):
         # Inport the robot's state
         self.state = state.State()
-
-        GPIO.setmode(GPIO.BOARD)
+        self.pi = pigpio.pi()
+        #GPIO.setmode(GPIO.BOARD)
         # Motor1 is the right motor
         self.Motor1A = 33
         self.Motor1B = 35
@@ -23,19 +23,19 @@ class Movement():
         self.Motor2B = 38
         self.Motor2E = 40
 
-        GPIO.setup(self.Motor1A,GPIO.OUT)
-        GPIO.setup(self.Motor1B,GPIO.OUT)
-        GPIO.setup(self.Motor1E,GPIO.OUT)
+        #GPIO.setup(self.Motor1A,GPIO.OUT)
+        #GPIO.setup(self.Motor1B,GPIO.OUT)
+        #GPIO.setup(self.Motor1E,GPIO.OUT)
 
-        GPIO.setup(self.Motor2A,GPIO.OUT)
-        GPIO.setup(self.Motor2B,GPIO.OUT)
-        GPIO.setup(self.Motor2E,GPIO.OUT)
+        #GPIO.setup(self.Motor2A,GPIO.OUT)
+        #GPIO.setup(self.Motor2B,GPIO.OUT)
+        #GPIO.setup(self.Motor2E,GPIO.OUT)
 
     def run_through_gpios(self):
       print("Debugging GPIO Pins")
-      pi = pigpio.pi()
+      self.pi = pigpio.pi()
       frequency = 16000
-      pwm_range = 100
+      pwm_range = 10
       pi.set_PWM_range(self.Motor1A, pwm_range)
       pi.set_PWM_range(self.Motor1B, pwm_range)
       pi.set_PWM_range(self.Motor1E, pwm_range)
@@ -47,6 +47,11 @@ class Movement():
         pi.set_PWM_dutycycle(self.Motor1A, dutycycle)
         pi.set_PWM_dutycycle(self.Motor1B, dutycycle)
         pi.set_PWM_dutycycle(self.Motor1E, dutycycle)
+        print("sleeping for 1 second")
+        time.sleep(1)
+        print("Now trying dutycycle {}/{} and frequency `{}`".format(dutycycle,
+          pwm_range
+          frequency))
 
       print("Any Change?")
       return True
