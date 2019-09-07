@@ -36,17 +36,17 @@ class Movement():
       self.pi = pigpio.pi()
       frequency = 16000
       pwm_range = 10
-      pi.set_PWM_range(self.Motor1A, pwm_range)
-      pi.set_PWM_range(self.Motor1B, pwm_range)
-      pi.set_PWM_range(self.Motor1E, pwm_range)
+      self.pi.set_PWM_range(self.Motor1A, pwm_range)
+      self.pi.set_PWM_range(self.Motor1B, pwm_range)
+      self.pi.set_PWM_range(self.Motor1E, pwm_range)
 
-      pi.set_PWM_frequency(self.Motor1A, frequency)
-      pi.set_PWM_frequency(self.Motor1B, frequency)
-      pi.set_PWM_frequency(self.Motor1E, frequency)
+      self.pi.set_PWM_frequency(self.Motor1A, frequency)
+      self.pi.set_PWM_frequency(self.Motor1B, frequency)
+      self.pi.set_PWM_frequency(self.Motor1E, frequency)
       for dutycycle in range(pwm_range, 1, 0):
-        pi.set_PWM_dutycycle(self.Motor1A, dutycycle)
-        pi.set_PWM_dutycycle(self.Motor1B, dutycycle)
-        pi.set_PWM_dutycycle(self.Motor1E, dutycycle)
+        self.pi.set_PWM_dutycycle(self.Motor1A, dutycycle)
+        self.pi.set_PWM_dutycycle(self.Motor1B, dutycycle)
+        self.pi.set_PWM_dutycycle(self.Motor1E, dutycycle)
         print("sleeping for 1 second")
         time.sleep(1)
         print("Now trying dutycycle {}/{} and frequency `{}`".format(dutycycle,
