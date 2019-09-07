@@ -50,7 +50,7 @@ class Movement():
         print("sleeping for 1 second")
         time.sleep(1)
         print("Now trying dutycycle {}/{} and frequency `{}`".format(dutycycle,
-          pwm_range
+          pwm_range,
           frequency))
 
       print("Any Change?")
