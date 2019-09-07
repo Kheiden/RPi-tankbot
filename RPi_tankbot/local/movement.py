@@ -192,4 +192,6 @@ class Movement():
         self.state.stopped = True
 
     def clear_gpio_motor_pins(self):
-        GPIO.cleanup()
+      # Not needed for pigpio tests
+        #GPIO.cleanup()
+        pass
