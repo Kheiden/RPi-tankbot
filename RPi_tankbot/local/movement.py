@@ -45,7 +45,8 @@ class Movement():
       print("Debugging GPIO Pins")
       self.pi = pigpio.pi()
       frequency = 16000
-      pwm_range = 10
+      # Must be 25 to 40000
+      pwm_range = 25
       self.pi.set_PWM_range(self.Motor1A, pwm_range)
       self.pi.set_PWM_range(self.Motor1B, pwm_range)
       self.pi.set_PWM_range(self.Motor1E, pwm_range)
