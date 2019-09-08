@@ -11,7 +11,7 @@ class Server():
     def __init__(self):
         self.api_version = "v1"
         self.home_dir = "/home/kheiden"
-        self.m = movement.Movement()
+        #self.m = movement.Movement()
 
     def create_disparity_map(self, imgLeft, imgRight, res_x=640, res_y=480, npzfile=None, ):
         """
@@ -85,7 +85,7 @@ class Server():
             # This means that we need to stop the robot ASAP
             print("Object detected too close!")
             if action[2] == 'stop_if_close':
-                self.m.stop()
+                #self.m.stop()
                 print("Stopping robot to avoid collision")
                 return None, None, action[2]
 
@@ -93,7 +93,7 @@ class Server():
                 direction = random.choice(["right", "left"])
                 print("Rotating {} to avoid obstacle".format(direction))
                 #move left or right
-                self.m.rotate_on_carpet(direction=direction,
+                #self.m.rotate_on_carpet(direction=direction,
                     movement_time=6,
                     sleep_speed=0.25)
 
@@ -101,7 +101,7 @@ class Server():
                 direction = "right"
                 print("Rotating {} to avoid obstacle".format(direction))
                 #move left or right
-                self.m.rotate_on_carpet(direction=direction,
+                #self.m.rotate_on_carpet(direction=direction,
                     movement_time=6,
                     sleep_speed=0.25)
 
@@ -117,7 +117,7 @@ class Server():
             action = payload['action']
             _, disparity = self.create_disparity_map(imgRGB_left,
                                                             imgRGB_right)
-            self.move_robot(action)
+            #self.move_robot(action)
             return "ok"
 
 
