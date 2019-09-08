@@ -11,7 +11,6 @@ class Movement():
     def __init__(self):
         # Inport the robot's state
         self.state = state.State()
-        self.pi = pigpio.pi()
         # Use the pin numbering from the BOARD
         #GPIO.setmode(GPIO.BOARD)
         # Motor1 is the right motor
