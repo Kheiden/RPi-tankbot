@@ -1,5 +1,5 @@
-#import RPi.GPIO as GPIO
-import pigpio
+import RPi.GPIO as GPIO
+#import pigpio
 from time import sleep
 import threading
 import state
@@ -210,5 +210,4 @@ class Movement():
 
     def clear_gpio_motor_pins(self):
       # Not needed for pigpio tests
-        #GPIO.cleanup()
-        return True
+        return GPIO.cleanup()
