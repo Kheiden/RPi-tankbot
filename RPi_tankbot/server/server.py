@@ -123,7 +123,7 @@ class Server():
 
         @app.route("/{}/serveronline".format(self.api_version))
         def server_online():
-            return "ok"
+            return "Robot Brain server is online."
 
         return app
 
@@ -139,4 +139,4 @@ if __name__ == '__main__':
     s = Server()
     app = s.start_webserver()
     app.debug=True
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8081)
