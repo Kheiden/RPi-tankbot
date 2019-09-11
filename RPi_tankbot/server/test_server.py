@@ -2,7 +2,7 @@ import requests
 import unittest
 from  unittest import mock
 
-class ServerTest(unittest.TestCase):
+class TestServer(unittest.TestCase):
 
   def __init__(self):
     self.ip_address = '192.168.1.10'
