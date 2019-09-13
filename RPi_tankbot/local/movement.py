@@ -62,7 +62,7 @@ class Movement():
       pin1.start(dutycycle)
       pin2.start(dutycycle)
       pin3.start(dutycycle)
-
+      #sleep
       time.sleep(5)
 
       pin1.stop()
