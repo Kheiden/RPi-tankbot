@@ -12,7 +12,7 @@ class Movement():
         # Inport the robot's state
         self.state = state.State()
         # Use the pin numbering from the BOARD
-        #GPIO.setmode(GPIO.BOARD)
+        GPIO.setmode(GPIO.BOARD)
         # Motor1 is the right motor
         self.Motor1A = 33
         self.Motor1B = 35
