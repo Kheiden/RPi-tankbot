@@ -14,35 +14,65 @@ class Movement():
         # Use the pin numbering from the BOARD
         #GPIO.setmode(GPIO.BOARD)
         # Motor1 is the right motor
-        #self.Motor1A = 33
-        #self.Motor1B = 35
-        #self.Motor1E = 37
+        self.Motor1A = 33
+        self.Motor1B = 35
+        self.Motor1E = 37
 
         # Motor2 is the left motor
-        #self.Motor2A = 36
-        #self.Motor2B = 38
-        #self.Motor2E = 40
+        self.Motor2A = 36
+        self.Motor2B = 38
+        self.Motor2E = 40
 
-        #GPIO.setup(self.Motor1A,GPIO.OUT)
-        #GPIO.setup(self.Motor1B,GPIO.OUT)
-        #GPIO.setup(self.Motor1E,GPIO.OUT)
+        GPIO.setup(self.Motor1A,GPIO.OUT)
+        GPIO.setup(self.Motor1B,GPIO.OUT)
+        GPIO.setup(self.Motor1E,GPIO.OUT)
 
-        #GPIO.setup(self.Motor2A,GPIO.OUT)
-        #GPIO.setup(self.Motor2B,GPIO.OUT)
-        #GPIO.setup(self.Motor2E,GPIO.OUT)
+        GPIO.setup(self.Motor2A,GPIO.OUT)
+        GPIO.setup(self.Motor2B,GPIO.OUT)
+        GPIO.setup(self.Motor2E,GPIO.OUT)
 
         # Use the pin numbering from BROADCOM
-        self.Motor1A = 13
-        self.Motor1B = 19
-        self.Motor1E = 26
+        #self.Motor1A = 13
+        #self.Motor1B = 19
+        #self.Motor1E = 26
 
-        self.Motor2A = 16
-        self.Motor2B = 20
-        self.Motor2E = 21
+        #self.Motor2A = 16
+        #self.Motor2B = 20
+        #self.Motor2E = 21
+    def run_through_gpios_pigpio(self):
+      frequency = 16000
+      # 0 < dutycycle < 100
+      dutycycle = 100
+      print("Starting frequency: {}, dutycycle: {}".format(frequency, dutycycle))
+      pin1 = GPIO.PWM(self.Motor1A, frequency)
+      pin2 = GPIO.PWM(self.Motor2A, frequency)
+      pin3 = GPIO.PWM(self.Motor1E, frequency)
+      pin1.start(dutycycle)
+      pin2.start(dutycycle)
+      pin3.start(dutycycle)
 
-    def run_through_gpios(self):
+      time.sleep(5)
+
+      pin1.stop()
+      pin2.stop()
+      pin3.stop()
+
+      print("Starting frequency: {}, dutycycle: {}".format(frequency, dutycycle))
+      dutycycle = 0
+      pin1.start(dutycycle)
+      pin2.start(dutycycle)
+      pin3.start(dutycycle)
+
+      time.sleep(5)
+
+      pin1.stop()
+      pin2.stop()
+      pin3.stop()
+      return True
+
+    def run_through_gpios_pigpio(self):
       print("Debugging GPIO Pins")
-      self.pi = pigpio.pi()
+      #self.pi = pigpio.pi()
       frequency = 16000
       # Must be 25 to 40000
       pwm_range = 25

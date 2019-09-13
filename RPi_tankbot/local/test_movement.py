@@ -13,9 +13,10 @@ class TestMovement():
     def teardown_class(self):
         self.m.clear_gpio_motor_pins()
 
-    @pytest.mark.skip(reason="Not Yet Passed.")
+    #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_red_robot_motors(self):
       """Used to figure out which GPIO pins control the PWM for the motor"""
+      #output = self.m.run_through_gpios_pigpio()
       output = self.m.run_through_gpios()
       assert output
 
