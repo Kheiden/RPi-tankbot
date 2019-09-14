@@ -42,7 +42,7 @@ class Movement():
     def run_through_gpios(self):
       frequency = 16000
       # 0 < dutycycle < 100
-      dutycycle_range = [0, 25, 50, 75 100]
+      dutycycle_range = [0, 25, 50, 75, 100]
 
       for dutycycle in dutycycle_range:
         print("Starting frequency: {}, dutycycle: {}".format(frequency, dutycycle))
