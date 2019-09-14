@@ -19,7 +19,7 @@ class Camera():
     def __init__(self):
         self.m = movement.Movement()
 
-        self.servo_axis_x_pin = 11
+        self.servo_axis_x_pin = 37
         self.servo_axis_y_pin = 13
 
         x_axis_degrees = 0

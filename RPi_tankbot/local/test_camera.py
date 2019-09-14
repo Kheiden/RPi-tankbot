@@ -296,7 +296,7 @@ class TestCamera():
         right.release()
         left.release()
 
-    @pytest.mark.skip(reason="Passed.")
+    #@pytest.mark.skip(reason="Passed.")
     def test_create_single_disparity_map(self):
         res_x = 640
         res_y = 480
@@ -448,6 +448,11 @@ class TestCamera():
         assert width == res_x
         assert height == res_y
 
+    #@pytest.mark.skip(reason="Not Yet Passed.")
+    def test_move_camera(self):
+      # First start at -90 degrees
+      self.c.move_camera(x_axis_degrees=-90, y_axis_degrees=-90)
+      self.c.move_camera(x_axis_degrees=90, y_axis_degrees=90)
 
 if __name__ == '__main__':
     main()

@@ -40,7 +40,7 @@ class Movement():
         #self.Motor2B = 20
         #self.Motor2E = 21
     def run_through_gpios(self):
-      frequency = 16000
+      frequency = 50
       # 0 < dutycycle < 100
       dutycycle_range = [0, 25, 50, 75, 100]
 
