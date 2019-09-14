@@ -42,32 +42,22 @@ class Movement():
     def run_through_gpios(self):
       frequency = 16000
       # 0 < dutycycle < 100
-      dutycycle = 100
-      print("Starting frequency: {}, dutycycle: {}".format(frequency, dutycycle))
-      pin1 = GPIO.PWM(self.Motor1A, frequency)
-      pin2 = GPIO.PWM(self.Motor2A, frequency)
-      pin3 = GPIO.PWM(self.Motor1E, frequency)
-      pin1.start(dutycycle)
-      pin2.start(dutycycle)
-      pin3.start(dutycycle)
+      dutycycle_range = [100, 0, 100, 0]
 
-      time.sleep(5)
+      for dutycycle in dutycycle_range:
+        print("Starting frequency: {}, dutycycle: {}".format(frequency, dutycycle))
+        pin1 = GPIO.PWM(self.Motor1A, frequency)
+        pin2 = GPIO.PWM(self.Motor2A, frequency)
+        pin3 = GPIO.PWM(self.Motor1E, frequency)
+        pin1.start(dutycycle)
+        pin2.start(dutycycle)
+        pin3.start(dutycycle)
 
-      pin1.stop()
-      pin2.stop()
-      pin3.stop()
+        time.sleep(5)
 
-      print("Starting frequency: {}, dutycycle: {}".format(frequency, dutycycle))
-      dutycycle = 0
-      pin1.start(dutycycle)
-      pin2.start(dutycycle)
-      pin3.start(dutycycle)
-      #sleep
-      time.sleep(5)
-
-      pin1.stop()
-      pin2.stop()
-      pin3.stop()
+        pin1.stop()
+        pin2.stop()
+        pin3.stop()
       return True
 
     def run_through_gpios_pigpio(self):
