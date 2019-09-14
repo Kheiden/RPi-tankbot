@@ -39,7 +39,7 @@ class Movement():
         #self.Motor2A = 16
         #self.Motor2B = 20
         #self.Motor2E = 21
-    def run_through_gpios_pigpio(self):
+    def run_through_gpios(self):
       frequency = 16000
       # 0 < dutycycle < 100
       dutycycle = 100
