@@ -1,29 +1,18 @@
 <!doctype html>
 <style>
 table, th, td {
-    border: 1px solid black;
+    border: 0px solid black;
     text-align: center;
 }
 </style>
 
-
-<title>Tankbot Web Controller</title>
-<h1>Tankbot Web Controller</h1>
+<style>
+    body { 
+    background: black no-repeat fixed center; 
+    }
+</style>
+    <title>Tankbot Web Controller v3</title>
 <html>
-<head>
-  <table style="width:1280px">
-
-  <tr>
-    <td width="50%" height="480px"><img id="left_cam_stream" src=""></td>
-    <td width="50%" height="480px"><img id="right_cam_stream" src=""></td>
-  </tr>
-</table>
-<table>
-    <tr>
-        <td width="100%"><img id="left_and_right_camera_stream" src=""></td>
-    </tr>
-</table>
-</head>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -31,21 +20,77 @@ table, th, td {
 function start_left_cam_stream()
 {
 var img = document.getElementById("left_cam_stream");
-img.src="/left_camera_stream";
+img.src="http://192.168.1.16:5000/left_camera_stream";
 return false;
 }
 function stop_left_cam_stream()
 {
 var img = document.getElementById("left_cam_stream");
 img.src="";
+location.reload();
 return false;
 }
+function show_gui_controls()
+{
+    $("#b_stop_new").addClass('b_opaque')
+    $("#b_stop_new").removeClass('b_transparent')
+    $("#b_stop_new_div").addClass('b_opaque')
+    $("#b_stop_new_div").removeClass('b_transparent')
 
+    $("#b_forward_button").addClass('b_opaque')
+    $("#b_forward_button").removeClass('b_transparent')
+    $("#b_forward_button_div").addClass('b_opaque')
+    $("#b_forward_button_div").removeClass('b_transparent')
+
+    $("#b_right_button").addClass('b_opaque')
+    $("#b_right_button").removeClass('b_transparent')
+    $("#b_right_button_div").addClass('b_opaque')
+    $("#b_right_button_div").removeClass('b_transparent')
+
+    $("#b_back_button").addClass('b_opaque')
+    $("#b_back_button").removeClass('b_transparent')
+    $("#b_back_button_div").addClass('b_opaque')
+    $("#b_back_button_div").removeClass('b_transparent')
+
+    $("#b_left_button").addClass('b_opaque')
+    $("#b_left_button").removeClass('b_transparent')
+    $("#b_left_button_div").addClass('b_opaque')
+    $("#b_left_button_div").removeClass('b_transparent')
+return false;
+}
+function hide_gui_controls()
+{
+    $("#b_stop_new_div").addClass('b_transparent')
+    $("#b_stop_new_div").removeClass('b_opaque')
+    $("#b_stop_new").addClass('b_transparent')
+    $("#b_stop_new").removeClass('b_opaque')
+
+    $("#b_forward_button").addClass('b_transparent')
+    $("#b_forward_button").removeClass('b_opaque')
+    $("#b_forward_button_div").addClass('b_transparent')
+    $("#b_forward_button_div").removeClass('b_opaque')
+
+    $("#b_right_button").addClass('b_transparent')
+    $("#b_right_button").removeClass('b_opaque')
+    $("#b_right_button_div").addClass('b_transparent')
+    $("#b_right_button_div").removeClass('b_opaque')
+
+    $("#b_back_button").addClass('b_transparent')
+    $("#b_back_button").removeClass('b_opaque')
+    $("#b_back_button_div").addClass('b_transparent')
+    $("#b_back_button_div").removeClass('b_opaque')
+    
+    $("#b_left_button").addClass('b_transparent')
+    $("#b_left_button").removeClass('b_opaque')
+    $("#b_left_button_div").addClass('b_transparent')
+    $("#b_left_button_div").removeClass('b_opaque')
+return false;
+}
 
 function start_right_cam_stream()
 {
 var img = document.getElementById("right_cam_stream");
-img.src="/right_camera_stream";
+img.src="http://192.168.1.16:5000/right_camera_stream";
 return false;
 }
 function stop_right_cam_stream()
@@ -58,7 +103,7 @@ return false;
 function start_disparity_map_stream()
 {
 var img = document.getElementById("disparity_map_stream");
-img.src="/disparity_map_stream";
+img.src="http://192.168.1.16:5000/disparity_map_stream";
 return false;
 }
 function stop_disparity_map_stream()
@@ -72,7 +117,7 @@ return false;
 <script>
 $(document).ready(function(){
     $("#b_forwards").mousedown(function(){
-        $.get("forwards", function(data, status){
+        $.get("http://192.168.1.16:5000/forwards", function(data, status){
             console.log("forwards on!")
             console.log(data)
         });
@@ -80,14 +125,14 @@ $(document).ready(function(){
 });
 $(document).ready(function(){
     $("#b_forwards").mouseup(function(){
-        $.get("stop", function(data, status){
+        $.get("http://192.168.1.16:5000/stop", function(data, status){
             console.log("forwards off!")
         });
     });
 });
 $(document).ready(function(){
     $("#b_backwards").mousedown(function(){
-        $.get("backwards", function(data, status){
+        $.get("http://192.168.1.16:5000/backwards", function(data, status){
             console.log("backwards on!")
             console.log(data)
         });
@@ -95,14 +140,14 @@ $(document).ready(function(){
 });
 $(document).ready(function(){
     $("#b_backwards").mouseup(function(){
-        $.get("stop", function(data, status){
+        $.get("http://192.168.1.16:5000/stop", function(data, status){
             console.log("backwards off!")
         });
     });
 });
 $(document).ready(function(){
     $("#b_right").mousedown(function(){
-        $.get("turn_right", function(data, status){
+        $.get("http://192.168.1.16:5000/turn_right", function(data, status){
             console.log("turning right!")
             console.log(data)
         });
@@ -110,14 +155,14 @@ $(document).ready(function(){
 });
 $(document).ready(function(){
     $("#b_right").mouseup(function(){
-        $.get("stop", function(data, status){
+        $.get("http://192.168.1.16:5000/stop", function(data, status){
             console.log("turning stopped!")
         });
     });
 });
 $(document).ready(function(){
     $("#b_left").mousedown(function(){
-        $.get("turn_left", function(data, status){
+        $.get("http://192.168.1.16:5000/turn_left", function(data, status){
             console.log("turning left!")
             console.log(data)
         });
@@ -125,30 +170,275 @@ $(document).ready(function(){
 });
 $(document).ready(function(){
     $("#b_left").mouseup(function(){
-        $.get("stop", function(data, status){
+        $.get("http://192.168.1.16:5000/stop", function(data, status){
             console.log("turning stopped!")
         });
     });
 });
 $(document).ready(function(){
     $("#b_take_stereo_photo").mousedown(function(){
-        $.get("take_stereo_photo", function(data, status){
+        $.get("http://192.168.1.16:5000/take_stereo_photo", function(data, status){
             console.log("Taking Stero Photo")
         });
     });
 });
 $(document).ready(function(){
     $("#b_capture_cloud_point").mousedown(function(){
-        $.get("capture_cloud_point", function(data, status){
+        $.get("http://192.168.1.16:5000/capture_cloud_point", function(data, status){
             console.log("Capturing 3D cloud point")
         });
     });
 });
 </script>
+ <style>
+        .b_transparent {
+          opacity: 0.0;
+        }
+        .b_opaque {
+          opacity: 1.0;
+        }
+        .b_nav_button {
+          border: none;
+          color: white;
+          padding: 0px 0px;
+          text-align: center;
+          width: 100%;
+          height: 100%;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 24px;
+          margin: 0px 0px;
+          cursor: pointer;
+        }
+        .b_stop_button {
+          border: none;
+          color: white;
+          padding: 0px 0px;
+          text-align: center;
+          width: 100%;
+          height: 100%;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 36px;
+          margin: 0px 0px;
+          cursor: pointer;
+        }
+        .b_start_left {
+          border: none;
+          color: white;
+          padding: 0px 0px;
+          text-align: center;
+          width: 100%;
+          height: 100%;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 24px;
+          margin: 0px 0px;
+          cursor: pointer;
+        }
+        .b_stop_left {
+          border: none;
+          color: white;
+          padding: 0px 0px;
+          text-align: center;
+          width: 100%;
+          height: 100%;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 24px;
+          margin: 0px 0px;
+          cursor: pointer;
+        }
+        .b_show_gui_controls{
+          border: none;
+          color: white;
+          padding: 0px 0px;
+          text-align: center;
+          width: 100%;
+          height: 100%;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 24px;
+          margin: 0px 0px;
+          cursor: pointer;  
+        }
+        .b_hide_gui_controls{
+          border: none;
+          color: white;
+          padding: 0px 0px;
+          text-align: center;
+          width: 100%;
+          height: 100%;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 24px;
+          margin: 0px 0px;
+          cursor: pointer;  
+        }
+        </style>
+ <body></body>
+<div style = "background-color:rgba(255, 0, 0, 0.685); 
+    width:180px; 
+    height:100px; 
+    position:fixed; 
+    top:100px; 
+    left:792px; 
+    z-index:4;">
+    <button id="b_stop_right" class="b_nav_button" onclick="stop_left_cam_stream();">Stop Camera Stream (R)</button>
+ </div>
+    <div  id="b_left_button_div" style = "background-color:burlywood; 
+    width:200px; 
+    height:100px; 
+    position:fixed; 
+    top:300px; 
+    left:000px; 
+    z-index:0">
+    <button id="b_left_button" class="b_nav_button">Turn Left</button>
+ </div>
+ <div style = "background-color:grey; 
+    width:590px; 
+    height:172px; 
+    position:fixed; 
+    top:500px; 
+    left:0px; 
+    font: 15px monospace;
+    z-index:3;">
+    YYYY-MM-DD | HH:MM:SS.000 | message_lvl | message<br \>
+    2019-09-14 | 05:53:19.233 | INFO ______ | Boot up Successful.<br \>
+ </div>
+ <div id="b_stop_new_div" class="b_stop_button" class="b_transparent" style="background-color:red;
+    width:300px; 
+    height:300px; 
+    position:fixed;
+    top:200px; 
+    left:200px; 
+    z-index:3;">
+    <button id="b_stop_button" class="b_stop_button" class="b_transparent">STOP</button>
+</div>
+<div id="b_forward_button_div" class="b_nav_button" class="b_transparent" style="background-color:burlywood; 
+    width:200px; 
+    height:100px; 
+    position:fixed; 
+    top:100px; 
+    left:250px; 
+    z-index:3;">
+    <button id="b_forward_button" class="b_nav_button" class="b_transparent"> Move Forward</button>
+</div>
+<div id="b_back_button_div" style = "background-color:burlywood; 
+    width:200px; 
+    height:100px; 
+    position:fixed; 
+    top:500px; 
+    left:250px; 
+    z-index:3;">
+    <button id="b_back_button" class="b_nav_button"> Move Backwards</button>
+</div>
+<div style = "background-color:yellowgreen; 
+    width:130px; 
+    height:100px; 
+    position:fixed; 
+    top:0; 
+    left:658px; 
+    z-index:4;">
+    <button id="b_start_left" class="b_start_left" onclick="start_left_cam_stream();">Start Left Camera Stream</button>
+</div>
+<div style = "background-color:magenta; 
+    width:130px; 
+    height:100px; 
+    position:fixed; 
+    top:200px; 
+    left:658px; 
+    z-index:4;">
+    <button id="b_hide_gui_controls" class="b_hide_gui_controls" onclick="hide_gui_controls();">Hide Movement Controls</button>
+</div>
+<div style = "background-color:blueviolet; 
+    width:180px; 
+    height:100px; 
+    position:fixed; 
+    top:400px; 
+    left:792px; 
+    z-index:4;">
+    <button id="b_take_stereo_photo" class="b_nav_button" onclick="take_stereo_photo();">Take Stereo Photo</button>
+</div>
+<div id="b_right_button_div" class="b_nav_button" class="b_transparent" style="background-color:burlywood;
+    width:200px; 
+    height:100px; 
+    position:fixed; 
+    top:300px; 
+    left:499px; 
+    z-index:3;">
+    <button id="b_right_button" class="b_nav_button" class="b_transparent"> Turn Right</button>
+</div>
+<div style = "background-color:yellowgreen; 
+    width:180px; 
+    height:100px; 
+    position:fixed; 
+    top:500px; 
+    left:792px; 
+    z-index:3;">
+    <button id="b_take_3d_photo" class="b_nav_button" onclick="take_3d_photo();">Take 3D Photo</button>
+</div>
+<div style = "background-color:pink; 
+    width:200px; 
+    height:100px; 
+    position:fixed; 
+    top:500px; 
+    left:592px; 
+    z-index:3;">
+    
+    <button id="b_start_automation" class="b_nav_button" onclick="start_automation_routing('1A');">Start Automation Routine 1A</button>
+    
+</div>
+<div style = "background-color:rgba(255, 0, 0, 0.685); 
+    width:180px; 
+    height:100px; 
+    position:fixed; 
+    top:0px; 
+    left:792px; 
+    z-index:3;">
+    <button id="b_stop_left" class="b_stop_left" class="b_transparent" onclick="stop_left_cam_stream();">Stop Camera Stream (L)</button>
+</div>
+<div style = "background-color:pink; 
+    width:180px; 
+    height:100px; 
+    position:fixed; 
+    top:200px; 
+    left:792px; 
+    z-index:3;">
+    <button id="b_show_gui_controls" class="b_show_gui_controls" class="b_transparent" onclick="show_gui_controls();">Show Movement Controls</button>
+</div>
+<div style = "background-color:yellowgreen; 
+    width:130px; 
+    height:100px; 
+    position:fixed; 
+    top:100px; 
+    left:658px; 
+    z-index:3;">
+    <button id="b_start_right" class="b_nav_button" class="b_transparent" onclick="start_right_cam_stream();">Start Right Camera Stream</button>
+</div>
+<table>
+    <tr>
+        <td><img id="left_cam_stream" src=""></td>
+        <td><img id="right_cam_stream" src=""></td>
+        <td><dir style = "width:280px"></dir></td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td width="100%"><img id="left_and_right_camera_stream" src=""></td>
+    </tr>
 
-<body>
+</table>
+<!-- Depricated UI -->
+<div style="display:none">
+    <table
+        width:300px;
+        height:100px;
+        position:relative;
 
-    <table style="width:800px">
+        top:200px;
+        left:1px;
+        z-index:2">
       <tr>
         <td style="height:50px"></td>
         <td><button id="b_forwards">Forwards</button></td>
@@ -178,6 +468,6 @@ $(document).ready(function(){
         <td width="20%"><button id="b_capture_cloud_point" onclick=capture_cloud_point();>Capture 3D Cloud Point</button></td>
       </tr>
     </table>
-
+</div>
 </body>
 </html>
