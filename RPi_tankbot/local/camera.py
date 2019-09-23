@@ -605,6 +605,50 @@ class Camera():
         self.pwm_x.stop()
         self.pwm_y.stop()
 
+    def take_stereo_photo_yield():
+        CAMERA_WIDTH = 640
+        CAMERA_HEIGHT = 480
+
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+        left.set(cv2.CAP_PROP_FPS,30)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        right = cv2.VideoCapture(0)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+        right.set(cv2.CAP_PROP_FPS,30)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        left.grab()
+        right.grab()
+
+        _, left_frame = left.retrieve()
+        _, right_frame = right.retrieve()
+
+        imgRGB_left=cv2.cvtColor(left_frame,cv2.COLOR_BGR2RGB)
+        imgRGB_right=cv2.cvtColor(right_frame,cv2.COLOR_BGR2RGB)
+
+        jpg_image_left = Image.fromarray(imgRGB_left)
+        jpg_image_right = Image.fromarray(imgRGB_right)
+
+        bytes_array = io.BytesIO()
+
+        jpg_image_left.save(bytes_array_left, format='JPEG')
+        jpg_image_right.save(bytes_array_right, format='JPEG')
+
+        jpg_image_bytes_left = bytes_array_left.getvalue()
+        jpg_image_bytes_right = bytes_array_right.getvalue()
+
+
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' +
+               jpg_image_bytes_left +
+               jpg_image_bytes_right +
+               b'\r\n')
+        left.release()
+
     def take_stereo_photo(self, res_x, res_y,
                         right=None,
                         left=None,

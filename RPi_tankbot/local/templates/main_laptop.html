@@ -119,9 +119,7 @@ function toggle_all_buttons(){
     var transparent = 'b_transparent'
     var opaque = 'b_opaque'
     // var div_button = '#b_stop_new_div'
-    var div_array = ['#b_stop_new_div', '#b_forward_button_div', '#b_back_button_div', '#b_left_button_div', '#b_right_button_div',
-                    '#b_stop_new', '#b_forward_button', '#b_right_button', '#b_left_button', '#b_back_button', '#b_take_stereo_photo',
-                    '#b_take_stereo_photo_div']
+    var div_array = ['#hide_all_buttons']
     try {
         for(var i = 0, j = div_array.length; i < j; i++) {
             if (($(div_array[i]))[0].classList.contains(transparent))
@@ -237,6 +235,23 @@ document.getElementById('console').innerHTML =
     + "Stopping Disparity Map Stream<br \>"
 return false;
 }
+function take_stereo_photo()
+{
+console.log("Taking Stero Photo :)")
+var img = document.getElementById("stereo_photo");
+img.src="http://192.168.1.16:5000/take_stereo_photo";
+d = new Date();
+document.getElementById('console').innerHTML = 
+    document.getElementById('console').innerHTML
+    + d.getFullYear()
+    + "-" + (d.getMonth() + 1) + "-" + d.getDay()
+    + " | "
+    + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + "." + d.getMilliseconds()
+    + " | "
+    + "INFO | "
+    + "Taking Stereo Photo!<br \>"
+return false;
+}
 
 </script>
 <script>
@@ -307,13 +322,6 @@ $(document).ready(function(){
     $("#b_left").mouseup(function(){
         $.get("http://192.168.1.16:5000/stop", function(data, status){
             console.log("turning stopped!")
-        });
-    });
-});
-$(document).ready(function(){
-    $("#b_take_stereo_photo").mousedown(function(){
-        $.get("http://192.168.1.16:5000/take_stereo_photo", function(data, status){
-            console.log("Taking Stero Photo")
         });
     });
 });
@@ -517,6 +525,15 @@ $(document).ready(function(){
     z-index:4;">
     <button id="b_toggle_readings" class="b_button" onclick="toggle_movement_controls();">Toggle Movement Controls</button>
 </div>
+<div id="hide_all_buttons" class="b_button" style = "background-color:black; 
+    width:970px; 
+    height:600px; 
+    position:fixed; 
+    
+    top:0px; 
+    left:0px; 
+    z-index:4;">
+</div>
 <div class="b_button" style = "background-color:magenta; 
     width:100px; 
     height:100px; 
@@ -588,6 +605,7 @@ $(document).ready(function(){
     <tr>
         <td><img id="left_cam_stream" src=""></td>
         <td><img id="right_cam_stream" src=""></td>
+        <td><img id="stereo_photo" src=""></td>
         <td><dir style = "width:400px"></dir></td>
     </tr>
 </table>
