@@ -39,7 +39,7 @@ class Camera():
         self.pwm_x.stop()
         self.pwm_y.stop()
 
-        self.home_dir = "/home/pi/RPi-tankbot"
+        self.home_dir = "/home/pi/ROBOT/RPi-tankbot"
         self.brain = robot_brain.RobotBrain()
 
     def create_3d_point_cloud(self, imgL, disparity_map, file_num):
