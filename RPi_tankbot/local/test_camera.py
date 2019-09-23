@@ -385,7 +385,7 @@ class TestCamera():
             assert width == res_x
             assert height == res_y
 
-    #@pytest.mark.skip(reason="Passed.")
+    @pytest.mark.skip(reason="Passed.")
     def test_take_picture(self):
         res_x = 640
         res_y = 480
@@ -409,6 +409,29 @@ class TestCamera():
 
         right.release()
         left.release()
+
+    #@pytest.mark.skip(reason="Not Yet Passed.")
+    def test_stereo_photo_save_to_disk(self):
+            res_x = 640
+            res_y = 480
+            right = cv2.VideoCapture(1)
+            right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+            right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+            right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+            left = cv2.VideoCapture(0)
+            left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+            left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+            left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+                # Below images are BGR
+            imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="combined", quick_capture=True)
+
+            assert imgL is not None
+            assert imgR is not None
+
+            right.release()
+            left.release()
 
     @pytest.mark.skip(reason="Passed.")
     def test_stereo_photo_new(self):
