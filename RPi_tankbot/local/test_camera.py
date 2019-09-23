@@ -425,7 +425,7 @@ class TestCamera():
             left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
                 # Below images are BGR
-            imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="combined", quick_capture=True)
+            imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="separate", quick_capture=True)
 
             assert imgL is not None
             assert imgR is not None
