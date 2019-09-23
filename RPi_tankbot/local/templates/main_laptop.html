@@ -57,16 +57,24 @@ function toggle_readings()
     // var div_button = '#b_stop_new_div'
     var div_array = ['#b_sensor_area_div', '#b_sensor_area']
     try {
+        bit = 0;
         for(var i = 0, j = div_array.length; i < j; i++) {
             if (($(div_array[i]))[0].classList.contains(transparent))
             {
-                log_to_div("Toggling readings ON", "INFO")
-                log_to_div("Found", "VERBOSE")
+                if (bit == 0) {
+                    log_to_div("Toggling readings ON", "INFO")
+                    log_to_div("Found", "VERBOSE")
+                    bit = 1;
+                }
+
                 $(div_array[i]).addClass(opaque)
                 $(div_array[i]).removeClass(transparent)
             } else {
-                log_to_div("Found", "VERBOSE")
-                log_to_div("Toggling readings OFF", "INFO")
+                if (bit == 0) {
+                    log_to_div("Found", "VERBOSE")
+                    log_to_div("Toggling readings OFF", "INFO")
+                    bit = 1;
+                }
                 $(div_array[i]).addClass(transparent)
                 $(div_array[i]).removeClass(opaque)
             }
@@ -291,111 +299,78 @@ $(document).ready(function(){
 });
 </script>
  <style>
-        .b_transparent {
-          visibility: hidden;
-          opacity: 0;
-        }
-        .b_opaque {
-            visibility: visible;
-            opacity: 1;
-        }
-        .b_nav_button {
-          border: none;
-          /* border-radius: 300px / 400px; */
-          color: white;
-          padding: 0px 0px;
-          text-align: center;
-          width: 100%;
-          height: 100%;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 24px;
-          margin: 0px 0px;
-          cursor: pointer;
-        }
-        .b_button {
-          border: none;
-          /* border-radius: 300px / 400px; */
-          color: white;
-          padding: 0px 0px;
-          text-align: center;
-          width: 100%;
-          height: 100%;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 24px;
-          margin: 0px 0px;
-          cursor: pointer;
-        }
-        .b_stop_button {
-          border: none;
-          
-          color: white;
-          padding: 0px 0px;
-          text-align: center;
-          width: 100%;
-          height: 100%;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 36px;
-          margin: 0px 0px;
-          cursor: pointer;
-        }
-        .b_start_left {
-          border: none;
-          color: white;
-          padding: 0px 0px;
-          text-align: center;
-          width: 100%;
-          height: 100%;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 24px;
-          margin: 0px 0px;
-          cursor: pointer;
-        }
-        .b_stop_left {
-          border: none;
-          color: white;
-          padding: 0px 0px;
-          text-align: center;
-          width: 100%;
-          height: 100%;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 24px;
-          margin: 0px 0px;
-          cursor: pointer;
-        }
-        .b_show_gui_controls{
-          border: none;
-          color: white;
-          padding: 0px 0px;
-          text-align: center;
-          width: 100%;
-          height: 100%;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 24px;
-          margin: 0px 0px;
-          cursor: pointer;  
-        }
-        .b_hide_gui_controls{
-          border: none;
-          color: white;
-          padding: 0px 0px;
-          text-align: center;
-          width: 100%;
-          height: 100%;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 24px;
-          margin: 0px 0px;
-          cursor: pointer;  
-        }
-        </style>
- <body></body>
-<div style = "background-color:rgba(255, 0, 0, 0.685); 
+    .b_transparent {
+      visibility: hidden;
+      opacity: 0;
+    }
+    .b_opaque {
+        visibility: visible;
+        opacity: 1;
+    }
+    .b_nav_button {
+      border: none;
+      /* border-radius: 300px / 400px; */
+      color: white;
+      padding: 0px 0px;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 24px;
+      margin: 0px 0px;
+      cursor: pointer;
+    }
+    .b_button {
+      border: none;
+      /* border-radius: 300px / 400px; */
+      color: white;
+      background-color: rgba(0, 0, 0, 0);
+      padding: 0px 0px;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 24px;
+      margin: 0px 0px;
+      cursor: pointer;
+    }
+    .b_movement_button {
+      border: none;
+      /* border-radius: 300px / 400px; */
+      color: white;
+      background-color: rgba(0, 0, 0, 0);
+      padding: 0px 0px;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 24px;
+      margin: 0px 0px;
+      cursor: pointer;
+    }
+    .b_stop_button {
+      border: none;
+      background-color: rgba(0, 0, 0, 0);
+      color: white;
+      padding: 0px 0px;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 36px;
+      margin: 0px 0px;
+      cursor: pointer;
+    }
+    .b_red{
+        color:red;
+    }
+    </style>
+<body>
+<div class="b_button" style = "background-color:rgba(255, 0, 0, 0.685); 
     width:180px; 
     height:100px; 
     position:fixed; 
@@ -405,20 +380,20 @@ $(document).ready(function(){
     z-index:4;">
     <button id="b_stop_right" class="b_button" onclick="stop_right_cam_stream();">Stop Camera Stream (R)</button>
  </div>
-    <div id="b_left_button_div" class="b_nav_button" style = "background-color:burlywood; 
+    <div id="b_left_button_div" class="b_movement_button" style = "background-color:burlywood; 
     width:200px; 
     height:100px; 
     position:fixed; 
     top:300px; 
     left:000px; 
     z-index:0">
-    <button id="b_left_button" class="b_nav_button">Turn Left</button>
+    <button id="b_left_button" class="b_movement_button">Turn Left</button>
  </div>
  <div id="console" style = "background-color:grey; 
     width:590px; 
     height:172px; 
     position:fixed; 
-    top:500px; 
+    top:425px; 
     left:0px; 
     font: 15px monospace;
     display:flex;
@@ -458,25 +433,25 @@ $(document).ready(function(){
     z-index:6;">
     <iframe id="b_sensor_area" height="450" width="450" class="b_transparent" src="http://192.168.1.10:3000/d/zwiGz3NWk/ambient-air-singlestat?refresh=5s&orgId=1&from=1568561407325&to=1568583007325"></iframe>
     </div>
-<div id="b_forward_button_div" class="b_nav_button" class="b_transparent" style="background-color:burlywood; 
+<div id="b_forward_button_div" class="b_movement_button" class="b_transparent" style="background-color:burlywood; 
     width:200px; 
     height:100px; 
     position:fixed; 
     top:100px; 
     left:250px; 
     z-index:3;">
-    <button id="b_forward_button" class="b_nav_button" class="b_transparent"> Move Forward</button>
+    <button id="b_forward_button" class="b_movement_button" class="b_transparent"> Move Forward</button>
 </div>
-<div id="b_back_button_div" class="b_nav_button" style = "background-color:burlywood; 
+<div id="b_back_button_div" class="b_movement_button" style = "background-color:burlywood; 
     width:200px; 
     height:100px; 
     position:fixed; 
     top:500px; 
     left:250px; 
     z-index:3;">
-    <button id="b_back_button" class="b_nav_button"> Move Backwards</button>
+    <button id="b_back_button" class="b_movement_button"> Move Backwards</button>
 </div>
-<div style = "background-color:yellowgreen; 
+<div class="b_button" style = "background-color:yellowgreen; 
     width:130px; 
     height:100px; 
     position:fixed; 
@@ -484,7 +459,7 @@ $(document).ready(function(){
     top:0; 
     left:658px; 
     z-index:4;">
-    <button id="b_start_left" class="b_start_left" onclick="start_left_cam_stream();">Start Left Camera Stream</button>
+    <button id="b_start_left" class="b_button" onclick="start_left_cam_stream();">Start Left Camera Stream</button>
 </div>
 <div class="b_button" style = "background-color:orangered; 
     width:130px; 
@@ -494,9 +469,9 @@ $(document).ready(function(){
     top:200px; 
     left:658px; 
     z-index:4;">
-    <button id="b_hide_gui_controls" class="b_hide_gui_controls" onclick="">Button02</button>
+    <button id="b_hide_gui_controls" class="b_button" onclick="">Button02</button>
 </div>
-<div style = "background-color:blueviolet; 
+<div class="b_button" style = "background-color:blueviolet; 
     width:180px; 
     height:100px; 
     position:fixed; 
@@ -506,7 +481,7 @@ $(document).ready(function(){
     z-index:4;">
     <button id="b_take_stereo_photo" class="b_button" onclick="take_stereo_photo();">Take Stereo Photo</button>
 </div>
-<div style = "background-color:magenta; 
+<div class="b_button" style = "background-color:magenta; 
     width:180px; 
     height:100px; 
     position:fixed; 
@@ -516,16 +491,16 @@ $(document).ready(function(){
     z-index:4;">
     <button id="b_toggle_readings" class="b_button" onclick="toggle_movement_controls();">Toggle Movement Controls</button>
 </div>
-<div id="b_right_button_div" class="b_nav_button" class="b_transparent" style="background-color:burlywood;
+<div id="b_right_button_div" class="b_movement_button" class="b_transparent" style="background-color:burlywood;
     width:200px; 
     height:100px; 
     position:fixed;
     top:300px; 
     left:499px; 
     z-index:3;">
-    <button id="b_right_button" class="b_nav_button" class="b_transparent"> Turn Right</button>
+    <button id="b_right_button" class="b_movement_button" class="b_transparent"> Turn Right</button>
 </div>
-<div style = "background-color:yellowgreen; 
+<div class="b_button" style = "background-color:yellowgreen; 
     width:180px; 
     height:100px; 
     position:fixed; 
@@ -535,36 +510,33 @@ $(document).ready(function(){
     z-index:3;">
     <button id="b_take_3d_cloudpoint" class="b_button" onclick="take_3d_cloudpoint();">Take 3D Cloud Point</button>
 </div>
-<div style = "background-color:rgb(255, 17, 0); 
+<div class="b_button" style = "background-color:rgb(255, 17, 0); 
     width:200px; 
     height:100px; 
     position:fixed; 
-    
     top:500px; 
     left:592px; 
     z-index:3;">
     <button id="b_reload_console" class="b_button" onclick="reload_page();">Reload Console</button>
     
 </div>
-<div class="b_stop_left" style = "background-color:rgba(255, 0, 0, 0.685); 
+<div class="b_button" style = "background-color:rgba(255, 0, 0, 0.685); 
     width:180px; 
     height:100px; 
     position:fixed;
-    
     top:0px; 
     left:792px; 
-    z-index:3;">
-    <button id="b_stop_left" class="b_stop_left" onclick="stop_left_cam_stream();">Stop Camera Stream (L)</button>
+    z-index:0;">
+    <button id="b_stop_left" class="b_button" onclick="stop_left_cam_stream();">Stop Camera Stream (L)</button>
 </div>
-<div style = "background-color:orangered; 
+<div class="b_button" style = "background-color:blue; 
     width:180px; 
     height:100px; 
     position:fixed; 
-    
     top:200px; 
     left:792px; 
     z-index:3;">
-    <button id="b_show_gui_controls" class="b_show_gui_controls" onclick="toggle_readings();">Toggle Sensor Readings</button>
+    <button id="b_show_gui_controls" class="b_button" onclick="toggle_readings();">Toggle Sensor Readings</button>
 </div>
 <div class="b_button" style = "background-color:yellowgreen; 
     width:130px; 
@@ -580,7 +552,7 @@ $(document).ready(function(){
     <tr>
         <td><img id="left_cam_stream" src=""></td>
         <td><img id="right_cam_stream" src=""></td>
-        <td><dir style = "width:280px"></dir></td>
+        <td><dir style = "width:400px"></dir></td>
     </tr>
 </table>
 <table>

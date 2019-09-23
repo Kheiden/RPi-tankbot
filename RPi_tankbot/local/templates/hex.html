@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<body>
+    <style>
+        .b_hex_button {
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            background: red;
+
+        }
+        .b_hex_button_top {
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 50px solid #F00;
+            width:150px;
+            height:10px;
+            position:fixed; 
+            top:100px; 
+            left:100px; 
+            z-index:6;
+        }
+        .b_hex_button_middle {
+            width:150px;
+            height:50px;
+            position:fixed; 
+            background: red;
+            top:150px; 
+            left:100px; 
+            z-index:6;
+        }
+        .b_hex_button_bottom {
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-top: 50px solid #F00;
+            width:150px;
+            height:10px;
+            position:fixed; 
+            top:200px; 
+            left:100px; 
+            z-index:6;
+        }
+          
+    </style>
+    <script>
+        $.getScript( "hex.js", function( data, textStatus, jqxhr ) {
+            console.log( data ); // Data returned
+            console.log( textStatus ); // Success
+            console.log( jqxhr.status ); // 200
+            console.log( "Load was performed." );
+          });
+        </script>
+    <div>
+        <button id="b_button01" class = "b_hex_button_top" class = "b_hex_button_div" onclick="button02();"></button>
+        <button id="b_button01" class = "b_hex_button" onclick="button02();"></button>
+        <button id="b_button01" class = "b_hex_button_bottom" class = "b_hex_button_div" onclick="button02();"></button>
+    </div>
+</body>
+</html>
