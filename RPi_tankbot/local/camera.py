@@ -692,8 +692,8 @@ class Camera():
             jpg_image_left = Image.fromarray(imgRGB_left)
             if filename == None:
                 filename = datetime.now().strftime("%F_%H-%M-%S.%f")
-            jpg_image_right.save("{}/RPi-tankbot/local/frames/{}_right.jpg".format(self.home_dir, filename), format='JPEG')
-            jpg_image_left.save("{}/RPi-tankbot/local/frames/{}_left.jpg".format(self.home_dir, filename), format='JPEG')
+            jpg_image_right.save("{}/RPi_tankbot/local/frames/{}_right.jpg".format(self.home_dir, filename), format='JPEG')
+            jpg_image_left.save("{}/RPi_tankbot/local/frames/{}_left.jpg".format(self.home_dir, filename), format='JPEG')
 
             width_right, height_right = jpg_image_right.shape[:2]
             width_left, height_left = jpg_image_left.shape[:2]

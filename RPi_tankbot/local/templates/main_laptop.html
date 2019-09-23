@@ -93,7 +93,7 @@ function toggle_movement_controls()
     var opaque = 'b_opaque'
     // var div_button = '#b_stop_new_div'
     var div_array = ['#b_stop_new_div', '#b_forward_button_div', '#b_back_button_div', '#b_left_button_div', '#b_right_button_div',
-                    '#b_stop_new', '#b_forward_button', '#b_right_button', '#b_left_button', '#b_back_button']
+                    '#b_stop_new', '#b_forward_button', '#b_right_button', '#b_left_button', '#b_start_left']
     try {
         for(var i = 0, j = div_array.length; i < j; i++) {
             if (($(div_array[i]))[0].classList.contains(transparent))
@@ -113,6 +113,33 @@ function toggle_movement_controls()
         log_to_div("Toggle readings Attempt Failed", "ERROR")
     }
 
+}
+function toggle_all_buttons(){
+    log_to_div("Toggling All Controls", "INFO")
+    var transparent = 'b_transparent'
+    var opaque = 'b_opaque'
+    // var div_button = '#b_stop_new_div'
+    var div_array = ['#b_stop_new_div', '#b_forward_button_div', '#b_back_button_div', '#b_left_button_div', '#b_right_button_div',
+                    '#b_stop_new', '#b_forward_button', '#b_right_button', '#b_left_button', '#b_back_button', '#b_take_stereo_photo',
+                    '#b_take_stereo_photo_div']
+    try {
+        for(var i = 0, j = div_array.length; i < j; i++) {
+            if (($(div_array[i]))[0].classList.contains(transparent))
+            {
+                log_to_div("Found", "VERBOSE")
+                $(div_array[i]).addClass(opaque)
+                $(div_array[i]).removeClass(transparent)
+            } else {
+                log_to_div("Found", "VERBOSE")
+                $(div_array[i]).addClass(transparent)
+                $(div_array[i]).removeClass(opaque)
+            }
+        }
+        log_to_div("Toggle readings Attempt Complete", "VERBOSE")
+    }
+    catch(err){
+        log_to_div("Toggle readings Attempt Failed", "ERROR")
+    }
 }
 function log_to_div(text, type){
     if (type == "VERBOSE") {
@@ -450,7 +477,7 @@ $(document).ready(function(){
     z-index:3;">
     <button id="b_back_button" class="b_movement_button"> Move Backwards</button>
 </div>
-<div class="b_button" style = "background-color:yellowgreen; 
+<div class="b_button" class="b_transparent" style = "background-color:yellowgreen; 
     width:130px; 
     height:100px; 
     position:fixed; 
@@ -458,7 +485,7 @@ $(document).ready(function(){
     top:0; 
     left:658px; 
     z-index:4;">
-    <button id="b_start_left" class="b_button" onclick="start_left_cam_stream();">Start Left Camera Stream</button>
+    <button id="b_start_left" class="b_button" class="b_transparent" onclick="start_left_cam_stream();">Start Left Camera Stream</button>
 </div>
 <div class="b_button" style = "background-color:orangered; 
     width:130px; 
@@ -470,7 +497,7 @@ $(document).ready(function(){
     z-index:4;">
     <button id="b_hide_gui_controls" class="b_button" onclick="">Button02</button>
 </div>
-<div class="b_button" style = "background-color:blueviolet; 
+<div id="b_take_stereo_photo_div" class="b_button" class="b_opaque" style = "background-color:blueviolet; 
     width:180px; 
     height:100px; 
     position:fixed; 
@@ -478,7 +505,7 @@ $(document).ready(function(){
     top:400px; 
     left:792px; 
     z-index:4;">
-    <button id="b_take_stereo_photo" class="b_button" onclick="take_stereo_photo();">Take Stereo Photo</button>
+    <button id="b_take_stereo_photo" class="b_button" class="b_opaque" onclick="take_stereo_photo();">Take Stereo Photo</button>
 </div>
 <div class="b_button" style = "background-color:magenta; 
     width:180px; 
@@ -489,6 +516,16 @@ $(document).ready(function(){
     left:792px; 
     z-index:4;">
     <button id="b_toggle_readings" class="b_button" onclick="toggle_movement_controls();">Toggle Movement Controls</button>
+</div>
+<div class="b_button" style = "background-color:magenta; 
+    width:100px; 
+    height:100px; 
+    position:fixed; 
+    
+    top:500px; 
+    left:975px; 
+    z-index:4;">
+    <button id="b_toggle_readings" class="b_button" onclick="toggle_all_buttons();">Toggle All Buttons</button>
 </div>
 <div id="b_right_button_div" class="b_movement_button" class="b_transparent" style="background-color:burlywood;
     width:200px; 
