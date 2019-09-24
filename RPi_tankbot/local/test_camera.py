@@ -8,6 +8,10 @@ import camera
 import time
 import glob
 import cv2
+import io
+
+
+from PIL import Image
 
 class TestCamera():
 
