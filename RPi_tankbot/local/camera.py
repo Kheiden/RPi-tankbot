@@ -734,13 +734,27 @@ class Camera():
         elif type == "separate":
             jpg_image_right = Image.fromarray(imgRGB_right)
             jpg_image_left = Image.fromarray(imgRGB_left)
+
+            if not jpg_image_right:
+              print("Error: No jpg_image_right")
+              return 0, 0
+
+            if not jpg_image_left:
+              print("Error: No jpg_image_left")
+              return 0, 0
+
             if filename == None:
                 filename = datetime.now().strftime("%F_%H-%M-%S.%f")
             jpg_image_right.save("{}/RPi_tankbot/local/frames/{}_right.jpg".format(self.home_dir, filename), format='JPEG')
             jpg_image_left.save("{}/RPi_tankbot/local/frames/{}_left.jpg".format(self.home_dir, filename), format='JPEG')
 
-            width_right, height_right = jpg_image_right.shape[:2]
-            width_left, height_left = jpg_image_left.shape[:2]
+            try:
+              width_right, height_right = jpg_image_right.shape[:2]
+              width_left, height_left = jpg_image_left.shape[:2]
+            except AttributeError:
+              print("Unable to obtain shape of image")
+              return 0, 0
+
             if ((width_right == width_left) and (height_right == height_left)):
                 return width_right, height_right
             else:
