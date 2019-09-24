@@ -425,10 +425,22 @@ class TestCamera():
           left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
               # Below images are BGR
-          imgL, imgR = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="separate", override_warmup=False)
+          imgRGB_left, imgRGB_right = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="separate", override_warmup=False)
 
-          assert imgL is not None
-          assert imgR is not None
+          assert imgRGB_left is not None
+          assert imgRGB_right is not None
+
+          jpg_image_left = Image.fromarray(imgRGB_left)
+          jpg_image_right = Image.fromarray(imgRGB_right)
+
+          bytes_array_left = io.BytesIO()
+          bytes_array_right = io.BytesIO()
+
+          jpg_image_left.save(bytes_array_left, format='JPEG')
+          jpg_image_right.save(bytes_array_right, format='JPEG')
+
+          jpg_image_bytes_left = bytes_array_left.getvalue()
+          jpg_image_bytes_right = bytes_array_right.getvalue()
 
           right.release()
           left.release()
