@@ -59,10 +59,10 @@ class Server():
             return Response(self.c.start_disparity_map(),
                 mimetype='multipart/x-mixed-replace; boundary=frame')
 
-        @app.route("/take_stereo_photo")
-        def disparity_map_stream():
-            return Response(self.c.take_stereo_photo_yield(),
-                mimetype='multipart/x-mixed-replace; boundary=frame')
+        # @app.route("/take_stereo_photo")
+        # def disparity_map_stream():
+        #     return Response(self.c.take_stereo_photo_yield(),
+        #         mimetype='multipart/x-mixed-replace; boundary=frame')
 
         @app.route("/left_camera_stream")
         def left_camera_stream():
