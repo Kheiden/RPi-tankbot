@@ -606,7 +606,7 @@ class Camera():
         self.pwm_y.stop()
 
     def take_stereo_photo_yield(self):
-        self.c.test_stereo_photo_save_to_disk()
+        self.test_stereo_photo_save_to_disk()
 
         imgRGB_left=cv2.cvtColor(left_frame,cv2.COLOR_BGR2RGB)
         imgRGB_right=cv2.cvtColor(right_frame,cv2.COLOR_BGR2RGB)
