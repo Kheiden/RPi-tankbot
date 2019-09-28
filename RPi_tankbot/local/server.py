@@ -60,7 +60,7 @@ class Server():
                 mimetype='multipart/x-mixed-replace; boundary=frame')
 
         @app.route("/take_stereo_photo")
-        def disparity_map_stream():
+        def take_stereo_photo():
             return Response(self.c.take_stereo_photo_yield(),
                 mimetype='multipart/x-mixed-replace; boundary=frame')
 
