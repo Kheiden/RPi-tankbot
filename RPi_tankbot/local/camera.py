@@ -605,11 +605,59 @@ class Camera():
         self.pwm_x.stop()
         self.pwm_y.stop()
 
-    def take_stereo_photo_yield(self):
-        self.test_stereo_photo_save_to_disk()
+    def stereo_photo_save_to_disk(self):
+        res_x = 640
+        res_y = 480
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
-        imgRGB_left=cv2.cvtColor(left_frame,cv2.COLOR_BGR2RGB)
-        imgRGB_right=cv2.cvtColor(right_frame,cv2.COLOR_BGR2RGB)
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+            # Below images are BGR
+        imgRGB_left, imgRGB_right = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="separate", override_warmup=False)
+
+        assert imgRGB_left is not None
+        assert imgRGB_right is not None
+
+        jpg_image_left = Image.fromarray(imgRGB_left)
+        jpg_image_right = Image.fromarray(imgRGB_right)
+
+        bytes_array_left = io.BytesIO()
+        bytes_array_right = io.BytesIO()
+
+        jpg_image_left.save(bytes_array_left, format='JPEG')
+        jpg_image_right.save(bytes_array_right, format='JPEG')
+
+        jpg_image_bytes_left = bytes_array_left.getvalue()
+        jpg_image_bytes_right = bytes_array_right.getvalue()
+
+        right.release()
+        left.release()
+        return True
+
+    def take_stereo_photo_yield(self):
+        res_x = 640
+        res_y = 480
+        right = cv2.VideoCapture(1)
+        right.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        right.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        right.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+        left = cv2.VideoCapture(0)
+        left.set(cv2.CAP_PROP_FRAME_WIDTH, res_x)
+        left.set(cv2.CAP_PROP_FRAME_HEIGHT, res_y)
+        left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+
+            # Below images are BGR
+        imgRGB_left, imgRGB_right = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="separate", override_warmup=False)
+
+        assert imgRGB_left is not None
+        assert imgRGB_right is not None
 
         jpg_image_left = Image.fromarray(imgRGB_left)
         jpg_image_right = Image.fromarray(imgRGB_right)
