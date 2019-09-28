@@ -619,7 +619,7 @@ class Camera():
         left.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 
             # Below images are BGR
-        imgRGB_left, imgRGB_right = self.c.take_stereo_photo(res_x, res_y, right, left, None, type="separate", override_warmup=False)
+        imgRGB_left, imgRGB_right = self.take_stereo_photo(res_x, res_y, right, left, None, type="separate", override_warmup=False)
 
         assert imgRGB_left is not None
         assert imgRGB_right is not None
