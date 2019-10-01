@@ -64,6 +64,11 @@ class Server():
             return Response(self.c.take_stereo_photo_yield(),
                 mimetype='multipart/x-mixed-replace; boundary=frame')
 
+        @app.route("/take_stereo_photo_remote")
+        def take_stereo_photo_remote():
+            return Response(self.c.take_stereo_photo_remote(),
+                mimetype='multipart/x-mixed-replace; boundary=frame')
+
         @app.route("/left_camera_stream")
         def left_camera_stream():
             return Response(self.c.start_left_camera(),
