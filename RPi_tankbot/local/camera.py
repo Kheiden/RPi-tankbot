@@ -712,8 +712,7 @@ class Camera():
         jpg_image_bytes_right = bytes_array_right.getvalue()
 
         yield (jpg_image_bytes_left +
-               jpg_image_bytes_right +
-               )
+               jpg_image_bytes_right)
 
         left.release()
         right.release()
