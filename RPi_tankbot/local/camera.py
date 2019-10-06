@@ -18,6 +18,7 @@ class Camera():
 
     def __init__(self):
         self.m = movement.Movement()
+        GPIO.setmode(GPIO.BOARD)
 
         self.servo_motor_left = 37
         self.servo_motor_right = 35
@@ -25,7 +26,7 @@ class Camera():
         x_axis_degrees = 0
         y_axis_degrees = 0
         # x_axis
-        GPIO.setmode(GPIO.BOARD)
+
         GPIO.setup(self.servo_motor_left,GPIO.OUT)
         self.pwm_x=GPIO.PWM(self.servo_motor_left,50)
         self.pwm_x.start(1/18*(x_axis_degrees+90)+2)
