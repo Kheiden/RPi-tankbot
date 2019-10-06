@@ -12,19 +12,19 @@ class Movement():
         # Inport the robot's state
         self.state = state.State()
         # Use the pin numbering from the BOARD
-        GPIO.setmode(GPIO.BOARD)
-
-        self.left_pin = 37
-        self.right_pin = 35
-
-        GPIO.setup(self.left_pin,GPIO.OUT)
-        GPIO.setup(self.right_pin,GPIO.OUT)
-
-        self.motor_left=GPIO.PWM(self.left_pin,50)
-        self.motor_right=GPIO.PWM(self.right_pin,50)
-
-        self.motor_left.start(2.5)
-        self.motor_right.start(2.5)
+        # GPIO.setmode(GPIO.BOARD)
+        #
+        # self.left_pin = 37
+        # self.right_pin = 35
+        #
+        # GPIO.setup(self.left_pin,GPIO.OUT)
+        # GPIO.setup(self.right_pin,GPIO.OUT)
+        #
+        # self.motor_left=GPIO.PWM(self.left_pin,50)
+        # self.motor_right=GPIO.PWM(self.right_pin,50)
+        #
+        # self.motor_left.start(2.5)
+        # self.motor_right.start(2.5)
 
     def rotate_on_carpet(self, direction=None, movement_time=None, sleep_speed=0.25):
         self.state.stopped = False
@@ -119,6 +119,19 @@ class Movement():
     def forward(self, movement_time=None, speed=180):
         self.state.stopped = False
 
+        GPIO.setmode(GPIO.BOARD)
+
+        self.left_pin = 37
+        self.right_pin = 35
+
+        GPIO.setup(self.left_pin,GPIO.OUT)
+        GPIO.setup(self.right_pin,GPIO.OUT)
+
+        self.motor_left=GPIO.PWM(self.left_pin,50)
+        self.motor_right=GPIO.PWM(self.right_pin,50)
+
+        self.motor_left.start(2.5)
+        self.motor_right.start(2.5)
 
         self.motor_left.ChangeDutyCycle(8)
         self.motor_right.ChangeDutyCycle(8)
@@ -150,9 +163,20 @@ class Movement():
             self.stop()
 
     def stop_motors(self):
+      GPIO.setmode(GPIO.BOARD)
 
-        self.motor_left.ChangeDutyCycle(2.5)
-        self.motor_right.ChangeDutyCycle(2.5)
+      self.left_pin = 37
+      self.right_pin = 35
+
+      GPIO.setup(self.left_pin,GPIO.OUT)
+      GPIO.setup(self.right_pin,GPIO.OUT)
+
+      self.motor_left=GPIO.PWM(self.left_pin,50)
+      self.motor_right=GPIO.PWM(self.right_pin,50)
+
+      self.motor_left.start(2.5)
+      self.motor_right.start(2.5)
+
         #
         # self.motor_left.stop()
         # self.motor_right.stop()
