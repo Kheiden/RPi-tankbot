@@ -121,9 +121,6 @@ class Movement():
         self.motor_left.ChangeDutyCycle(10)
         self.motor_right.ChangeDutyCycle(10)
 
-        self.motor_left.stop()
-        self.motor_right.stop()
-
         """
         If movement_time is specified, then shut down motors after the
         amount of time, otherwise continue spinning the motors ad infinitum
@@ -155,9 +152,9 @@ class Movement():
         # self.motor_right.start(1/18*(speed)+2)
         self.motor_left.ChangeDutyCycle(2)
         self.motor_right.ChangeDutyCycle(2)
-
-        self.motor_left.stop()
-        self.motor_right.stop()
+        # 
+        # self.motor_left.stop()
+        # self.motor_right.stop()
 
     def stop(self):
         # This function will need to interrupt the previous 3 functions
