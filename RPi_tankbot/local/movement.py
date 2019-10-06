@@ -120,12 +120,15 @@ class Movement():
         self.state.stopped = False
 
         self.motor_left.start(2.5)
+        time.sleep(1)
         self.motor_right.start(2.5)
 
         self.motor_left=GPIO.PWM(self.left_pin,50)
+        time.sleep(1)
         self.motor_right=GPIO.PWM(self.right_pin,50)
 
         self.motor_left.ChangeDutyCycle(10)
+        time.sleep(1)
         self.motor_right.ChangeDutyCycle(10)
 
         """
@@ -157,12 +160,15 @@ class Movement():
     def stop_motors(self):
 
         self.motor_left=GPIO.PWM(self.left_pin,50)
+        time.sleep(1)
         self.motor_right=GPIO.PWM(self.right_pin,50)
 
         self.motor_left.start(2.5)
+        time.sleep(1)
         self.motor_right.start(2.5)
 
         self.motor_left.ChangeDutyCycle(2.5)
+        time.sleep(1)
         self.motor_right.ChangeDutyCycle(2.5)
         #
         # self.motor_left.stop()
