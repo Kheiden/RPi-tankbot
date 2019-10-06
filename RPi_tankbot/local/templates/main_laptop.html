@@ -256,7 +256,7 @@ return false;
 </script>
 <script>
 $(document).ready(function(){
-    $("#b_forwards").mousedown(function(){
+    $("#b_forward_button").mousedown(function(){
         $.get("http://192.168.1.16:5000/forwards", function(data, status){
             console.log("forwards on!")
             console.log(data)
@@ -274,7 +274,7 @@ $(document).ready(function(){
     });
 });
 $(document).ready(function(){
-    $("#b_forwards").mouseup(function(){
+    $("#b_stop_button").mousedown(function(){
         $.get("http://192.168.1.16:5000/stop", function(data, status){
             console.log("forwards off!")
         });

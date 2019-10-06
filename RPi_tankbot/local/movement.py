@@ -19,67 +19,8 @@ class Movement():
         GPIO.setup(left_pin,GPIO.OUT)
         GPIO.setup(right_pin,GPIO.OUT)
 
-        self.left=GPIO.PWM(left_pin,50)
-        self.right=GPIO.PWM(right_pin,50)
-
-    def gpio_pinout_issue(self):
-      pin1 = GPIO.PWM(self.Motor1A, frequency)
-      pin2 = GPIO.PWM(self.Motor1B, frequency)
-      pin3 = GPIO.PWM(self.Motor1E, frequency)
-      return
-
-    def run_through_gpios(self):
-      frequency = 50
-      # 0 < dutycycle < 100
-      dutycycle_range = [0, 25, 50, 75, 100]
-
-      for dutycycle in dutycycle_range:
-        print("Starting frequency: {}, dutycycle: {}".format(frequency, dutycycle))
-        pin1 = GPIO.PWM(self.Motor1A, frequency)
-        pin2 = GPIO.PWM(self.Motor1B, frequency)
-        pin3 = GPIO.PWM(self.Motor1E, frequency)
-        pin1.start(dutycycle)
-        pin2.start(dutycycle)
-        pin3.start(dutycycle)
-
-        time.sleep(10)
-
-        pin1.stop()
-        pin2.stop()
-        pin3.stop()
-      return True
-
-    def run_through_gpios_pigpio(self):
-      print("Debugging GPIO Pins")
-      #self.pi = pigpio.pi()
-      frequency = 16000
-      # Must be 25 to 40000
-      pwm_range = 25
-      self.pi.set_PWM_range(self.Motor1A, pwm_range)
-      self.pi.set_PWM_range(self.Motor1B, pwm_range)
-      self.pi.set_PWM_range(self.Motor1E, pwm_range)
-
-      self.pi.set_PWM_frequency(self.Motor1A, frequency)
-      self.pi.set_PWM_frequency(self.Motor1B, frequency)
-      self.pi.set_PWM_frequency(self.Motor1E, frequency)
-      # The below list counts up from `start_number` to `stop_number` then down
-      # to `start_number` again. It steps in increments of `increment`.
-      start_number = 0
-      stop_number = 25
-      increment = 1
-      create_list = [i for i in range(start_number, stop_number, increment)] + [i for i in range(stop_number, start_number-1, -increment)]
-      for dutycycle in create_list:
-        self.pi.set_PWM_dutycycle(self.Motor1A, dutycycle)
-        self.pi.set_PWM_dutycycle(self.Motor1B, dutycycle)
-        self.pi.set_PWM_dutycycle(self.Motor1E, dutycycle)
-        print("sleeping for 1 second")
-        time.sleep(1)
-        print("Now trying dutycycle {}/{} and frequency `{}`".format(dutycycle,
-          pwm_range,
-          frequency))
-
-      print("Any Change?")
-      return True
+        self.left=GPIO.PWM(self.left_pin,50)
+        self.right=GPIO.PWM(self.right_pin,50)
 
     def rotate_on_carpet(self, direction=None, movement_time=None, sleep_speed=0.25):
         self.state.stopped = False
