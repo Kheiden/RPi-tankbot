@@ -19,8 +19,8 @@ class Movement():
         GPIO.setup(self.left_pin,GPIO.OUT)
         GPIO.setup(self.right_pin,GPIO.OUT)
 
-        self.left=GPIO.PWM(self.left_pin,50)
-        self.right=GPIO.PWM(self.right_pin,50)
+        self.motor_left=GPIO.PWM(self.left_pin,50)
+        self.motor_right=GPIO.PWM(self.right_pin,50)
 
     def rotate_on_carpet(self, direction=None, movement_time=None, sleep_speed=0.25):
         self.state.stopped = False
@@ -144,10 +144,10 @@ class Movement():
             self.stop()
 
     def stop_motors(self):
-        self.left.start(1/18*(0)+2)
-        self.right.start(1/18*(0)+2)
-        self.left.stop()
-        self.right.stop()
+        self.motor_left.start(1/18*(0)+2)
+        self.motor_right.start(1/18*(0)+2)
+        self.motor_left.stop()
+        self.motor_right.stop()
 
     def stop(self):
         # This function will need to interrupt the previous 3 functions
