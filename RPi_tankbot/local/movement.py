@@ -121,20 +121,23 @@ class Movement():
 
         GPIO.setmode(GPIO.BOARD)
 
-        self.left_pin = 37
-        self.right_pin = 35
+        left_pin = 37
+        right_pin = 35
 
         GPIO.setup(self.left_pin,GPIO.OUT)
         GPIO.setup(self.right_pin,GPIO.OUT)
 
-        self.motor_left=GPIO.PWM(self.left_pin,50)
-        self.motor_right=GPIO.PWM(self.right_pin,50)
+        motor_left=GPIO.PWM(self.left_pin,50)
+        motor_right=GPIO.PWM(self.right_pin,50)
 
-        self.motor_left.start(2.5)
-        self.motor_right.start(2.5)
+        motor_left.start(2.5)
+        motor_right.start(2.5)
 
-        self.motor_left.ChangeDutyCycle(8)
-        self.motor_right.ChangeDutyCycle(8)
+        motor_left.ChangeDutyCycle(8)
+        motor_right.ChangeDutyCycle(8)
+
+        motor_left.stop()
+        motor_right.stop()
 
         """
         If movement_time is specified, then shut down motors after the
@@ -163,28 +166,27 @@ class Movement():
             self.stop()
 
     def stop_motors(self):
-      GPIO.setmode(GPIO.BOARD)
+        GPIO.setmode(GPIO.BOARD)
 
-      self.left_pin = 37
-      self.right_pin = 35
+        left_pin = 37
+        right_pin = 35
 
-      GPIO.setup(self.left_pin,GPIO.OUT)
-      GPIO.setup(self.right_pin,GPIO.OUT)
+        GPIO.setup(left_pin,GPIO.OUT)
+        GPIO.setup(right_pin,GPIO.OUT)
 
-      self.motor_left=GPIO.PWM(self.left_pin,50)
-      self.motor_right=GPIO.PWM(self.right_pin,50)
+        motor_left=GPIO.PWM(left_pin,50)
+        motor_right=GPIO.PWM(right_pin,50)
 
-      self.motor_left.start(2.5)
-      self.motor_right.start(2.5)
+        motor_left.start(2.5)
+        motor_right.start(2.5)
 
-        #
-        # self.motor_left.stop()
-        # self.motor_right.stop()
+        motor_left.stop()
+        motor_right.stop()
 
     def stop(self):
         # This function will need to interrupt the previous 3 functions
-        self.stop_motors()
-        self.state.stopped = True
+        stop_motors()
+        state.stopped = True
 
     def clear_gpio_motor_pins(self):
       # Not needed for pigpio tests
