@@ -120,13 +120,16 @@ class Movement():
 
         time.sleep(0.1)
 
-        motor_left.start(2.5)
-        motor_right.start(2.5)
+        # motor_left.start(2.5)
+        # motor_right.start(2.5)
+        #
+        # time.sleep(0.25)
+        #
+        # motor_left.ChangeDutyCycle(8)
+        # motor_right.ChangeDutyCycle(8)
 
-        time.sleep(0.25)
-
-        motor_left.ChangeDutyCycle(8)
-        motor_right.ChangeDutyCycle(8)
+        motor_left.start(8)
+        motor_right.start(8)
 
         time.sleep(1)
 
