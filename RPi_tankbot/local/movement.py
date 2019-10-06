@@ -116,6 +116,8 @@ class Movement():
         self.state.stopped = False
         self.motor_left.start(1/18*(speed)+2)
         self.motor_right.start(1/18*(speed)+2)
+        self.motor_left.stop()
+        self.motor_right.stop()
 
         """
         If movement_time is specified, then shut down motors after the
