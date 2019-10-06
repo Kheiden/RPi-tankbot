@@ -13,32 +13,21 @@ class Movement():
         self.state = state.State()
         # Use the pin numbering from the BOARD
         GPIO.setmode(GPIO.BOARD)
-        # Motor1 is the right motor
-        self.Motor1A = 33
-        self.Motor1B = 35
-        self.Motor1E = 37
 
-        # Motor2 is the left motor
-        self.Motor2A = 36
-        self.Motor2B = 38
-        self.Motor2E = 40
+        self.left_pin = 37
+        self.right_pin = 35
+        GPIO.setup(left_pin,GPIO.OUT)
+        GPIO.setup(right_pin,GPIO.OUT)
 
-        GPIO.setup(self.Motor1A,GPIO.OUT)
-        GPIO.setup(self.Motor1B,GPIO.OUT)
-        GPIO.setup(self.Motor1E,GPIO.OUT)
+        self.left=GPIO.PWM(left_pin,50)
+        self.right=GPIO.PWM(right_pin,50)
 
-        GPIO.setup(self.Motor2A,GPIO.OUT)
-        GPIO.setup(self.Motor2B,GPIO.OUT)
-        GPIO.setup(self.Motor2E,GPIO.OUT)
+    def gpio_pinout_issue(self):
+      pin1 = GPIO.PWM(self.Motor1A, frequency)
+      pin2 = GPIO.PWM(self.Motor1B, frequency)
+      pin3 = GPIO.PWM(self.Motor1E, frequency)
+      return
 
-        # Use the pin numbering from BROADCOM
-        #self.Motor1A = 13
-        #self.Motor1B = 19
-        #self.Motor1E = 26
-
-        #self.Motor2A = 16
-        #self.Motor2B = 20
-        #self.Motor2E = 21
     def run_through_gpios(self):
       frequency = 50
       # 0 < dutycycle < 100
@@ -182,15 +171,10 @@ class Movement():
             time.sleep(movement_time)
 
 
-    def forward(self, movement_time=None):
+    def forward(self, movement_time=None, speed=20):
         self.state.stopped = False
-        GPIO.output(self.Motor1A,GPIO.HIGH)
-        GPIO.output(self.Motor1B,GPIO.LOW)
-        GPIO.output(self.Motor1E,GPIO.HIGH)
-
-        GPIO.output(self.Motor2A,GPIO.HIGH) # ok
-        GPIO.output(self.Motor2B,GPIO.LOW) # not ok
-        GPIO.output(self.Motor2E,GPIO.HIGH) #ok
+        self.motor_left.start(1/18*(speed)+2)
+        self.motor_right.start(1/18*(speed)+2)
 
         """
         If movement_time is specified, then shut down motors after the
@@ -219,8 +203,10 @@ class Movement():
             self.stop()
 
     def stop_motors(self):
-        GPIO.output(self.Motor1E,GPIO.LOW)
-        GPIO.output(self.Motor2E,GPIO.LOW)
+        self.left.start(1/18*(0)+2)
+        self.right.start(1/18*(0)+2)
+        self.left.stop()
+        self.right.stop()
 
     def stop(self):
         # This function will need to interrupt the previous 3 functions

@@ -414,7 +414,7 @@ class TestCamera():
         right.release()
         left.release()
 
-    #@pytest.mark.skip(reason="Not Yet Passed.")
+    @pytest.mark.skip(reason="Passed.")
     def test_take_stereo_photo_yield(self):
       assert self.c.take_stereo_photo_yield()
 

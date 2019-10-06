@@ -19,20 +19,19 @@ class Camera():
     def __init__(self):
         self.m = movement.Movement()
 
-        self.servo_axis_x_pin = 37
-        self.servo_axis_y_pin = 13
+        self.servo_motor_left = 37
+        self.servo_motor_right = 35
 
         x_axis_degrees = 0
         y_axis_degrees = 0
         # x_axis
         GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(11,GPIO.OUT)
-        self.pwm_x=GPIO.PWM(self.servo_axis_x_pin,50)
+        GPIO.setup(self.servo_motor_left,GPIO.OUT)
+        self.pwm_x=GPIO.PWM(self.servo_motor_left,50)
         self.pwm_x.start(1/18*(x_axis_degrees+90)+2)
-
         # y_axis
-        GPIO.setup(13,GPIO.OUT)
-        self.pwm_y=GPIO.PWM(self.servo_axis_y_pin,50)
+        GPIO.setup(self.servo_motor_right,GPIO.OUT)
+        self.pwm_y=GPIO.PWM(self.servo_motor_right,50)
         self.pwm_y.start(1/18*(y_axis_degrees+90)+2)
 
         time.sleep(1)
@@ -567,10 +566,10 @@ class Camera():
         # pwm_y 0 is neutral, 90 is up, -90 is down
         """
         if x_axis_degrees != None:
-            self.pwm_x=GPIO.PWM(self.servo_axis_x_pin,50)
+            self.pwm_x=GPIO.PWM(self.servo_motor_left,50)
             self.pwm_x.start(1/18*((x_axis_degrees*-1)+90)+2)
         if y_axis_degrees != None:
-            self.pwm_y=GPIO.PWM(self.servo_axis_y_pin,50)
+            self.pwm_y=GPIO.PWM(self.servo_motor_right,50)
             self.pwm_y.start(1/18*((y_axis_degrees*-1)+90)+2)
         """GPIO movement is not thread-blocking, so we must sleep thread"""
         time.sleep(0.75)
