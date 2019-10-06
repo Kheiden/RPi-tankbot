@@ -22,6 +22,9 @@ class Movement():
         self.motor_left=GPIO.PWM(self.left_pin,50)
         self.motor_right=GPIO.PWM(self.right_pin,50)
 
+        self.motor_left.start(2.5)
+        self.motor_right.start(2.5)
+
     def rotate_on_carpet(self, direction=None, movement_time=None, sleep_speed=0.25):
         self.state.stopped = False
         """
@@ -115,11 +118,9 @@ class Movement():
     def forward(self, movement_time=None, speed=180):
         self.state.stopped = False
 
-        self.motor_left=GPIO.PWM(self.left_pin,50)
-        self.motor_right=GPIO.PWM(self.right_pin,50)
+        self.motor_left.ChangeDutyCycle(10)
+        self.motor_right.ChangeDutyCycle(10)
 
-        self.motor_left.start(1/18*(speed)+2)
-        self.motor_right.start(1/18*(speed)+2)
         self.motor_left.stop()
         self.motor_right.stop()
 
@@ -149,9 +150,12 @@ class Movement():
             sleep(movement_time)
             self.stop()
 
-    def stop_motors(self, speed=30):
-        self.motor_left.start(1/18*(speed)+2)
-        self.motor_right.start(1/18*(speed)+2)
+    def stop_motors(self):
+        # self.motor_left.start(1/18*(speed)+2)
+        # self.motor_right.start(1/18*(speed)+2)
+        self.motor_left.ChangeDutyCycle(2)
+        self.motor_right.ChangeDutyCycle(2)
+
         self.motor_left.stop()
         self.motor_right.stop()
 
