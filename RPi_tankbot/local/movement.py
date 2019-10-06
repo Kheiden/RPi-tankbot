@@ -185,7 +185,7 @@ class Movement():
 
     def stop(self):
         # This function will need to interrupt the previous 3 functions
-        stop_motors()
+        self.stop_motors()
         state.stopped = True
 
     def clear_gpio_motor_pins(self):
