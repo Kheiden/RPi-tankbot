@@ -118,6 +118,8 @@ class Movement():
         motor_left=GPIO.PWM(self.left_pin,50)
         motor_right=GPIO.PWM(self.right_pin,50)
 
+        time.sleep(0.1)
+        
         motor_left.start(2.5)
         motor_right.start(2.5)
 
@@ -125,6 +127,8 @@ class Movement():
 
         motor_left.ChangeDutyCycle(8)
         motor_right.ChangeDutyCycle(8)
+
+        time.sleep(1)
 
         motor_left.stop()
         motor_right.stop()
@@ -158,6 +162,8 @@ class Movement():
     def stop_motors(self):
         motor_left=GPIO.PWM(self.left_pin,50)
         motor_right=GPIO.PWM(self.right_pin,50)
+
+        time.sleep(0.1)
 
         motor_left.start(2.5)
         motor_right.start(2.5)
