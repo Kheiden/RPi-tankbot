@@ -115,6 +115,9 @@ class Movement():
     def forward(self, movement_time=None, speed=180):
         self.state.stopped = False
 
+        self.motor_left=GPIO.PWM(self.left_pin,50)
+        self.motor_right=GPIO.PWM(self.right_pin,50)
+
         self.motor_left.start(1/18*(speed)+2)
         self.motor_right.start(1/18*(speed)+2)
         self.motor_left.stop()
