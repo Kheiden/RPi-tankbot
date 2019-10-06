@@ -24,6 +24,7 @@ class Movement():
         self.motor_right=GPIO.PWM(self.right_pin,50)
 
         self.motor_left.start(2.5)
+        time.sleep(1)
         self.motor_right.start(2.5)
 
     def rotate_on_carpet(self, direction=None, movement_time=None, sleep_speed=0.25):
