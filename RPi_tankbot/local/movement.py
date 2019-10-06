@@ -124,8 +124,8 @@ class Movement():
         left_pin = 37
         right_pin = 35
 
-        GPIO.setup(self.left_pin,GPIO.OUT)
-        GPIO.setup(self.right_pin,GPIO.OUT)
+        GPIO.setup(left_pin,GPIO.OUT)
+        GPIO.setup(right_pin,GPIO.OUT)
 
         motor_left=GPIO.PWM(left_pin,50)
         motor_right=GPIO.PWM(right_pin,50)
