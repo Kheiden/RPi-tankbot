@@ -168,8 +168,8 @@ class Movement():
 
         time.sleep(0.1)
 
-        motor_left.start(2.5)
-        motor_right.start(2.5)
+        motor_left.start(1.9)
+        motor_right.start(1.9)
 
         time.sleep(1)
 
