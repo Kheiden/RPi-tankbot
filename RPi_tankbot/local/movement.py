@@ -77,22 +77,17 @@ class Movement():
     def rotate(self, direction=None, movement_time=None):
         self.state.stopped = False
         if direction == "right":
-            GPIO.output(self.Motor1A,GPIO.HIGH)
-            GPIO.output(self.Motor1B,GPIO.LOW)
-            GPIO.output(self.Motor1E,GPIO.HIGH)
-
-            GPIO.output(self.Motor2A,GPIO.LOW)
-            GPIO.output(self.Motor2B,GPIO.HIGH)
-            GPIO.output(self.Motor2E,GPIO.HIGH)
+            motor_right=GPIO.PWM(self.right_pin,50)
+            time.sleep(0.1)
+            motor_right.start(8)
+            time.sleep(1)
+            motor_right.stop()
         elif direction == "left":
-            GPIO.output(self.Motor1A,GPIO.LOW)
-            GPIO.output(self.Motor1B,GPIO.HIGH)
-            GPIO.output(self.Motor1E,GPIO.HIGH)
-
-            GPIO.output(self.Motor2A,GPIO.HIGH)
-            GPIO.output(self.Motor2B,GPIO.LOW)
-            GPIO.output(self.Motor2E,GPIO.HIGH)
-
+            motor_left=GPIO.PWM(self.left_pin,50)
+            time.sleep(0.1)
+            motor_left.start(8)
+            time.sleep(1)
+            motor_left.stop()
         else:
             return
         if movement_time != None:

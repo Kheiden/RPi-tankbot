@@ -289,14 +289,7 @@ $(document).ready(function(){
     });
 });
 $(document).ready(function(){
-    $("#b_backwards").mouseup(function(){
-        $.get("http://192.168.1.16:5000/stop", function(data, status){
-            console.log("backwards off!")
-        });
-    });
-});
-$(document).ready(function(){
-    $("#b_right").mousedown(function(){
+    $("#b_right_button").mousedown(function(){
         $.get("http://192.168.1.16:5000/turn_right", function(data, status){
             console.log("turning right!")
             console.log(data)
@@ -304,24 +297,10 @@ $(document).ready(function(){
     });
 });
 $(document).ready(function(){
-    $("#b_right").mouseup(function(){
-        $.get("http://192.168.1.16:5000/stop", function(data, status){
-            console.log("turning stopped!")
-        });
-    });
-});
-$(document).ready(function(){
-    $("#b_left").mousedown(function(){
+    $("#b_left_button").mousedown(function(){
         $.get("http://192.168.1.16:5000/turn_left", function(data, status){
             console.log("turning left!")
             console.log(data)
-        });
-    });
-});
-$(document).ready(function(){
-    $("#b_left").mouseup(function(){
-        $.get("http://192.168.1.16:5000/stop", function(data, status){
-            console.log("turning stopped!")
         });
     });
 });
