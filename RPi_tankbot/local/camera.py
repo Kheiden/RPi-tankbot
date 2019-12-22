@@ -300,7 +300,7 @@ class Camera():
         # Initialize the stereo block matching object
         stereo = cv2.StereoSGBM_create()
         stereo.setMinDisparity(0)
-        # stereo.setBlockSize(9) # was 25
+        stereo.setBlockSize(7)
         window_size = 3
         stereo.setP1(8*window_size*window_size)
         stereo.setP2(64*window_size*window_size)
