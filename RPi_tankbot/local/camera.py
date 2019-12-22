@@ -294,8 +294,8 @@ class Camera():
            imgLeft_jpg = Image.fromarray(grayLeft)
            imgRight_jpg = Image.fromarray(grayRight)
 
-           imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_left.jpg".format(file_name), format='JPEG')
-           imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_right.jpg".format(file_name), format='JPEG')
+           imgLeft_jpg.save("/home/pi/ROBOT/RPi-tankbot/RPi_tankbot/local/frames/{}_gray_left.jpg".format(file_name), format='JPEG')
+           imgRight_jpg.save("/home/pi/ROBOT/RPi-tankbot/RPi_tankbot/local/frames/{}_gray_right.jpg".format(file_name), format='JPEG')
 
         # Initialize the stereo block matching object
         stereo = cv2.StereoBM_create()
