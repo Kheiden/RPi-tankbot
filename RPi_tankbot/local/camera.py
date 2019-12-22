@@ -227,6 +227,20 @@ class Camera():
                 if processing_time >= time_on:
                     return processing_time, frame_counter, None
 
+    def capture_cloud_point():
+      """
+      Used by the Web_Controller service to take a photo then create a
+      cloud_point.
+      """
+      res_x = 640
+      res_y = 480
+      imgL, imgR = self.take_stereo_photo(res_x, res_y, type="image_array")
+      assert imgL.any()
+      assert imgR.any()
+      imgLeft, disparity_map = self.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
+      result = self.create_3d_point_cloud(imgLeft, disparity_map)
+      assert result
+
     def create_disparity_map(self, imgLeft, imgRight, res_x=640, res_y=480, npzfile=None, save_disparity_image=False):
         """
         create_disparity_map takes in two undistorted images from left and right cameras.
@@ -285,19 +299,19 @@ class Camera():
 
         # Initialize the stereo block matching object
         stereo = cv2.StereoBM_create()
-        stereo.setBlockSize(25) # was 9
+        stereo.setBlockSize(9) # was 25
         stereo.setMinDisparity(0)
-        stereo.setNumDisparities(48)
+        stereo.setNumDisparities(7) #was 48
         stereo.setDisp12MaxDiff(2)
         stereo.setSpeckleRange(3) # was 0
         stereo.setSpeckleWindowSize(65) # was 0
         #stereo.setROI1(leftROI)
         #stereo.setROI2(rightROI)
-        stereo.setPreFilterCap(10) # was 63
         stereo.setPreFilterSize(5) # was 5
+        stereo.setPreFilterCap(10) # was 63
 
         stereo.setUniquenessRatio(4) # was 3
-        stereo.setTextureThreshold(0)
+        stereo.setTextureThreshold(5)
 
         # Compute the disparity image
         disparity = stereo.compute(grayLeft, grayRight)
