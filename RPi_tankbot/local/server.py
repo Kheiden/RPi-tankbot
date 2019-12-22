@@ -53,9 +53,9 @@ class Server():
             return "ok"
 
         @app.route("/capture_cloud_point")
-            def turn_right():
-                self.c.capture_cloud_point()
-                return "ok"
+        def turn_right():
+            self.c.capture_cloud_point()
+            return "ok"
 
         @app.route("/disparity_map_stream")
         def disparity_map_stream():
