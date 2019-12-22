@@ -303,7 +303,7 @@ class Camera():
         stereo.setBlockSize(7)
         window_size = 3
         stereo.setP1(8*window_size*window_size)
-        stereo.setP2(64*window_size*window_size)
+        stereo.setP2(32*window_size*window_size) # was 64
         stereo.setNumDisparities(16) #was 48
         stereo.setPreFilterCap(63) # was 63
         #
