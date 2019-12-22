@@ -290,32 +290,26 @@ class Camera():
         grayLeft = cv2.cvtColor(imgLeft,cv2.COLOR_BGR2GRAY)
         grayRight = cv2.cvtColor(imgRight,cv2.COLOR_BGR2GRAY)
 
-        #if save_disparity_image == True:
-        #    imgLeft_jpg = Image.fromarray(grayLeft)
-        #    imgRight_jpg = Image.fromarray(grayRight)
+        if save_disparity_image == True:
+           imgLeft_jpg = Image.fromarray(grayLeft)
+           imgRight_jpg = Image.fromarray(grayRight)
 
-        #    imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_left.jpg".format(file_name), format='JPEG')
-        #    imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_right.jpg".format(file_name), format='JPEG')
+           imgLeft_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_left.jpg".format(file_name), format='JPEG')
+           imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_right.jpg".format(file_name), format='JPEG')
 
         # Initialize the stereo block matching object
-        stereo = cv2.StereoSGBM_create()
+        stereo = cv2.StereoBM_create()
+        stereo.setBlockSize(9) # was 7
         stereo.setMinDisparity(0)
-        stereo.setBlockSize(7)
-        window_size = 3
-        stereo.setP1(8*window_size*window_size)
-        stereo.setP2(64*window_size*window_size)
-        stereo.setNumDisparities(16) #was 48
-        stereo.setPreFilterCap(63) # was 63
-        #
-        stereo.setDisp12MaxDiff(200) #was 1000000
-        stereo.setSpeckleRange(2) # was 0
-        stereo.setSpeckleWindowSize(200) # was 150
-        #stereo.setROI1(leftROI)
-        #stereo.setROI2(rightROI)
-        # stereo.setPreFilterSize(5) # was 5
+        stereo.setNumDisparities(48) #was 16
+        stereo.setDisp12MaxDiff(2) #was 200
+        stereo.setSpeckleRange(0) # was 2
+        stereo.setSpeckleWindowSize(0) # was 200
+        stereo.setPreFilterCap(63)
+        stereo.setPreFilterSize(5) # was 5
 
-        stereo.setUniquenessRatio(10) # was 3
-        # stereo.setTextureThreshold(5)
+        stereo.setUniquenessRatio(3)
+        stereo.setTextureThreshold(0)
 
         # Compute the disparity image
         disparity = stereo.compute(grayLeft, grayRight)
