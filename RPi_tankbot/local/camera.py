@@ -48,7 +48,7 @@ class Camera():
         self.home_dir = "/home/pi/ROBOT/RPi-tankbot"
         self.brain = robot_brain.RobotBrain()
 
-    def create_3d_point_cloud(self, imgL, disparity_map, file_num):
+    def create_3d_point_cloud(self, imgL, disparity_map, file_num=0):
         """
         Based on sample code from OpenCV
         """
@@ -69,7 +69,8 @@ class Camera():
         verts = out_points
         colors = out_colors
 
-        file_name = "{}/RPi-tankbot/local/cloud_points/out{}.ply".format(self.home_dir, file_num)
+        file_name = "{}/RPi-tankbot/local/cloud_points/out{}_{}.ply".format(
+          self.home_dir, file_num, time.time())
         ply_header = '''ply
         format ascii 1.0
         element vertex %(vert_num)d
