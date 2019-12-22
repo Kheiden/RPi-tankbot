@@ -69,7 +69,7 @@ class Camera():
         verts = out_points
         colors = out_colors
 
-        file_name = "{}/RPi-tankbot/local/cloud_points/out{}_{}.ply".format(
+        file_name = "{}/RPi_tankbot/local/cloud_points/out{}_{}.ply".format(
           self.home_dir, file_num, time.time())
         ply_header = '''ply
         format ascii 1.0
