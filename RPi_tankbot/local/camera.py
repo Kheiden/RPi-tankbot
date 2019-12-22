@@ -310,7 +310,7 @@ class Camera():
             jpg_image = Image.fromarray(disparity_normalized*255)
             jpg_image = jpg_image.convert('RGB')
             timestamp = time.time()
-            jpg_image.save("{}/ROBOT/RPi-tankbot/RPi-tankbot/local/frames/disparity_map_{}.jpg".format(self.home_dir, timestamp), format='JPEG')
+            jpg_image.save("{}/RPi-tankbot/local/frames/disparity_map_{}.jpg".format(self.home_dir, timestamp), format='JPEG')
             # Uncomment below to save the color image (left)
             #jpg_image = Image.fromarray(imgLeft)
             #jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}_color.jpg".format(timestamp), format='JPEG')
