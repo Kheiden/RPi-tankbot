@@ -563,16 +563,6 @@ class Camera():
         #Return an image the same size as the input image
         return (processing_time, undistorted_img[0:h, 0:w])
 
-    def move_camera_new(self):
-        "This function will rotate the stepper motor"
-
-        PIN2 =
-        PIN1 =
-        PIN0 =
-        PIN9 =
-
-        return
-
     def move_camera(self, x_axis_degrees=None, y_axis_degrees=None):
         """
         # input in degrees, output in DutyCycle
