@@ -291,11 +291,12 @@ class Camera():
         grayRight = cv2.cvtColor(imgRight,cv2.COLOR_BGR2GRAY)
 
         if save_disparity_image == True:
-           imgLeft_jpg = Image.fromarray(grayLeft)
-           imgRight_jpg = Image.fromarray(grayRight)
+          timestamp = time.time()
+          imgLeft_jpg = Image.fromarray(grayLeft)
+          imgRight_jpg = Image.fromarray(grayRight)
 
-           imgLeft_jpg.save("/home/pi/ROBOT/RPi-tankbot/RPi_tankbot/local/frames/{}_gray_left.jpg".format(file_name), format='JPEG')
-           imgRight_jpg.save("/home/pi/ROBOT/RPi-tankbot/RPi_tankbot/local/frames/{}_gray_right.jpg".format(file_name), format='JPEG')
+          imgLeft_jpg.save("/home/pi/ROBOT/RPi-tankbot/RPi_tankbot/local/frames/{}_gray_left.jpg".format(timestamp), format='JPEG')
+          imgRight_jpg.save("/home/pi/ROBOT/RPi-tankbot/RPi_tankbot/local/frames/{}_gray_right.jpg".format(timestamp), format='JPEG')
 
         # Initialize the stereo block matching object
         stereo = cv2.StereoBM_create()
@@ -323,7 +324,6 @@ class Camera():
         if save_disparity_image == True:
             jpg_image = Image.fromarray(disparity_normalized*255)
             jpg_image = jpg_image.convert('RGB')
-            timestamp = time.time()
             jpg_image.save("/home/pi/ROBOT/RPi-tankbot/RPi_tankbot/local/frames/disparity_map_{}.jpg".format(timestamp), format='JPEG')
             # Also save the color image (left)
             jpg_image = Image.fromarray(imgLeft)
