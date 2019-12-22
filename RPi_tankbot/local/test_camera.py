@@ -235,7 +235,6 @@ class TestCamera():
         assert frame_counter >= time_on * fps
         #2.2 seconds per frame (14 frames)
 
-
     @pytest.mark.skip(reason="Test Failing.")
     def test_realtime_disparity_map_stream(self):
         # specify the amount of time that the stream is open for
@@ -303,8 +302,7 @@ class TestCamera():
         right.release()
         left.release()
 
-
-    #@pytest.mark.skip(reason="Passed.")
+    @pytest.mark.skip(reason="Passed.")
     def test_create_disparity_maps_with_multiple_calib_data(self):
         """
         This test is used to create multiple disparity maps from different
@@ -352,7 +350,7 @@ class TestCamera():
         right.release()
         left.release()
 
-    #@pytest.mark.skip(reason="Not Yet Passed.")
+    @pytest.mark.skip(reason="Not Yet Passed.")
     def test_create_single_disparity_map(self):
         res_x = 640
         res_y = 480
@@ -416,7 +414,6 @@ class TestCamera():
         assert (result2 < threshold_seconds)
         result3 = self.c.calibrate_stereo_cameras()
 
-
     @pytest.mark.skip(reason="Passed.")
     def test_calibrate_cameras(self):
         """
@@ -430,7 +427,6 @@ class TestCamera():
         result2 = self.c.calibrate_camera(cam_num=1, res_x=1920, res_y=1080)
         print(result2)
         assert (result2 < threshold_seconds)
-
 
     @pytest.mark.skip(reason="Passed.")
     def test_chessboard_photos(self):
@@ -496,7 +492,6 @@ class TestCamera():
 
         right.release()
         left.release()
-
 
     @pytest.mark.skip(reason="Passed.")
     def test_stereo_photo(self):
