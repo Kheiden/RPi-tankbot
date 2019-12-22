@@ -53,7 +53,7 @@ class Server():
             return "ok"
 
         @app.route("/capture_cloud_point")
-        def turn_right():
+        def capture_cloud_point():
             self.c.capture_cloud_point()
             return "ok"
 
