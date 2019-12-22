@@ -240,7 +240,7 @@ class Camera():
           save_disparity_image: (bool) Whether or not to save the image as a normalized jpg
         """
         if npzfile is None:
-            npzfile = np.load('/home/pi/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
+            npzfile = np.load('/home/pi/calibration_data/{}p/stereo_camera_calibration.npz'.format(res_y))
 
         imageSize = tuple(npzfile['imageSize'])
         leftMapX = npzfile['leftMapX']
