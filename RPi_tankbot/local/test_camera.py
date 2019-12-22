@@ -256,6 +256,8 @@ class TestCamera():
         res_x = 640
         res_y = 480
         imgL, imgR = self.c.take_stereo_photo(res_x, res_y, type="image_array")
+        assert imgL
+        assert imgR
         imgLeft, disparity_map = self.c.create_disparity_map(imgL, imgR, res_x=640, res_y=480, save_disparity_image=True)
         result = self.c.create_3d_point_cloud(imgLeft, disparity_map)
         assert result
