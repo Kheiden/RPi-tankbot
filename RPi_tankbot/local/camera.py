@@ -312,10 +312,10 @@ class Camera():
         stereo.setSpeckleWindowSize(0)
         #stereo.setROI1(leftROI)
         #stereo.setROI2(rightROI)
-        stereo.setPreFilterSize(5) # was 5
+        # stereo.setPreFilterSize(5) # was 5
 
-        stereo.setUniquenessRatio(0) # was 3
-        stereo.setTextureThreshold(5)
+        # stereo.setUniquenessRatio(0) # was 3
+        # stereo.setTextureThreshold(5)
 
         # Compute the disparity image
         disparity = stereo.compute(grayLeft, grayRight)
