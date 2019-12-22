@@ -17,7 +17,7 @@ class TestBrain():
     def teardown_class(self):
         return
 
-    @pytest.mark.skip(reason="Not Yet Passed.")
+    #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_server_online(self):
         # First test to make sure that the server is online
         result = self.brain.server_alive()

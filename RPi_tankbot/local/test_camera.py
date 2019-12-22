@@ -10,6 +10,7 @@ import glob
 import cv2
 import io
 
+import RPi.GPIO as GPIO
 
 from PIL import Image
 
@@ -25,6 +26,59 @@ class TestCamera():
     @classmethod
     def teardown_class(self):
         self.c.stop_servos()
+
+    @pytest.mark.skip(reason="")
+    def test_rotate_new(self):
+      GPIO.setmode(GPIO.BOARD)
+      GPIO.setwarnings(False)
+      coil_A_1_pin = 15 # pink (Actual color: red)
+      coil_A_2_pin = 11 # orange (Actual color: black)
+      coil_B_1_pin = 13 # blue (Actual color: blue)
+      coil_B_2_pin = 12 # yellow(Actual color: green)
+
+      # adjust if different
+      StepCount = 8
+      Seq = range(0, StepCount)
+      #     BLK,RED,GRN,BLU]
+      #       [A,B,A\,B\]
+      Seq[0] = [1,1,0,0]
+      Seq[1] = [0,1,1,0]
+      Seq[2] = [0,0,1,1]
+      Seq[3] = [1,0,0,1]
+
+      # GPIO.setup(enable_pin, GPIO.OUT)
+      GPIO.setup(coil_A_1_pin, GPIO.OUT)
+      GPIO.setup(coil_A_2_pin, GPIO.OUT)
+      GPIO.setup(coil_B_1_pin, GPIO.OUT)
+      GPIO.setup(coil_B_2_pin, GPIO.OUT)
+
+      # GPIO.output(enable_pin, 1)
+
+      def setStep(w1, w2, w3, w4):
+        GPIO.output(coil_A_1_pin, w1)
+        GPIO.output(coil_A_2_pin, w2)
+        GPIO.output(coil_B_1_pin, w3)
+        GPIO.output(coil_B_2_pin, w4)
+
+      def forward(delay, steps):
+        for i in range(steps):
+            for j in range(StepCount):
+                setStep(Seq[j][0], Seq[j][1], Seq[j][2], Seq[j][3])
+                time.sleep(delay)
+
+      def backwards(delay, steps):
+        for i in range(steps):
+            for j in reversed(range(StepCount)):
+                setStep(Seq[j][0], Seq[j][1], Seq[j][2], Seq[j][3])
+                time.sleep(delay)
+
+      if __name__ == '__main__':
+        while True:
+            delay = raw_input("Time Delay (ms)?")
+            steps = raw_input("How many steps forward? ")
+            forward(int(delay) / 1000.0, int(steps))
+            steps = raw_input("How many steps backwards? ")
+            backwards(int(delay) / 1000.0, int(steps))
 
     @pytest.mark.skip(reason="Passed.")
     def test_basic_autonomous_routine(self):
@@ -83,8 +137,6 @@ class TestCamera():
             self.m.stop()
 
         assert action is not None
-
-
 
     @pytest.mark.skip(reason="Passed.")
     def test_stereo_photo_speed(self):
@@ -200,7 +252,7 @@ class TestCamera():
         #3) 4.46 seconds per frame (7 frames)
         #4) 3.36 frames per second (9 frames)
 
-    @pytest.mark.skip(reason="Not Yet Passed.")
+    #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_create_3d_point_cloud(self):
         res_x = 640
         res_y = 480
@@ -252,7 +304,7 @@ class TestCamera():
         left.release()
 
 
-    @pytest.mark.skip(reason="Passed.")
+    #@pytest.mark.skip(reason="Passed.")
     def test_create_disparity_maps_with_multiple_calib_data(self):
         """
         This test is used to create multiple disparity maps from different
@@ -300,7 +352,7 @@ class TestCamera():
         right.release()
         left.release()
 
-    @pytest.mark.skip(reason="Not Yet Passed.")
+    #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_create_single_disparity_map(self):
         res_x = 640
         res_y = 480

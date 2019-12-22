@@ -14,7 +14,6 @@ class TestServer():
     def teardown_class(self):
         self.s.clear_gpio_motor_pins()
 
-    @pytest.mark.skip(reason="Passed.")
     def test_basic_webpage(self, client):
         """
         This test is used to start the webserver which is hosted on the RPi.

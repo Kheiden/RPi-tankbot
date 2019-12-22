@@ -23,6 +23,12 @@ class Camera():
         self.servo_motor_left = 37
         self.servo_motor_right = 35
 
+        # Pin numbers (NOT GPIO NUMBER)
+        self.pin2 = 15
+        self.pin1 = 11
+        self.pin0 = 12
+        self.pin9 = 13
+
         x_axis_degrees = 0
         y_axis_degrees = 0
         # x_axis
@@ -233,9 +239,6 @@ class Camera():
           npzfile: location to the stereo calibration data
           save_disparity_image: (bool) Whether or not to save the image as a normalized jpg
         """
-        #file_name = "disparity_test"
-
-        #imgLeft, imgRight = self.take_stereo_photo(res_x, res_y, file_name, "image_array")
         if npzfile is None:
             npzfile = np.load('{}/calibration_data/{}p/stereo_camera_calibration.npz'.format(self.home_dir, res_y))
 
@@ -307,7 +310,7 @@ class Camera():
             jpg_image = Image.fromarray(disparity_normalized*255)
             jpg_image = jpg_image.convert('RGB')
             timestamp = time.time()
-            jpg_image.save("{}RPi-tankbot/local/frames/disparity_map_{}.jpg".format(self.home_dir, timestamp), format='JPEG')
+            jpg_image.save("{}/ROBOT/RPi-tankbot/RPi-tankbot/local/frames/disparity_map_{}.jpg".format(self.home_dir, timestamp), format='JPEG')
             # Uncomment below to save the color image (left)
             #jpg_image = Image.fromarray(imgLeft)
             #jpg_image.save("/home/pi/RPi-tankbot/local/frames/disparity_map_{}_color.jpg".format(timestamp), format='JPEG')
@@ -560,6 +563,16 @@ class Camera():
         #Return an image the same size as the input image
         return (processing_time, undistorted_img[0:h, 0:w])
 
+    def move_camera_new(self):
+        "This function will rotate the stepper motor"
+
+        PIN2 =
+        PIN1 =
+        PIN0 =
+        PIN9 =
+
+        return
+
     def move_camera(self, x_axis_degrees=None, y_axis_degrees=None):
         """
         # input in degrees, output in DutyCycle
@@ -733,9 +746,9 @@ class Camera():
           right: VideoCapture object [for the right camera]
           left: VideoCapture object [for the left camera]
           filename:
-          type: "combined" [a single .JPG file]
-          type: "separate" [two separate .JPG files]
-          type: "image_array" [two Numpy image arrays]
+            type: "combined" [a single .JPG file]
+            type: "separate" [two separate .JPG files]
+            type: "image_array" [two Numpy image arrays]
           override_warmup: Boolean
           quick_capture: Boolean [is used to take the photos as fast as possible.
             This returns greyscale photos to be used in the disparity_map_stream
