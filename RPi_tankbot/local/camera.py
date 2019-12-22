@@ -298,29 +298,29 @@ class Camera():
         #    imgRight_jpg.save("/home/pi/RPi-tankbot/local/frames/{}_gray_right.jpg".format(file_name), format='JPEG')
 
         # Initialize the stereo block matching object
-        # stereo = cv2.StereoSGBM_create()
-        # stereo.setMinDisparity(0)
+        stereo = cv2.StereoSGBM_create()
+        stereo.setMinDisparity(0)
         # stereo.setBlockSize(9) # was 25
-        # wsize = 3
-        # stereo.setP1(24*wsize*wsize)
-        # stereo.setP2(96*wsize*wsize)
-        # stereo.setNumDisparities(16) #was 48
-        # stereo.setPreFilterCap(63) # was 63
+        window_size = 3
+        stereo.setP1(8*window_size*window_size)
+        stereo.setP2(64*window_size*window_size)
+        stereo.setSADWindowSize(window_size)
+        stereo.setNumDisparities(16) #was 48
+        stereo.setPreFilterCap(63) # was 63
         #
-        # stereo.setDisp12MaxDiff(1000000)
-        # #stereo.setSpeckleRange(3) # was 0
-        # stereo.setSpeckleWindowSize(0)
+        stereo.setDisp12MaxDiff(1000000)
+        stereo.setSpeckleRange(2) # was 0
+        stereo.setSpeckleWindowSize(50)
         #stereo.setROI1(leftROI)
         #stereo.setROI2(rightROI)
         # stereo.setPreFilterSize(5) # was 5
 
-        # stereo.setUniquenessRatio(0) # was 3
+        stereo.setUniquenessRatio(10) # was 3
         # stereo.setTextureThreshold(5)
 
         # Compute the disparity image
-        # disparity = stereo.compute(grayLeft, grayRight)
-        disparity = None
-        cv2.cvFindStereoCorrespondenceBM(grayLeft, grayRight, disparity)
+        disparity = stereo.compute(grayLeft, grayRight)
+        # cv2.cvFindStereoCorrespondenceBM(grayLeft, grayRight, disparity)
         # Normalize the image for representation
         norm_coeff = 255 / disparity.max()
         disparity_normalized = disparity * norm_coeff / 255
