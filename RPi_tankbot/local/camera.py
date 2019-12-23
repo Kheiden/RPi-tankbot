@@ -305,7 +305,7 @@ class Camera():
         stereo.setNumDisparities(48) #was 16
         stereo.setDisp12MaxDiff(2) #was 200
         stereo.setSpeckleRange(0) # was 2
-        stereo.setSpeckleWindowSize(0) # was 200
+        stereo.setSpeckleWindowSize(200) # was 0
         stereo.setPreFilterCap(63)
         stereo.setPreFilterSize(5) # was 5
 
