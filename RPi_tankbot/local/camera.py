@@ -300,16 +300,16 @@ class Camera():
 
         # Initialize the stereo block matching object
         stereo = cv2.StereoBM_create()
-        stereo.setBlockSize(21) # was 7,9
+        stereo.setBlockSize(5)
         stereo.setMinDisparity(0)
-        stereo.setNumDisparities(48) #was 16
-        stereo.setDisp12MaxDiff(2) #was 200
-        stereo.setSpeckleRange(0) # was 2
-        stereo.setSpeckleWindowSize(0) # was 0, 200
-        stereo.setPreFilterCap(63)
-        stereo.setPreFilterSize(5) # was 5
+        stereo.setNumDisparities(16)
+        stereo.setDisp12MaxDiff(-1)
+        stereo.setSpeckleRange(0)
+        stereo.setSpeckleWindowSize(1086)
+        stereo.setPreFilterCap(1)
+        stereo.setPreFilterSize(89)
 
-        stereo.setUniquenessRatio(3)
+        stereo.setUniquenessRatio(0)
         stereo.setTextureThreshold(0)
 
         # Compute the disparity image
