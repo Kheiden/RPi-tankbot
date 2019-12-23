@@ -314,7 +314,6 @@ class Camera():
 
         # Compute the disparity image
         disparity = stereo.compute(grayLeft, grayRight)
-        cv2.cvFindStereoCorrespondenceBM(grayLeft, grayRight, disparity)
         # Normalize the image for representation
         norm_coeff = 255 / disparity.max()
         disparity_normalized = disparity * norm_coeff / 255
