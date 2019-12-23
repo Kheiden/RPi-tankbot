@@ -299,18 +299,18 @@ class Camera():
           imgRight_jpg.save("/home/pi/ROBOT/RPi-tankbot/RPi_tankbot/local/frames/{}_gray_right.jpg".format(timestamp), format='JPEG')
 
         # Initialize the stereo block matching object
-        stereo = cv2.StereoSGBM_create()
-        stereo.setBlockSize(13)
+        stereo = cv2.StereoBM_create()
+        stereo.setBlockSize(9)
         stereo.setMinDisparity(0)
-        stereo.setNumDisparities(32)
-        stereo.setDisp12MaxDiff(-1)
+        stereo.setNumDisparities(48)
+        stereo.setDisp12MaxDiff(2)
         stereo.setSpeckleRange(0)
         stereo.setSpeckleWindowSize(0)
-        # stereo.setPreFilterCap(1)
-        # stereo.setPreFilterSize(89)
+        stereo.setPreFilterCap(63)
+        stereo.setPreFilterSize(5)
         #
-        # stereo.setUniquenessRatio(0)
-        # stereo.setTextureThreshold(0)
+        stereo.setUniquenessRatio(3)
+        stereo.setTextureThreshold(0)
 
         # Compute the disparity image
         disparity = stereo.compute(grayLeft, grayRight)
