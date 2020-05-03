@@ -1,0 +1,556 @@
+<!doctype html>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+table, th, td {
+    border: 0px solid black;
+    text-align: center;
+}
+</style>
+
+<style>
+    body { 
+    background: black no-repeat fixed center; 
+    }
+</style>
+    <title>Tankbot Web Controller v3</title>
+<html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+function start_left_cam_stream()
+{
+var img = document.getElementById("left_cam_stream");
+img.src="http://192.168.1.16:5000/left_camera_stream";
+d = new Date();
+log_to_div("Starting Left Camera Stream", "INFO")
+return false;
+}
+function stop_left_cam_stream()
+{
+var img = document.getElementById("left_cam_stream");
+img.src="";
+d = new Date();
+log_to_div("Stopping Left Camera Stream", "INFO")
+return false;
+}
+
+function toggle_readings()
+{
+    var transparent = 'b_transparent'
+    var opaque = 'b_opaque'
+    // var div_button = '#b_stop_new_div'
+    var div_array = ['#b_sensor_area_div', '#b_sensor_area']
+    try {
+        bit = 0;
+        for(var i = 0, j = div_array.length; i < j; i++) {
+            if (($(div_array[i]))[0].classList.contains(transparent))
+            {
+                if (bit == 0) {
+                    log_to_div("Toggling readings ON", "INFO")
+                    log_to_div("Found", "VERB")
+                    bit = 1;
+                }
+
+                $(div_array[i]).addClass(opaque)
+                $(div_array[i]).removeClass(transparent)
+            } else {
+                if (bit == 0) {
+                    log_to_div("Found", "VERB")
+                    log_to_div("Toggling readings OFF", "INFO")
+                    bit = 1;
+                }
+                $(div_array[i]).addClass(transparent)
+                $(div_array[i]).removeClass(opaque)
+            }
+        }
+        log_to_div("Toggle readings Attempt Complete", "VERB")
+    }
+    catch(err){
+        log_to_div("Toggle readings Attempt Failed", "ERR ")
+    }
+
+}
+function initiate_self_check()
+{
+    log_to_div("INIATING SELF CHECK", "INFO")
+    log_to_div("----------------------------", "INFO")
+    log_to_div("Starting Left Camera Feed...", "INFO")
+    start_left_cam_stream()
+    log_to_div("Stopping Left Camera Feed...", "INFO")
+    stop_left_cam_stream()
+}
+
+function toggle_movement_controls()
+{
+    log_to_div("Toggling Movement Controls", "INFO")
+    var transparent = 'b_transparent'
+    var opaque = 'b_opaque'
+    // var div_button = '#b_stop_new_div'
+    var div_array = ['#b_stop_new_div', '#b_forward_button_div', '#b_back_button_div', '#b_left_button_div', '#b_right_button_div',
+                    '#b_stop_new', '#b_forward_button', '#b_right_button', '#b_left_button', '#b_start_left']
+    try {
+        for(var i = 0, j = div_array.length; i < j; i++) {
+            if (($(div_array[i]))[0].classList.contains(transparent))
+            {
+                log_to_div("Found", "VERB")
+                $(div_array[i]).addClass(opaque)
+                $(div_array[i]).removeClass(transparent)
+            } else {
+                log_to_div("Found", "VERB")
+                $(div_array[i]).addClass(transparent)
+                $(div_array[i]).removeClass(opaque)
+            }
+        }
+        log_to_div("Toggle Movement Attempt Complete", "VERB")
+    }
+    catch(err){
+        // log_to_div("Toggle Movement Attempt Failed", "ERR_")
+    }
+
+}
+function toggle_all_buttons(){
+    log_to_div("Toggling All Controls", "INFO")
+    var transparent = 'b_transparent'
+    var opaque = 'b_opaque'
+    // var div_button = '#b_stop_new_div'
+    var div_array = ['#hide_all_buttons']
+    try {
+        for(var i = 0, j = div_array.length; i < j; i++) {
+            if (($(div_array[i]))[0].classList.contains(transparent))
+            {
+                log_to_div("Found", "VERB")
+                $(div_array[i]).addClass(opaque)
+                $(div_array[i]).removeClass(transparent)
+            } else {
+                log_to_div("Found", "VERB")
+                $(div_array[i]).addClass(transparent)
+                $(div_array[i]).removeClass(opaque)
+            }
+        }
+        log_to_div("Toggle All Buttons Attempt Complete", "VERB")
+    }
+    catch(err){
+        log_to_div("Toggle All Buttons Attempt Failed", "ERR_")
+    }
+}
+function log_to_div(text, type){
+    if (type == "VERB") {
+        return
+    }
+
+    d = new Date();
+    document.getElementById('console').innerHTML = 
+    document.getElementById('console').innerHTML
+    + d.toISOString()
+    + " | "
+    + type + " | "
+    + text + "<br \>"
+
+    var elem = document.getElementById('console');
+    elem.scrollTop = elem.scrollHeight;
+    return
+}
+function reload_page()
+{
+location.reload()
+log_to_div("Console Reloaded", "INFO")
+return false;
+}
+function start_right_cam_stream()
+{
+var img = document.getElementById("right_cam_stream");
+img.src="http://192.168.1.16:5000/right_camera_stream";
+log_to_div("Starting Right Camera Stream", "INFO")
+return false;
+}
+function stop_right_cam_stream()
+{
+var img = document.getElementById("right_cam_stream");
+img.src="";
+log_to_div("Stopping Right Camera Stream", "INFO")
+return false;
+}
+
+function start_disparity_map_stream()
+{
+var img = document.getElementById("disparity_map_stream");
+img.src="http://192.168.1.16:5000/disparity_map_stream";
+log_to_div("Starting Disparity Map Stream", "INFO")
+return false;
+}
+function stop_disparity_map_stream()
+{
+var img = document.getElementById("disparity_map_stream");
+img.src="";
+log_to_div("Stopping Disparity Map Stream", "INFO")
+return false;
+}
+function take_stereo_photo()
+{
+console.log("Taking Stero Photo :)")
+var img = document.getElementById("stereo_photo");
+img.src="http://192.168.1.16:5000/take_stereo_photo";
+log_to_div("Taking Stereo Photo", "INFO")
+return false;
+}
+
+</script>
+<script>
+$(document).ready(function(){
+    $("#b_forward_button").mousedown(function(){
+        $.get("http://192.168.1.16:5000/forwards", function(data, status){
+            console.log("forwards on!")
+            console.log(data)
+            log_to_div("Going Forwards", "INFO")
+        });
+    });
+});
+$(document).ready(function(){
+    $("#b_stop_button").mousedown(function(){
+        $.get("http://192.168.1.16:5000/stop", function(data, status){
+            console.log("forwards off!")
+            log_to_div("Forwards Stop", "INFO")
+        });
+    });
+});
+$(document).ready(function(){
+    $("#b_backwards").mousedown(function(){
+        $.get("http://192.168.1.16:5000/backwards", function(data, status){
+            console.log("backwards on!")
+            log_to_div("Going Backwards", "INFO")
+            console.log(data)
+        });
+    });
+});
+$(document).ready(function(){
+    $("#b_right_button").mousedown(function(){
+        $.get("http://192.168.1.16:5000/turn_right", function(data, status){
+            console.log("turning right!")
+            log_to_div("Starting Right Turn", "INFO")
+            console.log(data)
+        });
+    });
+});
+$(document).ready(function(){
+    $("#b_left_button").mousedown(function(){
+        $.get("http://192.168.1.16:5000/turn_left", function(data, status){
+            console.log("turning left!")
+            log_to_div("Starting Left Turn", "INFO")
+            console.log(data)
+        });
+    });
+});
+$(document).ready(function(){
+    $("#b_capture_cloud_point").mousedown(function(){
+        $.get("http://192.168.1.16:5000/capture_cloud_point", function(data, status){
+            console.log("Capturing 3D cloud point")
+            log_to_div("Capturing 3D cloud point", "INFO")
+        });
+    });
+});
+</script>
+ <style>
+    .b_transparent {
+      visibility: hidden;
+      opacity: 0;
+    }
+    .b_opaque {
+        visibility: visible;
+        opacity: 1;
+    }
+    .b_nav_button {
+      border: none;
+      /* border-radius: 300px / 400px; */
+      color: white;
+      padding: 0px 0px;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 24px;
+      margin: 0px 0px;
+      cursor: pointer;
+    }
+    .b_button {
+      border: none;
+      /* border-radius: 300px / 400px; */
+      color: white;
+      background-color: rgba(0, 0, 0, 0);
+      padding: 0px 0px;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 24px;
+      margin: 0px 0px;
+      cursor: pointer;
+    }
+    .b_movement_button {
+      border: none;
+      /* border-radius: 300px / 400px; */
+      color: white;
+      background-color: rgba(0, 0, 0, 0);
+      padding: 0px 0px;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 24px;
+      margin: 0px 0px;
+      cursor: pointer;
+    }
+    .b_stop_button {
+      border: none;
+      background-color: rgba(0, 0, 0, 0);
+      color: white;
+      padding: 0px 0px;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 36px;
+      margin: 0px 0px;
+      cursor: pointer;
+    }
+    .b_red{
+        color:red;
+    }
+    </style>
+<body>
+<div class="b_button" style = "background-color:rgba(255, 0, 0, 0.685); 
+    width:180px; 
+    height:100px; 
+    position:fixed; 
+    top:100px; 
+    left:792px; 
+    z-index:4;">
+    <button id="b_stop_right" class="b_button" onclick="stop_right_cam_stream();">Stop Camera Stream (R)</button>
+</div>
+<div id="console2" style = "background-color:grey; 
+    width:980px; 
+    height:20px; 
+    position:fixed; 
+    top:760px; 
+    left:000px; 
+    font: 15px monospace;
+    display:flex;
+    overflow:hidden;
+    overflow-x: hidden;
+    z-index:4;">
+    YYYY-MM-DD HH:MM:SS.000Z | Type | Message<br \>
+</div>
+ <div id="console" style = "background-color:grey; 
+    width:980px; 
+    height:500px; 
+    position:fixed; 
+    top:780px; 
+    left:0px; 
+    font: 15px monospace;
+    display:flex;
+    overflow:auto;
+    overflow-x: auto;
+    flex-direction: column;
+    z-index:3;">
+    <script>
+    log_to_div("Boot up Successful", "INFO")
+    </script>
+ </div>
+ <div class="b_button" style = "background-color:rgba(255, 0, 0, 0.685); 
+    width:180px; 
+    height:100px; 
+    position:fixed;
+    top:0px; 
+    left:792px; 
+    z-index:0;">
+    <button id="b_stop_left" class="b_button" onclick="stop_left_cam_stream();">Stop Camera Stream (L)</button>
+</div>
+ <div id="b_stop_new_div" class="b_stop_button" class="b_transparent" style="background-color:red;
+    width:300px; 
+    height:300px; 
+    position:fixed;
+    top:50px; 
+    left:200px; 
+    z-index:0;">
+    <button id="b_stop_button" class="b_stop_button" class="b_transparent">STOP</button>
+</div>
+<div id="b_sensor_area_div" class="b_transparent" style="background-color:black;
+    width:650px; 
+    height:1200px; 
+    position:fixed;
+    top:50px; 
+    left:50px; 
+    z-index:6;">
+    <iframe id="b_sensor_area" height="1200" width="650" class="b_transparent" src="http://192.168.1.10:3000/d/zwiGz3NWk/ambient-air-singlestat?refresh=5s&orgId=1&from=1568561407325&to=1568583007325"></iframe>
+    </div>
+<div id="b_forward_button_div" class="b_movement_button" class="b_transparent" style="background-color:burlywood; 
+    width:200px; 
+    height:100px; 
+    position:fixed; 
+    top:000px; 
+    left:250px; 
+    z-index:3;">
+    <button id="b_forward_button" class="b_movement_button" class="b_transparent"> Move Forward</button>
+</div>
+<div id="b_back_button_div" class="b_movement_button" style = "background-color:burlywood; 
+    width:200px; 
+    height:100px; 
+    position:fixed; 
+    top:300px; 
+    left:250px; 
+    z-index:3;">
+    <button id="b_back_button" class="b_movement_button"> Move Backwards</button>
+</div>
+<div id="b_right_button_div" class="b_movement_button" class="b_transparent" style="background-color:burlywood;
+    width:200px; 
+    height:100px; 
+    position:fixed;
+    top:150px; 
+    left:450px; 
+    z-index:3;">
+    <button id="b_right_button" class="b_movement_button" class="b_transparent"> Turn Right</button>
+</div>
+</div>
+<div id="b_left_button_div" class="b_movement_button" style = "background-color:burlywood; 
+    width:200px; 
+    height:100px; 
+    position:fixed; 
+
+    top:150px; 
+    left:50px; 
+    z-index:3;">
+    <button id="b_left_button" class="b_movement_button">Turn Left</button>
+</div>
+<div class="b_button" class="b_transparent" style = "background-color:yellowgreen; 
+    width:130px; 
+    height:100px; 
+    position:fixed; 
+    
+    top:0; 
+    left:658px; 
+    z-index:4;">
+    <button id="b_start_left" class="b_button" class="b_transparent" onclick="start_left_cam_stream();">Start Left Camera Stream</button>
+</div>
+<div class="b_button" style = "background-color:orangered; 
+    width:130px; 
+    height:100px; 
+    position:fixed; 
+    
+    top:550px; 
+    left:658px; 
+    z-index:4;">
+    <button id="b_output_to_console" class="b_button" onclick="initiate_self_check()">Initiate Self Check</button>
+</div>
+<div id="b_take_stereo_photo_div" class="b_button" class="b_opaque" style = "background-color:blueviolet; 
+    width:180px; 
+    height:100px; 
+    position:fixed; 
+    
+    top:550px; 
+    left:792px; 
+    z-index:4;">
+    <button id="b_take_stereo_photo" class="b_button" class="b_opaque" onclick="take_stereo_photo();">Take Stereo Photo</button>
+</div>
+<div class="b_button" style = "background-color:magenta; 
+    width:180px; 
+    height:100px; 
+    position:fixed; 
+    
+    top:450px; 
+    left:792px; 
+    z-index:4;">
+    <button id="b_toggle_readings" class="b_button" onclick="toggle_movement_controls();">Toggle Auxilliary Controls</button>
+</div>
+<div id="hide_all_buttons" class="b_button" style = "background-color:black; 
+    width:970px; 
+    height:600px; 
+    position:fixed; 
+    
+    top:0px; 
+    left:0px; 
+    z-index:4;">
+</div>
+<div class="b_button" style = "background-color:magenta; 
+    width:180px; 
+    height:100px; 
+    position:fixed; 
+    
+    top:650px; 
+    left:792px; 
+    z-index:4;">
+    <button id="b_toggle_readings" class="b_button" onclick="toggle_all_buttons();">Toggle All Buttons</button>
+</div>
+<div class="b_button" style = "background-color:yellowgreen; 
+    width:130px; 
+    height:100px; 
+    position:fixed; 
+    
+    top:650px; 
+    left:658px; 
+    z-index:5;">
+    <button id="b_capture_cloud_point" class="b_button">Take 3D Cloud Point</button>
+</div>
+<div class="b_button" style = "background-color:rgb(255, 17, 0); 
+    width:650px; 
+    height:100px; 
+    position:fixed; 
+    top:650px; 
+    left:0px; 
+    z-index:3;">
+    <button id="b_reload_console" class="b_button" onclick="reload_page();">Reload Console</button>
+    
+</div>
+<div class="b_button" style = "background-color:blue; 
+    width:180px; 
+    height:100px; 
+    position:fixed; 
+    top:350px; 
+    left:792px; 
+    z-index:3;">
+    <button id="b_show_gui_controls" class="b_button" onclick="toggle_readings();">Toggle Sensor Readings</button>
+</div>
+<div class="b_button" style = "background-color:yellowgreen; 
+    width:130px; 
+    height:100px; 
+    position:fixed;
+     
+    top:100px; 
+    left:658px; 
+    z-index:3;">
+    <button id="b_start_right" class="b_button" class="b_transparent" onclick="start_right_cam_stream();">Start Right Camera Stream</button>
+</div>
+<table>
+    <tr>
+        <td><img id="left_cam_stream" src=""></td>
+        <td><img id="right_cam_stream" src=""></td>
+        <td><img id="stereo_photo" src=""></td>
+        <td><dir style = "width:400px"></dir></td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td width="100%"><img id="left_and_right_camera_stream" src=""></td>
+    </tr>
+
+</table>
+<script>
+  // Load the web page with aux controls on
+  aux_control_on = false;
+  // Load the web page with all buttons on
+  all_buttons_on = true;
+
+  if(!aux_control_on){
+    toggle_movement_controls();
+  }
+  if(all_buttons_on){
+    toggle_all_buttons();
+  }
+  </script>
+
+</div>
+</body>
+</html>
