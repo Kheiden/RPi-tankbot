@@ -27,7 +27,7 @@ class Movement():
       return GPIO.gpio_function(pin)
 
     def motor_precheck(self):
-      status = {pin: get_function_state(pin) for pin in self.all_active_pins}
+      status = {pin: self.get_function_state(pin) for pin in self.all_active_pins}
       header_text = '--- MOTOR PRECHECK ---\n'
       return header_text + str(status)
 
