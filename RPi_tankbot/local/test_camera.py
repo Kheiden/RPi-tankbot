@@ -251,7 +251,7 @@ class TestCamera():
         #3) 4.46 seconds per frame (7 frames)
         #4) 3.36 frames per second (9 frames)
 
-    #@pytest.mark.skip(reason="Not Yet Passed.")
+    @pytest.mark.skip(reason="Passed.")
     def test_create_3d_point_cloud(self):
         res_x = 640
         res_y = 480
