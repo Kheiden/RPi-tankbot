@@ -13,6 +13,7 @@ class TestMovement():
     def teardown_class(self):
         self.m.clear_gpio_motor_pins()
 
+
     @pytest.mark.skip(reason="Not Yet Passed.")
     def test_red_robot_motors(self):
       """Used to figure out which GPIO pins control the PWM for the motor"""
@@ -53,9 +54,12 @@ class TestMovement():
         """
 
 
-    @pytest.mark.skip(reason="Not Yet Passed.")
+    #@pytest.mark.skip(reason="Not Yet Passed.")
     def test_move_robot(self):
-        """move forward, turn, then move forward again."""
+        """move forward then stop
+        ."""
+        output = self.m.motor_precheck()
+        print(output)
         self.m.forward(movement_time=3)
         self.m.stop()
 
@@ -95,7 +99,6 @@ class TestMovement():
             x_axis_degrees,
             y_axis_degrees))
         self.m.move_camera(x_axis_degrees, y_axis_degrees)
-
 
     @pytest.mark.skip(reason="Not yet passed.")
     def test_smooth_rotate(self):

@@ -13,14 +13,23 @@ class Movement():
         self.state = state.State()
         # Use the pin numbering from the BOARD
         GPIO.setmode(GPIO.BOARD)
-        #
-
+        self.all_active_pins = [37, 35]
         self.left_pin = 37
         self.right_pin = 35
 
         GPIO.setup(self.left_pin,GPIO.OUT)
         GPIO.setup(self.right_pin,GPIO.OUT)
 
+    def get_function_state(self, pin):
+      '''Will return a value of:
+      GPIO.IN, GPIO.OUT, GPIO.SPI, GPIO.I2C, GPIO.HARD_PWM, GPIO.SERIAL,
+      GPIO.UNKNOWN'''
+      return GPIO.gpio_function(pin)
+
+    def motor_pre_check(self):
+      status = {pin: get_function_state(pin) for pin in self.all_active_pins}
+      header_text = '--- MOTOR PRECHECK ---\n'
+      return header_text + str(status)
 
     def rotate_on_carpet(self, direction=None, movement_time=None, sleep_speed=0.25):
         self.state.stopped = False
@@ -107,24 +116,27 @@ class Movement():
             time.sleep(movement_time)
 
 
-    def forward(self, movement_time=None, speed=180):
+    def forward(self, movement_time=None, speed_percentage=100):
+        '''
+        Args:
+          movement_time: the time in ms to travel at the given speed
+          speed: percentage of maximum speed (values 0 - 100)
+        '''
         self.state.stopped = False
+        # First we create an array of degrees from -90 through 90
+        speed_array = [i for i in range (-90, 90)]
+        # Then we choose the closest int from `speed_array` based on the
+        # percentage of max speed
+        axis_degrees = axis_degrees_array[int((speed_percentage / 100) *
+          len(speed_array)]
 
         motor_left=GPIO.PWM(self.left_pin,50)
         motor_right=GPIO.PWM(self.right_pin,50)
 
         time.sleep(0.1)
 
-        # motor_left.start(2.5)
-        # motor_right.start(2.5)
-        #
-        # time.sleep(0.25)
-        #
-        # motor_left.ChangeDutyCycle(8)
-        # motor_right.ChangeDutyCycle(8)
-
-        motor_left.start(8)
-        motor_right.start(8)
+        motor_left.start(1/18*((axis_degrees*-1)+90)+2)
+        motor_right.start(1/18*((axis_degrees*-1)+90)+2)
 
         time.sleep(1)
 
