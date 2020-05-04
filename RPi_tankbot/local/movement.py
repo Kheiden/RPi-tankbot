@@ -124,10 +124,10 @@ class Movement():
         '''
         self.state.stopped = False
         # First we create an array of degrees from -90 through 90
-        speed_array = [i for i in range (-90, 90)]
+        axis_degrees_array = [i for i in range (-90, 90)]
         # Then we choose the closest int from `speed_array` based on the
         # percentage of max speed
-        axis_degrees = axis_degrees_array[int((speed_percentage / 100) * len(speed_array))]
+        axis_degrees = axis_degrees_array[int((speed_percentage / 100) * len(axis_degrees_array))]
 
         motor_left=GPIO.PWM(self.left_pin,50)
         motor_right=GPIO.PWM(self.right_pin,50)
