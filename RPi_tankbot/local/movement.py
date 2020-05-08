@@ -124,21 +124,27 @@ class Movement():
         '''
         self.state.stopped = False
         # First we create an array of degrees from -90 through 90
-        axis_degrees_array = [i for i in range(-90, 90)]
+        # axis_degrees_array = [i for i in range(-90, 90)]
         # Then we choose the closest int from `speed_array` based on the
         # percentage of max speed
-        index = int((speed_percentage / 100) * len(axis_degrees_array)) - 1
-        axis_degrees = axis_degrees_array[index]
+        # index = int((speed_percentage / 100) * len(axis_degrees_array)) - 1
+        # axis_degrees = axis_degrees_array[index]
 
         motor_left=GPIO.PWM(self.left_pin,50)
         motor_right=GPIO.PWM(self.right_pin,50)
 
         time.sleep(0.1)
 
-        motor_left.start(1/18*((axis_degrees*-1)+90)+2)
-        motor_right.start(1/18*((axis_degrees*-1)+90)+2)
+        # motor_left.start(1/18*((axis_degrees*-1)+90)+2)
+        # motor_right.start(1/18*((axis_degrees*-1)+90)+2)
+        motor_left.start(0)
+        motor_right.start(0)
 
-        time.sleep(1)
+        for duty_cycle in range(10, 100, 10:)
+          print('Duty Cycle changed to %s', duty_cycle)
+          motor_left.ChangeDutyCycle(10)
+          motor_right.ChangeDutyCycle(10)
+          time.sleep(1)
 
         motor_left.stop()
         motor_right.stop()
