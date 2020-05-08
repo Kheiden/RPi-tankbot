@@ -140,10 +140,10 @@ class Movement():
         motor_left.start(0)
         motor_right.start(0)
 
-        for duty_cycle in range(10, 100, 10):
+        for duty_cycle in range(1, 10, 1):
           print('Duty Cycle changed to %s' % duty_cycle)
-          motor_left.ChangeDutyCycle(10)
-          motor_right.ChangeDutyCycle(10)
+          motor_left.ChangeDutyCycle(duty_cycle)
+          motor_right.ChangeDutyCycle(duty_cycle)
           time.sleep(1)
 
         motor_left.stop()
