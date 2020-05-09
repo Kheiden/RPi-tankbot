@@ -21,8 +21,8 @@ class Movement():
         GPIO.setup(self.left_pin,GPIO.OUT)
         GPIO.setup(self.right_pin,GPIO.OUT)
 
-        motor_left=GPIO.PWM(self.left_pin,50)
-        motor_right=GPIO.PWM(self.right_pin,50)
+        self.motor_left=GPIO.PWM(self.left_pin,50)
+        self.motor_right=GPIO.PWM(self.right_pin,50)
 
         # Initialize the servos to home
         time.sleep(0.1)
