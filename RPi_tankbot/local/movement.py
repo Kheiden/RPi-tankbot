@@ -13,9 +13,9 @@ class Movement():
         self.state = state.State()
         # Use the pin numbering from the BOARD
         GPIO.setmode(GPIO.BOARD)
-        self.all_active_pins = [37, 35]
+        self.all_active_pins = [37, 33]
         self.left_pin = 37
-        self.right_pin = 35
+        self.right_pin = 33
 
         GPIO.setup(self.left_pin,GPIO.OUT)
         GPIO.setup(self.right_pin,GPIO.OUT)
