@@ -81,64 +81,6 @@ class TestCamera():
             backwards(int(delay) / 1000.0, int(steps))
 
     @pytest.mark.skip(reason="Passed.")
-    def test_basic_autonomous_routine(self):
-        """
-        DEPRICATED: Use autonomy.py instead
-        """
-        time_on = 5
-        action = "rotate_random"
-        # Threshold is the value between 0 and 255 that a pixel needs to be above
-        # in order to count as being "too close"
-        threshold = 200
-        # num_threshold is the number of pixels that are above the threshold
-        # 640*480 = 307200
-        # 640*480*0.05 = 15360
-        # 640*480*0.01 = 30720
-        # 5 percent: 4'6" to 4'10" away from target
-        # 10 percent: <tbd>
-        num_threshold = 30720
-        action = [threshold, num_threshold, action]
-
-        processing_time, frame_counter, action = self.c.realtime_disparity_map_stream(time_on=time_on,
-            action=action,
-            save_disparity_image=True,
-            override_warmup=False,
-            autonomous_routine="basic")
-
-    @pytest.mark.skip(reason="Passed.")
-    def test_collision_avoidance(self):
-        """
-        DEPRICATED: Use autonomy.py instead
-        """
-        # Max time on
-        time_on = 30
-        action = "stop_if_close"
-        # Threshold is the value between 0 and 255 that a pixel needs to be above
-        # in order to count as being "too close"
-        threshold = 200
-        # num_threshold is the number of pixels that are above the threshold
-        # 640*480 = 307200
-        # 640*480*0.05 = 15360
-        # 640*480*0.01 = 30720
-        # 5 percent: 4'6" to 4'10" away from target
-        # 10 percent: <tbd>
-        num_threshold = 30720
-        action = [threshold, num_threshold]
-        movement_time = 0.50
-        sleep_time = 2.00
-        self.m.forward_slow_thread(movement_time, sleep_time)
-        _, _, action = self.c.realtime_disparity_map_stream(time_on=time_on,
-            action=action,
-            save_disparity_image=True,
-            override_warmup=False)
-        # %5 error tolerance for the stream to be on
-        if action == 'stop_robot':
-            print("Stopping robot.")
-            self.m.stop()
-
-        assert action is not None
-
-    @pytest.mark.skip(reason="Passed.")
     def test_stereo_photo_speed(self):
         """
         I want to take stereo photos as fast as possible
@@ -467,10 +409,6 @@ class TestCamera():
     @pytest.mark.skip(reason="Passed.")
     def test_take_stereo_photo_yield(self):
       assert self.c.take_stereo_photo_yield()
-
-    @pytest.mark.skip(reason="Passed.")
-    def test_stereo_photo_save_to_disk(self):
-      assert self.c.stereo_photo_save_to_disk()
 
     @pytest.mark.skip(reason="Passed.")
     def test_stereo_photo_new(self):

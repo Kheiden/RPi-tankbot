@@ -53,8 +53,10 @@ class TestMovement():
             track came off of the front left wheel (not the drive wheel)
         """
 
+    def test_motor_controller(self):
+      output = self.m.motor_controller()
 
-    #@pytest.mark.skip(reason="Not Yet Passed.")
+    @pytest.mark.skip(reason="Not Yet Passed.")
     def test_move_robot(self):
         """move forward then stop
         ."""

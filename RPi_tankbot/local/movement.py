@@ -11,23 +11,64 @@ class Movement():
     def __init__(self):
         # Inport the robot's state
         self.state = state.State()
-        # Use the pin numbering from the BOARD
-        GPIO.setmode(GPIO.BOARD)
-        self.all_active_pins = [37, 33]
-        self.left_pin = 37
-        self.right_pin = 33
-        self.relay_pins = {'left': 31, 'right':29}
+        # Use the pin numbering from the BROADCOM
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
 
-        GPIO.setup(self.left_pin,GPIO.OUT)
-        GPIO.setup(self.right_pin,GPIO.OUT)
+    def motor_controller(self):
+      AN2 = 13
+      AN1 = 12
+      DIG2 = 24
+      DIG1 = 26
+      GPIO.setup(AN2, GPIO.OUT)
+      GPIO.setup(AN1, GPIO.OUT)
+      GPIO.setup(DIG2, GPIO.OUT)
+      GPIO.setup(DIG1, GPIO.OUT)
+      sleep(1)
+      p1 = GPIO.PWM(DIG1, 100)
+      p2 = GPIO.PWM(DIG2, 100)
 
-        self.motor_left=GPIO.PWM(self.left_pin,50)
-        self.motor_right=GPIO.PWM(self.right_pin,50)
+      print "Forward"
+      GPIO.output(AN1, GPIO.HIGH)
+      GPIO.output(AN2, GPIO.HIGH)
+      p1.start(0)
+      p2.start(0)
+      sleep(2)
 
-        # Initialize the servos to home
-        time.sleep(0.1)
-        self.motor_left.start(0)
-        self.motor_right.start(0)
+      print "Left"
+      GPIO.output(AN1, GPIO.HIGH)
+      GPIO.output(AN2, GPIO.HIGH)
+      p1.start(100)
+      p2.start(100)
+      sleep(2)
+
+      print "Right"
+      GPIO.output(AN1, GPIO.HIGH)
+      GPIO.output(AN2, GPIO.HIGH)
+      p1.start(0)
+      p2.start(100)
+      sleep(2)
+
+      print "Backward"
+      GPIO.output(AN1, GPIO.HIGH)
+      GPIO.output(AN2, GPIO.HIGH)
+      p1.start(100)
+      p2.start(0)
+      sleep(2)
+
+      print "STOP"
+      GPIO.output(AN1, GPIO.LOW)
+      GPIO.output(AN2, GPIO.LOW)
+      p1.start(0)
+      p2.start(0)
+      sleep(3)
+
+
+      except:
+        p1.start(0)
+        p2.start(0)
+
+
 
     def get_function_state(self, pin):
       '''Will return a value of:
