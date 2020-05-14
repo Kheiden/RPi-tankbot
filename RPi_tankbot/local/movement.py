@@ -28,47 +28,40 @@ class Movement():
       p1 = GPIO.PWM(DIG1, 100)
       p2 = GPIO.PWM(DIG2, 100)
 
-      print "Forward"
+      print("Forward")
       GPIO.output(AN1, GPIO.HIGH)
       GPIO.output(AN2, GPIO.HIGH)
       p1.start(0)
       p2.start(0)
       sleep(2)
 
-      print "Left"
+      print("Left")
       GPIO.output(AN1, GPIO.HIGH)
       GPIO.output(AN2, GPIO.HIGH)
       p1.start(100)
       p2.start(100)
       sleep(2)
 
-      print "Right"
+      print("Right")
       GPIO.output(AN1, GPIO.HIGH)
       GPIO.output(AN2, GPIO.HIGH)
       p1.start(0)
       p2.start(100)
       sleep(2)
 
-      print "Backward"
+      print("Backward")
       GPIO.output(AN1, GPIO.HIGH)
       GPIO.output(AN2, GPIO.HIGH)
       p1.start(100)
       p2.start(0)
       sleep(2)
 
-      print "STOP"
+      print("STOP")
       GPIO.output(AN1, GPIO.LOW)
       GPIO.output(AN2, GPIO.LOW)
       p1.start(0)
       p2.start(0)
       sleep(3)
-
-
-      except:
-        p1.start(0)
-        p2.start(0)
-
-
 
     def get_function_state(self, pin):
       '''Will return a value of:
