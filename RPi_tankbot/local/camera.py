@@ -1,4 +1,3 @@
-import RPi.GPIO as GPIO
 from datetime import datetime
 import robot_brain
 import numpy as np
@@ -18,7 +17,6 @@ class Camera():
 
     def __init__(self):
         self.m = movement.Movement()
-        GPIO.setmode(GPIO.BOARD)
 
         self.home_dir = "/home/pi/ROBOT/RPi-tankbot"
         self.brain = robot_brain.RobotBrain()
@@ -550,47 +548,6 @@ class Camera():
         processing_time = (processing_time02 - processing_time01)/ cv2.getTickFrequency()
         #Return an image the same size as the input image
         return (processing_time, undistorted_img[0:h, 0:w])
-
-    def move_camera(self, x_axis_degrees=None, y_axis_degrees=None):
-        """
-        # input in degrees, output in DutyCycle
-        # pwm_x 0 is neutral, 90 is to the right, -90 is to the left
-        # pwm_y 0 is neutral, 90 is up, -90 is down
-        """
-        if x_axis_degrees != None:
-            self.pwm_x=GPIO.PWM(self.servo_motor_left,50)
-            self.pwm_x.start(1/18*((x_axis_degrees*-1)+90)+2)
-        if y_axis_degrees != None:
-            self.pwm_y=GPIO.PWM(self.servo_motor_right,50)
-            self.pwm_y.start(1/18*((y_axis_degrees*-1)+90)+2)
-        """GPIO movement is not thread-blocking, so we must sleep thread"""
-        time.sleep(0.75)
-        self.stop_servos()
-
-    def move_camera_smooth(self, x_start, y_start, x_end, y_end, speed):
-        """
-        First move x_axis, then move y_axis
-        TODO: Refactor this to move both axises at the same time.
-        """
-        speed_dict = {
-            "SLOW": 0.1,
-            "FAST": 0.01
-        }
-        timesleep = speed_dict[speed]
-
-        for i in range(x_start, x_end, 2):
-            self.move_camera(i, None)
-            time.sleep(timesleep)
-            self.stop_servos()
-            time.sleep(timesleep)
-
-        for i in range(y_start, y_end, 2):
-            self.move_camera(None, i)
-            time.sleep(timesleep)
-            self.stop_servos()
-            time.sleep(timesleep)
-
-        self.stop_servos()
 
     def stereo_photo_save_to_disk(self):
         # DEPRICATED use take_stereo_photo()
