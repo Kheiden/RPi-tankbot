@@ -5,6 +5,7 @@ import camera
 import unittest
 
 class TestBrain(unittest.TestCase):
+  """ Used to test Local and Remote Robot Brain."""
 
   def setUp(self):
     self.m = movement.Movement()

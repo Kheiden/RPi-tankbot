@@ -1,0 +1,8 @@
+message Memory {
+  string memory_name = 1;
+  int64 memory_number = 2; // Unique id for this memory
+  double memory_time =3; // Timestamp of the memory
+  double location_x = 4;
+  double location_y = 5;
+  double location_z = 6;
+}

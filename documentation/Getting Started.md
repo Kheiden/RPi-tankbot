@@ -37,3 +37,4 @@ https://putty.org/
 - Python3 should already be installed.  Confirm by typing "python3"
 - Follow these steps to build Opencv, but stop at the part regarding virtual environments:
 https://www.pyimagesearch.com/2017/09/04/raspbian-stretch-install-opencv-3-python-on-your-raspberry-pi/
+- Install [protocol buffers] locally on the RPi and on server. (https://github.com/protocolbuffers/protobuf)

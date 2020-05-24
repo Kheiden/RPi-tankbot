@@ -1,7 +1,15 @@
 import requests
 import pickle
 
-class RobotBrain ():
+class LocalRobotBrain ():
+    """ Used to test Local Robot Brain."""
+
+    def __init__(self):
+        self.memory =
+
+class RemoteRobotBrain ():
+    """ Used to test Remote Robot Brain."""
+
 
     def __init__(self):
         """ This class is used to handle the requests made to an external server
