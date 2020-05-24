@@ -53,6 +53,7 @@ class TestMovement():
             track came off of the front left wheel (not the drive wheel)
         """
 
+    @pytest.mark.skip(reason="Unable to confirm integration test.")
     def test_motor_controller(self):
       output = self.m.motor_controller()
 

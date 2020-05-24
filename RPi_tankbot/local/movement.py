@@ -31,8 +31,8 @@ class Movement():
       print("Left")
       GPIO.output(DIG1, GPIO.HIGH)
       GPIO.output(DIG2, GPIO.LOW)
-      p1.start(100)
-      p2.start(100)
+      p1.start(10)
+      p2.start(10)
       sleep(2)
       print("Forward")
       # set DIG1 as LOW, to control direction
