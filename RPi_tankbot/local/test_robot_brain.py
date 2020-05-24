@@ -2,9 +2,9 @@ import numpy as np
 import robot_brain
 import movement
 import camera
-import pytest
+import unittest
 
-class TestBrain():
+class TestBrain(unittest.TestCase):
 
     @classmethod
     def setup_class(self):

@@ -1,26 +1,21 @@
 import autonomy
-import pytest
+import unittest
 
-class TestAutonomy():
+class TestAutonomy(unittest.TestCase):
 
-    @classmethod
-    def setup_class(self):
-        """ DEPRICATED. Please move this code to server/autonomy
-        """
-        self.a = autonomy.Autonomy()
+  def setUp(self):
+    """ DEPRICATED. Please move this code to server/autonomy. """
+    self.a = autonomy.Autonomy()
 
-    @classmethod
-    def teardown_class(self):
-        pass
+  def tearDown(self):
+    pass
 
+  @unittest.skip(reason="Unable to test.")
+  def test_autonomous_routine_basic(self):
+    output = self.a.autonomous_routine_basic()
+    self.assertTrue(output)
 
-    @pytest.mark.skip(reason="Passed.")
-    def test_autonomous_routine_basic(self):
-        output = self.a.autonomous_routine_basic()
-        assert output is True
-
-
-    @pytest.mark.skip(reason="Passed.")
-    def test_collision_avoidance_basic(self):
-        output = self.a.collision_avoidance_basic()
-        assert output is not None
+  @unittest.skip(reason="Unable to test.")
+  def test_collision_avoidance_basic(self):
+    output = self.a.collision_avoidance_basic()
+    self.assertNotEqual(output, None)
