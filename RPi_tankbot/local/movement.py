@@ -45,7 +45,7 @@ class Movement():
       p2.start(10)
       sleep(2)
 
-      print( "Backward")
+      print("Backward")
       GPIO.output(DIG1, GPIO.HIGH)
       GPIO.output(DIG2, GPIO.HIGH)
       p1.start(10)
