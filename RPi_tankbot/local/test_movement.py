@@ -18,7 +18,7 @@ class TestMovement(unittest.TestCase):
     output = self.m.run_through_gpios()
     assert output
 
-  @unittest.skip(reason="Unable to confirm integration test.")
+  #@unittest.skip(reason="Unable to confirm integration test.")
   def test_motor_controller(self):
     output = self.m.motor_controller()
 
