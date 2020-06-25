@@ -5,7 +5,7 @@ class LocalRobotBrain ():
     """ Used to test Local Robot Brain."""
 
     def __init__(self):
-        self.memory =
+        self.memory = None
 
 class RemoteRobotBrain ():
     """ Used to test Remote Robot Brain."""
