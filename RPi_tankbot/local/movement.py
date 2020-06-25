@@ -15,56 +15,29 @@ class Movement():
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
 
-    def motor_controller(self):
-      AN2 = 13
-      AN1 = 12
-      DIG2 = 24
-      DIG1 = 26
-      GPIO.setup(AN2, GPIO.OUT)
-      GPIO.setup(AN1, GPIO.OUT)
-      GPIO.setup(DIG2, GPIO.OUT)
-      GPIO.setup(DIG1, GPIO.OUT)
+        AN2 = 13
+        AN1 = 12
+        DIG2 = 24
+        DIG1 = 26
+        GPIO.setup(AN2, GPIO.OUT)
+        GPIO.setup(AN1, GPIO.OUT)
+        GPIO.setup(DIG2, GPIO.OUT)
+        GPIO.setup(DIG1, GPIO.OUT)
+
+    def motor_controller_movement_cycle(self):
       sleep(1)
       p1 = GPIO.PWM(AN1, 100)
       p2 = GPIO.PWM(AN2, 100)
 
-      print("Left")
-      GPIO.output(DIG1, GPIO.HIGH)
-      GPIO.output(DIG2, GPIO.LOW)
-      p1.start(10)
-      p2.start(10)
-      sleep(2)
       print("Forward")
-      # set DIG1 as LOW, to control direction
-      GPIO.output(DIG1, GPIO.LOW)
-      # set DIG2 as LOW, to control direction
-      GPIO.output(DIG2, GPIO.LOW)
-      # set speed for M1 at 10%
-      # set speed for M2 at 10%
-      p1.start(10)
-      p2.start(10)
-      sleep(2)
-
+      self.forward()
       print("Backward")
-      GPIO.output(DIG1, GPIO.HIGH)
-      GPIO.output(DIG2, GPIO.HIGH)
-      p1.start(10)
-      p2.start(10)
-      sleep(2)
-
+      self.backward()
+      print("Left")
+      self.rotate(direction="left")
       print("Right")
-      GPIO.output(DIG1, GPIO.LOW)
-      GPIO.output(DIG2, GPIO.HIGH)
-      p1.start(10)
-      p2.start(10)
-      sleep(2)
-
+      self.rotate(direction="right")
       print("STOP")
-      GPIO.output(DIG1, GPIO.LOW)
-      GPIO.output(DIG2, GPIO.LOW)
-      p1.start(0)
-      p2.start(0)
-      sleep(3)
 
     def get_function_state(self, pin):
       '''Will return a value of:
@@ -80,84 +53,56 @@ class Movement():
     def rotate(self, direction=None, movement_time=None):
         self.state.stopped = False
         if direction == "right":
-            motor_left=GPIO.PWM(self.left_pin,50)
-            time.sleep(0.1)
-            motor_left.start(10)
-            time.sleep(1)
-            motor_left.stop()
+          GPIO.output(DIG1, GPIO.LOW)
+          GPIO.output(DIG2, GPIO.HIGH)
+          p1.start(10)
+          p2.start(10)
         elif direction == "left":
-            motor_right=GPIO.PWM(self.right_pin,50)
-            time.sleep(0.1)
-            motor_right.start(10)
-            time.sleep(1)
-            motor_right.stop()
+          GPIO.output(DIG1, GPIO.HIGH)
+          GPIO.output(DIG2, GPIO.LOW)
+          p1.start(10)
+          p2.start(10)
         else:
             return
         if movement_time != None:
-            sleep(movement_time)
-            self.stop()
+          sleep(movement_time)
+          self.stop()
 
-    def flip_relay(relay_array):
+    def forward(self, movement_time=None, speed_percentage=10):
       '''
       Args:
-        relay_array: Takes in a list of strings denoting which relays to flip
+        movement_time: the time in ms to travel at the given speed. If
+          movement_time is specified, then shut down motors after the amount
+          of time, otherwise continue spinning the motors ad infinitum
+        speed: percentage of maximum speed (values 0 - 100)
       '''
-      # # TODO: Fill this out
-      return False
-      # for relay in relay_array:
-      #   GPIO.PWM(self.relay_pins[relay], 5000)
+      GPIO.output(DIG1, GPIO.LOW)
+      GPIO.output(DIG2, GPIO.LOW)
+      p1.start(speed_percentage)
+      p2.start(speed_percentage)
 
-
-
-    def forward(self, movement_time=None, speed_percentage=100):
-        '''
-        Args:
-          movement_time: the time in ms to travel at the given speed. If
-            movement_time is specified, then shut down motors after the amount
-            of time, otherwise continue spinning the motors ad infinitum
-          speed: percentage of maximum speed (values 0 - 100)
-        '''
-        self.state.stopped = False
-        duty_cycle = speed_percentage / 10
-        print('Duty Cycle changed to %s' % duty_cycle)
-        self.motor_left.ChangeDutyCycle(duty_cycle)
-        self.motor_right.ChangeDutyCycle(duty_cycle)
-
-        if movement_time != None:
-            sleep(movement_time)
-            self.stop_motors()
-
-    def backward(self, movement_time=None, speed_percentage=100):
-        '''
-        Args:
-          movement_time: the time in ms to travel at the given speed. If
-            movement_time is specified, then shut down motors after the amount
-            of time, otherwise continue spinning the motors ad infinitum
-          speed: percentage of maximum speed (values 0 - 100)
-        '''
-        self.state.stopped = False
-        output = self.flip_relay(['left', 'right'])
-        if not output:
-          print('ERROR: No confirmation that the relays have successfully'
-            'switched')
-        # Backwards is just forwards in reverse!
-        forward(movement_time=movement_time, speed_percentage=speed_percentage)
-        """
-        If movement_time is specified, then shut down motors after the
-        amount of time, otherwise continue spinning the motors ad infinitum
-        """
-        if movement_time != None:
-            sleep(movement_time)
-            self.stop()
+    def backward(self, movement_time=None, speed_percentage=10):
+      '''
+      Args:
+        movement_time: the time in ms to travel at the given speed. If
+          movement_time is specified, then shut down motors after the amount
+          of time, otherwise continue spinning the motors ad infinitum
+        speed: percentage of maximum speed (values 0 - 100)
+      '''
+      GPIO.output(DIG1, GPIO.HIGH)
+      GPIO.output(DIG2, GPIO.HIGH)
+      p1.start(speed_percentage)
+      p2.start(speed_percentage)
 
     def stop_motors(self):
-        self.motor_left.stop()
-        self.motor_right.stop()
+      GPIO.output(DIG1, GPIO.LOW)
+      GPIO.output(DIG2, GPIO.LOW)
+      p1.start(0)
+      p2.start(0)
 
     def stop(self):
-        # This function will need to interrupt the previous 3 functions
-        self.stop_motors()
-        state.stopped = True
+      self.stop_motors()
+      state.stopped = True
 
     def clear_gpio_motor_pins(self):
-        return GPIO.cleanup()
+      return GPIO.cleanup()
