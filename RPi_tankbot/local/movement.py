@@ -15,19 +15,19 @@ class Movement():
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
 
-        AN2 = 13
-        AN1 = 12
-        DIG2 = 24
-        DIG1 = 26
-        GPIO.setup(AN2, GPIO.OUT)
-        GPIO.setup(AN1, GPIO.OUT)
-        GPIO.setup(DIG2, GPIO.OUT)
-        GPIO.setup(DIG1, GPIO.OUT)
+        self.AN2 = 13
+        self.AN1 = 12
+        self.DIG2 = 24
+        self.DIG1 = 26
+        GPIO.setup(self.AN2, GPIO.OUT)
+        GPIO.setup(self.AN1, GPIO.OUT)
+        GPIO.setup(self.DIG2, GPIO.OUT)
+        GPIO.setup(self.DIG1, GPIO.OUT)
 
     def motor_controller_movement_cycle(self):
       sleep(1)
-      p1 = GPIO.PWM(AN1, 100)
-      p2 = GPIO.PWM(AN2, 100)
+      p1 = GPIO.PWM(self.AN1, 100)
+      p2 = GPIO.PWM(self.AN2, 100)
 
       print("Forward")
       self.forward()
@@ -53,13 +53,13 @@ class Movement():
     def rotate(self, direction=None, movement_time=None):
         self.state.stopped = False
         if direction == "right":
-          GPIO.output(DIG1, GPIO.LOW)
-          GPIO.output(DIG2, GPIO.HIGH)
+          GPIO.output(self.DIG1, GPIO.LOW)
+          GPIO.output(self.DIG2, GPIO.HIGH)
           p1.start(10)
           p2.start(10)
         elif direction == "left":
-          GPIO.output(DIG1, GPIO.HIGH)
-          GPIO.output(DIG2, GPIO.LOW)
+          GPIO.output(self.DIG1, GPIO.HIGH)
+          GPIO.output(self.DIG2, GPIO.LOW)
           p1.start(10)
           p2.start(10)
         else:
@@ -76,8 +76,8 @@ class Movement():
           of time, otherwise continue spinning the motors ad infinitum
         speed: percentage of maximum speed (values 0 - 100)
       '''
-      GPIO.output(DIG1, GPIO.LOW)
-      GPIO.output(DIG2, GPIO.LOW)
+      GPIO.output(self.DIG1, GPIO.LOW)
+      GPIO.output(self.DIG2, GPIO.LOW)
       p1.start(speed_percentage)
       p2.start(speed_percentage)
 
@@ -89,14 +89,14 @@ class Movement():
           of time, otherwise continue spinning the motors ad infinitum
         speed: percentage of maximum speed (values 0 - 100)
       '''
-      GPIO.output(DIG1, GPIO.HIGH)
-      GPIO.output(DIG2, GPIO.HIGH)
+      GPIO.output(self.DIG1, GPIO.HIGH)
+      GPIO.output(self.DIG2, GPIO.HIGH)
       p1.start(speed_percentage)
       p2.start(speed_percentage)
 
     def stop_motors(self):
-      GPIO.output(DIG1, GPIO.LOW)
-      GPIO.output(DIG2, GPIO.LOW)
+      GPIO.output(self.DIG1, GPIO.LOW)
+      GPIO.output(self.DIG2, GPIO.LOW)
       p1.start(0)
       p2.start(0)
 
