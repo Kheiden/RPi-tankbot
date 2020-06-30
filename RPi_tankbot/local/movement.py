@@ -47,7 +47,7 @@ class Movement():
       header_text = '--- MOTOR PRECHECK ---\n'
       return header_text + str(status)
 
-    def rotate(self, direction=None, movement_time=None):
+    def rotate(self, direction=None, movement_time=500):
         self.state.stopped = False
         if direction == "right":
           GPIO.output(self.DIG1, GPIO.LOW)
@@ -56,6 +56,7 @@ class Movement():
           p2 = GPIO.PWM(self.AN2, 100)
           p1.start(10)
           p2.start(10)
+          time.sleep(movement_time)
         elif direction == "left":
           GPIO.output(self.DIG1, GPIO.HIGH)
           GPIO.output(self.DIG2, GPIO.LOW)
@@ -63,13 +64,14 @@ class Movement():
           p2 = GPIO.PWM(self.AN2, 100)
           p1.start(10)
           p2.start(10)
+          time.sleep(movement_time)
         else:
             return
         if movement_time != None:
           sleep(movement_time)
           self.stop()
 
-    def forward(self, movement_time=None, speed_percentage=10):
+    def forward(self, movement_time=500, speed_percentage=10):
       '''
       Args:
         movement_time: the time in ms to travel at the given speed. If
@@ -83,8 +85,9 @@ class Movement():
       p2 = GPIO.PWM(self.AN2, 100)
       p1.start(speed_percentage)
       p2.start(speed_percentage)
+      time.sleep(movement_time)
 
-    def backward(self, movement_time=None, speed_percentage=10):
+    def backward(self, movement_time=500, speed_percentage=10):
       '''
       Args:
         movement_time: the time in ms to travel at the given speed. If
@@ -98,6 +101,7 @@ class Movement():
       p2 = GPIO.PWM(self.AN2, 100)
       p1.start(speed_percentage)
       p2.start(speed_percentage)
+      time.sleep(movement_time)
 
     def stop_motors(self):
       GPIO.output(self.DIG1, GPIO.LOW)
