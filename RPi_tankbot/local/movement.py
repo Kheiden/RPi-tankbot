@@ -52,15 +52,15 @@ class Movement():
         if direction == "right":
           GPIO.output(self.DIG1, GPIO.LOW)
           GPIO.output(self.DIG2, GPIO.HIGH)
-          p1 = GPIO.PWM(AN1, 100)
-          p2 = GPIO.PWM(AN2, 100)
+          p1 = GPIO.PWM(self.AN1, 100)
+          p2 = GPIO.PWM(self.AN2, 100)
           p1.start(10)
           p2.start(10)
         elif direction == "left":
           GPIO.output(self.DIG1, GPIO.HIGH)
           GPIO.output(self.DIG2, GPIO.LOW)
-          p1 = GPIO.PWM(AN1, 100)
-          p2 = GPIO.PWM(AN2, 100)
+          p1 = GPIO.PWM(self.AN1, 100)
+          p2 = GPIO.PWM(self.AN2, 100)
           p1.start(10)
           p2.start(10)
         else:
@@ -79,8 +79,8 @@ class Movement():
       '''
       GPIO.output(self.DIG1, GPIO.LOW)
       GPIO.output(self.DIG2, GPIO.LOW)
-      p1 = GPIO.PWM(AN1, 100)
-      p2 = GPIO.PWM(AN2, 100)
+      p1 = GPIO.PWM(self.AN1, 100)
+      p2 = GPIO.PWM(self.AN2, 100)
       p1.start(speed_percentage)
       p2.start(speed_percentage)
 
@@ -94,16 +94,16 @@ class Movement():
       '''
       GPIO.output(self.DIG1, GPIO.HIGH)
       GPIO.output(self.DIG2, GPIO.HIGH)
-      p1 = GPIO.PWM(AN1, 100)
-      p2 = GPIO.PWM(AN2, 100)
+      p1 = GPIO.PWM(self.AN1, 100)
+      p2 = GPIO.PWM(self.AN2, 100)
       p1.start(speed_percentage)
       p2.start(speed_percentage)
 
     def stop_motors(self):
       GPIO.output(self.DIG1, GPIO.LOW)
       GPIO.output(self.DIG2, GPIO.LOW)
-      p1 = GPIO.PWM(AN1, 100)
-      p2 = GPIO.PWM(AN2, 100)
+      p1 = GPIO.PWM(self.AN1, 100)
+      p2 = GPIO.PWM(self.AN2, 100)
       p1.start(0)
       p2.start(0)
 
