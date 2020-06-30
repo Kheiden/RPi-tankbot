@@ -53,17 +53,17 @@ class Movement():
           GPIO.output(self.DIG1, GPIO.LOW)
           GPIO.output(self.DIG2, GPIO.HIGH)
           p1 = GPIO.PWM(self.AN1, 100)
-          p2 = GPIO.PWM(self.AN2, 100)
-          p1.start(10)
-          p2.start(10)
+          self.p2 = GPIO.PWM(self.AN2, 100)
+          self.p1.start(10)
+          self.p2.start(10)
           time.sleep(movement_time)
         elif direction == "left":
           GPIO.output(self.DIG1, GPIO.HIGH)
           GPIO.output(self.DIG2, GPIO.LOW)
-          p1 = GPIO.PWM(self.AN1, 100)
-          p2 = GPIO.PWM(self.AN2, 100)
-          p1.start(10)
-          p2.start(10)
+          self.p1 = GPIO.PWM(self.AN1, 100)
+          self.p2 = GPIO.PWM(self.AN2, 100)
+          self.p1.start(10)
+          self.p2.start(10)
           time.sleep(movement_time)
         else:
             return
@@ -81,10 +81,10 @@ class Movement():
       '''
       GPIO.output(self.DIG1, GPIO.LOW)
       GPIO.output(self.DIG2, GPIO.LOW)
-      p1 = GPIO.PWM(self.AN1, 100)
-      p2 = GPIO.PWM(self.AN2, 100)
-      p1.start(speed_percentage)
-      p2.start(speed_percentage)
+      self.p1 = GPIO.PWM(self.AN1, 100)
+      self.p2 = GPIO.PWM(self.AN2, 100)
+      self.p1.start(speed_percentage)
+      self.p2.start(speed_percentage)
       time.sleep(movement_time)
 
     def backward(self, movement_time=500, speed_percentage=10):
@@ -97,19 +97,15 @@ class Movement():
       '''
       GPIO.output(self.DIG1, GPIO.HIGH)
       GPIO.output(self.DIG2, GPIO.HIGH)
-      p1 = GPIO.PWM(self.AN1, 100)
-      p2 = GPIO.PWM(self.AN2, 100)
-      p1.start(speed_percentage)
-      p2.start(speed_percentage)
+      self.p1 = GPIO.PWM(self.AN1, 100)
+      self.p2 = GPIO.PWM(self.AN2, 100)
+      self.p1.start(speed_percentage)
+      self.p2.start(speed_percentage)
       time.sleep(movement_time)
 
     def stop_motors(self):
-      GPIO.output(self.DIG1, GPIO.LOW)
-      GPIO.output(self.DIG2, GPIO.LOW)
-      p1 = GPIO.PWM(self.AN1, 100)
-      p2 = GPIO.PWM(self.AN2, 100)
-      p1.start(0)
-      p2.start(0)
+      self.p1.start(0)
+      self.p2.start(0)
 
     def stop(self):
       self.stop_motors()
