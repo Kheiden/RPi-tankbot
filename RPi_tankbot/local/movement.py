@@ -23,6 +23,8 @@ class Movement():
       GPIO.setup(self.AN1, GPIO.OUT)
       GPIO.setup(self.DIG2, GPIO.OUT)
       GPIO.setup(self.DIG1, GPIO.OUT)
+      self.p1 = GPIO.PWM(self.AN1, 100)
+      self.p2 = GPIO.PWM(self.AN2, 100)
 
     def motor_controller_movement_cycle(self):
       sleep(1)
@@ -52,16 +54,12 @@ class Movement():
         if direction == "right":
           GPIO.output(self.DIG1, GPIO.LOW)
           GPIO.output(self.DIG2, GPIO.HIGH)
-          p1 = GPIO.PWM(self.AN1, 100)
-          self.p2 = GPIO.PWM(self.AN2, 100)
           self.p1.start(10)
           self.p2.start(10)
           time.sleep(movement_time)
         elif direction == "left":
           GPIO.output(self.DIG1, GPIO.HIGH)
           GPIO.output(self.DIG2, GPIO.LOW)
-          self.p1 = GPIO.PWM(self.AN1, 100)
-          self.p2 = GPIO.PWM(self.AN2, 100)
           self.p1.start(10)
           self.p2.start(10)
           time.sleep(movement_time)
@@ -81,8 +79,6 @@ class Movement():
       '''
       GPIO.output(self.DIG1, GPIO.LOW)
       GPIO.output(self.DIG2, GPIO.LOW)
-      self.p1 = GPIO.PWM(self.AN1, 100)
-      self.p2 = GPIO.PWM(self.AN2, 100)
       self.p1.start(speed_percentage)
       self.p2.start(speed_percentage)
       time.sleep(movement_time)
@@ -97,8 +93,6 @@ class Movement():
       '''
       GPIO.output(self.DIG1, GPIO.HIGH)
       GPIO.output(self.DIG2, GPIO.HIGH)
-      self.p1 = GPIO.PWM(self.AN1, 100)
-      self.p2 = GPIO.PWM(self.AN2, 100)
       self.p1.start(speed_percentage)
       self.p2.start(speed_percentage)
       time.sleep(movement_time)
