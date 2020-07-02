@@ -37,6 +37,20 @@ class Server():
           self.m.forward()
           return "ok"
 
+      @app.route("/v2/move", methods=['POST', 'GET'])
+      def go_forwards():
+        arbitrary_data = request.form['a']
+        motor_axis_name = request.form['axis_name']
+        motor_axis_value = request.form['axis_value']
+        movement_time = request.form['m']
+        speed_percentage = request.form['s']
+        speed_percentage = request.form['s']
+
+        self.m.move_robot(
+          movement_time=movement_time,
+          speed_percentage=speed_percentage)
+        return "ok"
+
       @app.route("/backwards")
       def go_backwards():
           self.m.backward()

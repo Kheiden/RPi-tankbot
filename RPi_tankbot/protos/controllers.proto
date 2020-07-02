@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+message Controllers {
+  repeated Joystick joysticks = 1;
+  int32 count_of_joysticks = 2;
+}
+
+message Joystick {
+  string name = 1;
+  int32 index_location = 2;
+  int32 number_of_axes = 3;
+
+  message Axis {
+    string axis_name = 1;
+    int32 axis_index_location = 2;
+    double axis_value = 3;
+  }
+
+  repeated Axis axis = 4;
+
+  int32 count_of_buttons = 5;
+
+  message Button {
+    string name = 1;
+    int32 index_location = 2;
+    bool toggled = 3;
+  }
+
+  repeated Button button = 6;
+}

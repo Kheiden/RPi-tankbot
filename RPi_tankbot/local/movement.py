@@ -69,6 +69,36 @@ class Movement():
           sleep(movement_time)
           self.stop()
 
+    def move_robot(self, axis_name, axis_value):
+      if axis_name == "Axis 0":
+        # This is the left motor
+        motor = self.DIG1
+      elif axis_name == "Axis 1":
+        # This is the right motor
+        motor = self.DIG2
+      else:
+        print("A New Axis has been moved.")
+
+      # The deadzone threshold is the area where the motors are off.
+      # This is useful due to the difficulty of achieving 0 in a continuum.
+      deadzone_threshold = 0.10
+      if axis_value > deadzone_threshold:
+        signal = GPIO.HIGH
+        # speed_percentage goed from 0 to 100 while
+        # axis_value goes from 0 - 1 and -1 to 0
+        speed_percentage = axis_value*100
+      elif axis_value < (deadzone_threshold*-1):
+        signal = GPIO.LOW
+        speed_percentage = axis_value*100*-1
+      else:
+        # Stop all motors
+        pass
+      finally:
+        # Update the PWM signal to the dc motor controllwer which will in turn
+        # update the dc motors
+        GPIO.output(motor, signal)
+        self.p1.start(speed_percentage)
+
     def forward(self, movement_time=500, speed_percentage=10):
       '''
       Args:
