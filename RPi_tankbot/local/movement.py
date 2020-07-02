@@ -93,11 +93,11 @@ class Movement():
       else:
         # Stop all motors
         pass
-      finally:
-        # Update the PWM signal to the dc motor controllwer which will in turn
-        # update the dc motors
-        GPIO.output(motor, signal)
-        self.p1.start(speed_percentage)
+
+      # Update the PWM signal to the dc motor controllwer which will in turn
+      # update the dc motors
+      GPIO.output(motor, signal)
+      self.p1.start(speed_percentage)
 
     def forward(self, movement_time=500, speed_percentage=10):
       '''
