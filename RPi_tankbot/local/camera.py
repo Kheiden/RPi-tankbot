@@ -2,7 +2,6 @@ from datetime import datetime
 import robot_brain
 import numpy as np
 import threading
-import movement
 import requests
 import random
 import queue
@@ -16,8 +15,6 @@ from PIL import Image
 class Camera():
 
     def __init__(self):
-        self.m = movement.Movement()
-
         self.home_dir = "/home/pi/ROBOT/RPi-tankbot"
         self.brain = None
 
@@ -143,8 +140,6 @@ class Camera():
         processing_time01 = cv2.getTickCount()
         while True:
             disparity_map_time = cv2.getTickCount()
-            # Stop moving
-            self.m.stop()
             imgL, imgR = self.take_stereo_photo(
                 res_x,
                 res_y,
@@ -169,31 +164,19 @@ class Camera():
                     # This means that we need to stop the robot ASAP
                     print("Object detected too close!")
                     if action[2] == 'stop_if_close':
-                        self.m.stop()
-                        print("Stopping robot to avoid collision")
                         return None, None, action[2]
 
                     if action[2] == 'rotate_random':
                         direction = random.choice(["right", "left"])
                         print("Rotating {} to avoid obstacle".format(direction))
-                        #move left or right
-                        self.m.rotate_on_carpet(direction=direction,
-                            movement_time=6,
-                            sleep_speed=0.25)
-
                     if action[2] == 'rotate_right':
                         direction = "right"
                         print("Rotating {} to avoid obstacle".format(direction))
-                        #move left or right
-                        self.m.rotate_on_carpet(direction=direction,
-                            movement_time=6,
-                            sleep_speed=0.25)
                 else:
                     # this means that there are no objects in the way
                     disparity_map_time = (cv2.getTickCount() - disparity_map_time)/ cv2.getTickFrequency()
                     print("Disparity map took {} seconds to process".format(disparity_map_time))
                     # use the threadblocking forward command with the sleep parameter set
-                    self.m.forward(1)
 
                 frame_counter += 1
                 processing_time = (cv2.getTickCount() - processing_time01)/ cv2.getTickFrequency()

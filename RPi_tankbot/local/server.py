@@ -47,8 +47,8 @@ class Server():
         speed_percentage = request.form['s']
 
         self.m.move_robot(
-          movement_time=movement_time,
-          speed_percentage=speed_percentage)
+          axis_name=axis_name,
+          axis_value=axis_value)
         return "ok"
 
       @app.route("/backwards")
