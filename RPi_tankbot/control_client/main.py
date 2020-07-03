@@ -44,6 +44,14 @@ class ControlWindow():
             self.x -= 10
 
     class Callback (object):
+      def __init__(self):
+        self.connection_failure_count = 0
+        self.connection_200_count = 0
+        self.request_previous = {
+          'joystick_name': 'DEFAULT joystick_name',
+          'axis_name': 'DEFAULT axis_name',
+          'axis_value': -1.321,
+        }
 
       def tread_controller(self, axis_name, axis_value):
         """
@@ -56,8 +64,15 @@ class ControlWindow():
         #print("Axis Updated to new value:", axis_value)
         payload = {'axis_name': axis_name, 'axis_value': axis_value}
         endpoint = 'v2/move'
-        r = requests.post('{}:{}/{}'.format(IP_ADDRESS, PORT, endpoint))
-        print(r.status_code)
+        try:
+          r = requests.post('http://{}:{}/{}'.format(IP_ADDRESS, PORT, endpoint),
+            timeout=0.001)
+          if r.status_code == 200:
+            self.connection_200_count += 1
+          print(r.status_code)
+        except:
+          self.connection_failure_count += 1
+          print("Current Connection Failure Count:", self.connection_failure_count)
 
       def axis_update(self, joystick_name, axis_name, axis_value):
         """
@@ -72,6 +87,9 @@ class ControlWindow():
 
         list_of_axis = ["Axis 0", "Axis 1"]
         if axis_name in list_of_axis:
+          self.request_previous['joystick_name'] = joystick_name
+          self.request_previous['axis_name'] = axis_name
+          self.request_previous['axis_value'] = axis_value
           self.tread_controller(axis_name=axis_name, axis_value=axis_value)
 
       def button_update(self, joystick_name, button_number, button_value):
