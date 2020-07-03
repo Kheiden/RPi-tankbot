@@ -38,7 +38,7 @@ class Server():
           return "ok"
 
       @app.route("/v2/move", methods=['POST', 'GET'])
-      def go_forwards():
+      def move():
         arbitrary_data = request.form['a']
         motor_axis_name = request.form['axis_name']
         motor_axis_value = request.form['axis_value']
