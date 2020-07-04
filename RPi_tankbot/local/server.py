@@ -38,7 +38,7 @@ class Server():
           self.m.forward()
           return "ok"
 
-      @app.route("/v2/move", methods=['POST', 'GET'])
+      @app.route("/v2/move", methods=['POST'])
       def move():
         axis_name = request.form['axis_name']
         axis_value = request.form['axis_value']
@@ -46,8 +46,8 @@ class Server():
         output = self.m.move_robot(
           axis_name=axis_name,
           axis_value=float(axis_value))
-        print(output)
-        return "ok"
+        #print(output)
+        return Response(output)
 
       @app.route("/backwards")
       def go_backwards():
