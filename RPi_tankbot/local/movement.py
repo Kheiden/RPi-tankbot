@@ -94,10 +94,10 @@ class Movement():
         self.signal = GPIO.HIGH
         # speed_percentage goed from 0 to 100 while
         # axis_value goes from 0 - 1 and -1 to 0
-        self.speed_percentage = axis_value*100
+        self.speed_percentage = (axis_value*100) - deadzone_threshold
       elif axis_value < (deadzone_threshold*-1):
         self.signal = GPIO.LOW
-        self.speed_percentage = axis_value*100*-1
+        self.speed_percentage = (axis_value*100*-1) - deadzone_threshold
       else:
         # Between -1*0.10 and 0.10
         # Stop all motors
