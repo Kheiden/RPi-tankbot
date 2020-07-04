@@ -129,7 +129,7 @@ class Movement():
       if motors == 'left':
         GPIO.output(self.DIG1, GPIO.LOW)
         self.p1.start(speed_percentage)
-      if motors == 'right':
+      elif motors == 'right':
         GPIO.output(self.DIG2, GPIO.LOW)
         self.p2.start(speed_percentage)
       else:
