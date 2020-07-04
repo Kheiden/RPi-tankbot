@@ -30,10 +30,13 @@ class TestMovement(unittest.TestCase):
       print(output)
       self.m.forward(movement_time=5, speed_percentage=12)
       self.m.stop()
+      time.sleep(1)
       self.m.forward(movement_time=5, speed_percentage=12, motors='left')
       self.m.stop()
+      time.sleep(1)
       self.m.forward(movement_time=5, speed_percentage=12, motors='right')
       self.m.stop()
+      time.sleep(1)
 
   @unittest.skip(reason="Not yet passed.")
   def test_camera_rotation(self):
