@@ -107,18 +107,16 @@ class Movement():
       else:
         # Between -1*0.10 and 0.10
         # Stop all motors
+        self.signal = GPIO.LOW
         self.speed_percentage = 0
 
       # Update the PWM signal to the dc motor controllwer which will in turn
       # update the dc motors
       GPIO.output(self.motor, self.signal)
       if motor_position == 'left motor':
-        output = (axis_name, axis_value)
         self.p2.start(self.speed_percentage)
       if motor_position == 'right motor':
-        output = (axis_name, axis_value)
         self.p1.start(self.speed_percentage)
-      return output
 
     def forward(self, movement_time=500, speed_percentage=10):
       '''
