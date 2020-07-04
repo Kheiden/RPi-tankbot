@@ -115,8 +115,14 @@ class Movement():
       GPIO.output(self.motor, self.signal)
       if motor_position == 'left motor':
         self.p2.start(self.speed_percentage)
+        output = "motor:{} signal:{} speed_percentage:{}".format(
+          self.motor,
+          self.signal,
+          self.speed_percentage)
       if motor_position == 'right motor':
+        output = ""
         self.p1.start(self.speed_percentage)
+      return output
 
     def forward(self, movement_time=500, speed_percentage=10, motors='both'):
       '''
