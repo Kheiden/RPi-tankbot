@@ -62,15 +62,15 @@ class ControlWindow():
           axis_value: 1 is full reverse, -1 is full forward, 0 is full stop
         """
         #print("Axis Updated to new value:", axis_value)
-        payload = {'axis_name': axis_name, 'axis_value': axis_value}
+        payload = {'axis_name': str(axis_name), 'axis_value': str(axis_value)}
         endpoint = 'v2/move'
         try:
           r = requests.post('http://{}:{}/{}'.format(IP_ADDRESS, PORT, endpoint),
-            timeout=1.0,
+            timeout=0.1,
             data=payload)
           if r.status_code == 200:
             self.connection_200_count += 1
-          #print(r.text)
+            print(r.status_code)
         except:
           self.connection_failure_count += 1
           print("Current Connection Failure Count:", self.connection_failure_count)
@@ -91,6 +91,7 @@ class ControlWindow():
           self.request_previous['axis_name'] = axis_name
           self.request_previous['axis_value'] = axis_value
           self.tread_controller(axis_name=axis_name, axis_value=axis_value)
+
 
       def button_update(self, joystick_name, button_number, button_value):
         """
