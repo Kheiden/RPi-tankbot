@@ -40,8 +40,8 @@ class Server():
 
       @app.route("/v2/move", methods=['POST', 'GET'])
       def move():
-        motor_axis_name = request.form['axis_name']
-        motor_axis_value = request.form['axis_value']
+        axis_name = request.form['axis_name']
+        axis_value = request.form['axis_value']
 
         self.m.move_robot(
           axis_name=axis_name,
