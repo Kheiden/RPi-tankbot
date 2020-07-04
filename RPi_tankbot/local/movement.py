@@ -118,7 +118,7 @@ class Movement():
       if motor_position == 'right motor':
         self.p1.start(self.speed_percentage)
 
-    def forward(self, movement_time=500, speed_percentage=10):
+    def forward(self, movement_time=500, speed_percentage=10, motors='both'):
       '''
       Args:
         movement_time: the time in ms to travel at the given speed. If
@@ -126,10 +126,17 @@ class Movement():
           of time, otherwise continue spinning the motors ad infinitum
         speed: percentage of maximum speed (values 0 - 100)
       '''
-      GPIO.output(self.DIG1, GPIO.LOW)
-      GPIO.output(self.DIG2, GPIO.LOW)
-      self.p1.start(speed_percentage)
-      self.p2.start(speed_percentage)
+      if motors == 'left':
+        GPIO.output(self.DIG1, GPIO.LOW)
+        self.p1.start(speed_percentage)
+      if motors == 'right':
+        GPIO.output(self.DIG2, GPIO.LOW)
+        self.p2.start(speed_percentage)
+      else:
+        GPIO.output(self.DIG2, GPIO.LOW)
+        self.p2.start(speed_percentage)
+        GPIO.output(self.DIG1, GPIO.LOW)
+        self.p1.start(speed_percentage)
       time.sleep(movement_time)
 
     def backward(self, movement_time=500, speed_percentage=10):
