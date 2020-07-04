@@ -1,3 +1,4 @@
+import time
 import requests
 import pygame
 #TODO: Get protos working on windows
@@ -64,13 +65,14 @@ class ControlWindow():
         #print("Axis Updated to new value:", axis_value)
         payload = {'axis_name': str(axis_name), 'axis_value': str(axis_value)}
         endpoint = 'v2/move'
+        time.sleep(1)
         try:
           r = requests.post('http://{}:{}/{}'.format(IP_ADDRESS, PORT, endpoint),
             timeout=0.1,
             data=payload)
           if r.status_code == 200:
             self.connection_200_count += 1
-            print(r.status_code)
+            #print(r.text)
         except:
           self.connection_failure_count += 1
           print("Current Connection Failure Count:", self.connection_failure_count)
@@ -256,7 +258,7 @@ if __name__ == '__main__':
   endpoint = 'stop'
   try:
     r = requests.get('http://{}:{}/{}'.format(IP_ADDRESS, PORT, endpoint),
-      timeout=3.0)
+      timeout=90.0)
     if r.status_code == 200:
       print("ALL STOP")
   except:

@@ -46,7 +46,7 @@ class Server():
         output = self.m.move_robot(
           axis_name=axis_name,
           axis_value=float(axis_value))
-        return output
+        return "ok"
 
       @app.route("/backwards")
       def go_backwards():
