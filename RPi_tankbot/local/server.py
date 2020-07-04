@@ -1,5 +1,6 @@
 from flask import Flask, render_template, Response
 from flask import request
+from flask import make_response
 
 import movement
 import camera
@@ -46,8 +47,7 @@ class Server():
         output = self.m.move_robot(
           axis_name=axis_name,
           axis_value=float(axis_value))
-        #print(output)
-        return Response(output)
+        return make_response(output)
 
       @app.route("/backwards")
       def go_backwards():
