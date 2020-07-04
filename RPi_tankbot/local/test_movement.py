@@ -22,13 +22,13 @@ class TestMovement(unittest.TestCase):
   def test_motor_controller_movement_cycle(self):
     output = self.m.motor_controller_movement_cycle()
 
-  @unittest.skip(reason="Not Yet Passed.")
+  #@unittest.skip(reason="Not Yet Passed.")
   def test_move_robot(self):
       """move forward then stop
       ."""
       output = self.m.motor_precheck()
       print(output)
-      self.m.forward(movement_time=3)
+      self.m.forward(movement_time=3, speed_percentage=5)
       self.m.stop()
 
   @unittest.skip(reason="Not yet passed.")
