@@ -94,13 +94,13 @@ class Movement():
       # This is useful due to the difficulty of achieving 0 in a continuum.
       deadzone_threshold = 0.50
       if axis_value > deadzone_threshold:
-        self.signal = GPIO.HIGH
+        self.signal = GPIO.LOW
         # speed_percentage goed from 0 to 100 while
         # axis_value goes from 0 - 1 and -1 to 0
-        self.speed_percentage = (axis_value*100) - deadzone_threshold
+        self.speed_percentage = axis_value-deadzone_threshold)*100
       elif axis_value < (deadzone_threshold*-1):
-        self.signal = GPIO.LOW
-        self.speed_percentage = (axis_value*100*-1) - deadzone_threshold
+        self.signal = GPIO.HIGH
+        self.speed_percentage = (axis_value-deadzone_threshold)*(100*-1) - deadzone_threshold
       else:
         # Between -1*0.10 and 0.10
         # Stop all motors
