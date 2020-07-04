@@ -66,7 +66,8 @@ class ControlWindow():
         endpoint = 'v2/move'
         try:
           r = requests.post('http://{}:{}/{}'.format(IP_ADDRESS, PORT, endpoint),
-            timeout=0.001)
+            timeout=0.001,
+            data=payload)
           if r.status_code == 200:
             self.connection_200_count += 1
           print(r.status_code)
