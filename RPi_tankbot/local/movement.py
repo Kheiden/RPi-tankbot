@@ -28,7 +28,7 @@ class Movement():
 
       # This will either be GPIO.HIGH or GPIO.LOW
       # of the most recent inbound movement signal.
-      self.signal = None
+      self.signal = GPIO.LOW
 
     def motor_controller_movement_cycle(self):
       sleep(1)
@@ -96,7 +96,7 @@ class Movement():
         speed_percentage = axis_value*100*-1
       else:
         # Stop all motors
-        pass
+        self.stop_motors()
 
       # Update the PWM signal to the dc motor controllwer which will in turn
       # update the dc motors
