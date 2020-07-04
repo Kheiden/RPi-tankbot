@@ -79,10 +79,10 @@ class Movement():
 
     def move_robot(self, axis_name, axis_value):
       if axis_name == "Axis 0":
-        # This is the left motor
+        motor_position = 'left motor'
         motor = self.DIG1
       elif axis_name == "Axis 1":
-        # This is the right motor
+        motor_position = 'right motor'
         motor = self.DIG2
       else:
         print("A New Axis has been moved.")
@@ -101,12 +101,16 @@ class Movement():
       else:
         # Between -1*0.10 and 0.10
         # Stop all motors
-        self.stop_motors()
+        self.p1.start(0)
+        self.p2.start(0)
 
       # Update the PWM signal to the dc motor controllwer which will in turn
       # update the dc motors
       GPIO.output(motor, self.signal)
-      self.p1.start(self.speed_percentage)
+      if motor_position == 'left motor':
+        self.p1.start(self.speed_percentage)
+      if motor_position == 'right motor':
+        self.p2.start(self.speed_percentage)
 
     def forward(self, movement_time=500, speed_percentage=10):
       '''
