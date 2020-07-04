@@ -66,11 +66,12 @@ class ControlWindow():
         endpoint = 'v2/move'
         try:
           r = requests.post('http://{}:{}/{}'.format(IP_ADDRESS, PORT, endpoint),
-            timeout=0.001,
+            timeout=1.0,
             data=payload)
           if r.status_code == 200:
             self.connection_200_count += 1
           print(r.status_code)
+          print(r.text)
         except:
           self.connection_failure_count += 1
           print("Current Connection Failure Count:", self.connection_failure_count)
