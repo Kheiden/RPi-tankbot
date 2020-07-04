@@ -123,12 +123,13 @@ class Movement():
         output = "motor:{} signal:{} direction{} speed_percentage:{}".format(
           self.motor,
           self.signal,
-          self.direction
+          self.direction,
           self.speed_percentage)
       if motor_position == 'right motor':
-        output = "motor:{} signal:{} speed_percentage:{}".format(
+        output = "motor:{} signal:{} direction{} speed_percentage:{}".format(
           self.motor,
           self.signal,
+          self.direction,
           self.speed_percentage)
         self.p1.start(self.speed_percentage)
       return output
