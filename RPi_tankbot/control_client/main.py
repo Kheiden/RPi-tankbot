@@ -86,7 +86,7 @@ class ControlWindow():
           axis_name: The name of the axis which has an update
           axis_value: The new value of the axis
         """
-
+        print(axis_name)
         list_of_axis = ["Axis 0", "Axis 1"]
         if axis_name in list_of_axis:
           self.request_previous['joystick_name'] = joystick_name

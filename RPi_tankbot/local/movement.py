@@ -81,10 +81,10 @@ class Movement():
           self.stop()
 
     def move_robot(self, axis_name, axis_value):
-      if axis_name == "Axis 0":
+      if axis_name == "Axis 1":
         motor_position = 'left motor'
         self.motor = self.DIG1
-      elif axis_name == "Axis 1":
+      elif axis_name == "Axis 0":
         motor_position = 'right motor'
         self.motor = self.DIG2
       else:
