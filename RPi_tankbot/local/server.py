@@ -1,4 +1,5 @@
-from flask import Flask, render_template, Response, request
+from flask import Flask, render_template, Response
+from flask import request
 
 import movement
 import camera
