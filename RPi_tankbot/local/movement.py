@@ -29,6 +29,9 @@ class Movement():
       # This will either be GPIO.HIGH or GPIO.LOW
       # of the most recent inbound movement signal.
       self.signal = GPIO.LOW
+      # Set the motor to the most recent inbound
+      # movement signal
+      self.motor = self.DIG1
 
       # The class level variable to show the most
       # recent inbound movement signal
@@ -80,10 +83,10 @@ class Movement():
     def move_robot(self, axis_name, axis_value):
       if axis_name == "Axis 0":
         motor_position = 'left motor'
-        motor = self.DIG1
+        self.motor = self.DIG1
       elif axis_name == "Axis 1":
         motor_position = 'right motor'
-        motor = self.DIG2
+        self.motor = self.DIG2
       else:
         print("A New Axis has been moved.")
 
@@ -105,7 +108,7 @@ class Movement():
 
       # Update the PWM signal to the dc motor controllwer which will in turn
       # update the dc motors
-      GPIO.output(motor, self.signal)
+      GPIO.output(self.motor, self.signal)
       if motor_position == 'left motor':
         self.p1.start(self.speed_percentage)
       if motor_position == 'right motor':
