@@ -113,10 +113,10 @@ class Movement():
       # update the dc motors
       GPIO.output(self.motor, self.signal)
       if motor_position == 'left motor':
-        output = output + motor_position + str(float(self.speed_percentage))
+        output = (axis_name, axis_value)
         self.p1.start(self.speed_percentage)
       if motor_position == 'right motor':
-        output = output + motor_position + str(float(self.speed_percentage))
+        output = (axis_name, axis_value)
         self.p2.start(self.speed_percentage)
       return output
 
