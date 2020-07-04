@@ -28,7 +28,11 @@ class TestMovement(unittest.TestCase):
       ."""
       output = self.m.motor_precheck()
       print(output)
-      self.m.forward(movement_time=10, speed_percentage=5)
+      self.m.forward(movement_time=5, speed_percentage=8)
+      self.m.stop()
+      self.m.forward(movement_time=5, speed_percentage=8, motors='left')
+      self.m.stop()
+      self.m.forward(movement_time=5, speed_percentage=8, motors='right')
       self.m.stop()
 
   @unittest.skip(reason="Not yet passed.")
