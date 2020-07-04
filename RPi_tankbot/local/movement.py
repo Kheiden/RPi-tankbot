@@ -82,10 +82,10 @@ class Movement():
     def move_robot(self, axis_name, axis_value):
       if axis_name == "Axis 0":
         motor_position = 'left motor'
-        self.motor = self.DIG1
+        self.motor = self.DIG2
       elif axis_name == "Axis 1":
         motor_position = 'right motor'
-        self.motor = self.DIG2
+        self.motor = self.DIG1
       else:
         print("A New Axis has been moved.")
 
