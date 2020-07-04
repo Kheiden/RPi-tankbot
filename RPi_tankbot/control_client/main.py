@@ -255,3 +255,13 @@ class Joystick():
 if __name__ == '__main__':
   control_window = ControlWindow()
   control_window.start_control_window()
+  IP_ADDRESS = '192.168.1.16'
+  PORT = '5000'
+  endpoint = 'stop'
+  try:
+    r = requests.get('http://{}:{}/{}'.format(IP_ADDRESS, PORT, endpoint),
+      timeout=3.0)
+    if r.status_code == 200:
+      print("ALL STOP")
+  except:
+    print("ERROR: Motors not stopped!")

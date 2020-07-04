@@ -89,7 +89,7 @@ class Movement():
 
       # The deadzone threshold is the area where the motors are off.
       # This is useful due to the difficulty of achieving 0 in a continuum.
-      deadzone_threshold = 0.10
+      deadzone_threshold = 0.50
       if axis_value > deadzone_threshold:
         self.signal = GPIO.HIGH
         # speed_percentage goed from 0 to 100 while
@@ -99,6 +99,7 @@ class Movement():
         self.signal = GPIO.LOW
         self.speed_percentage = axis_value*100*-1
       else:
+        # Between -1*0.10 and 0.10
         # Stop all motors
         self.stop_motors()
 
