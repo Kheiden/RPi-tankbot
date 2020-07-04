@@ -65,16 +65,16 @@ class ControlWindow():
         #print("Axis Updated to new value:", axis_value)
         payload = {'axis_name': str(axis_name), 'axis_value': str(axis_value)}
         endpoint = 'v2/move'
-        if axis_name == 'Axis 0':
-          print("axis_name: {}, axis_value: {}"
-            .format(axis_name,axis_value))
+        print("axis_name: {}, axis_value: {}"
+          .format(axis_name,axis_value))
+
         try:
           r = requests.post('http://{}:{}/{}'.format(IP_ADDRESS, PORT, endpoint),
             timeout=0.1,
             data=payload)
           if r.status_code == 200:
             self.connection_200_count += 1
-            #print(r.text)
+            print(r.text)
         except:
           self.connection_failure_count += 1
           print("Current Connection Failure Count:", self.connection_failure_count)

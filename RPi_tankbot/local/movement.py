@@ -36,6 +36,8 @@ class Movement():
       # The class level variable to show the most
       # recent inbound movement signal
       self.speed_percentage = 0
+      # The most recent inbound movement signal
+      self.direction = 'None'
 
     def motor_controller_movement_cycle(self):
       sleep(1)
@@ -96,12 +98,14 @@ class Movement():
       deadzone_threshold = 0.40
       if axis_value > deadzone_threshold:
         # GPIO.LOW is forwards
+        self.direction = 'forwards'
         self.signal = GPIO.LOW
         # speed_percentage goed from 0 to 100 while
         # axis_value goes from 0 - 1 and -1 to 0
         self.speed_percentage = (axis_value-deadzone_threshold)*100
       elif axis_value < (deadzone_threshold*-1):
         # GPIO.HIGH is backwards
+        self.direction = 'backwards'
         self.signal = GPIO.HIGH
         self.speed_percentage = (axis_value+deadzone_threshold)*(100)*-1
       else:
@@ -115,12 +119,17 @@ class Movement():
       GPIO.output(self.motor, self.signal)
       if motor_position == 'left motor':
         self.p2.start(self.speed_percentage)
+
+        output = "motor:{} signal:{} direction{} speed_percentage:{}".format(
+          self.motor,
+          self.signal,
+          self.direction
+          self.speed_percentage)
+      if motor_position == 'right motor':
         output = "motor:{} signal:{} speed_percentage:{}".format(
           self.motor,
           self.signal,
           self.speed_percentage)
-      if motor_position == 'right motor':
-        output = ""
         self.p1.start(self.speed_percentage)
       return output
 
