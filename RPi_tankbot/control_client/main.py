@@ -65,7 +65,6 @@ class ControlWindow():
         #print("Axis Updated to new value:", axis_value)
         payload = {'axis_name': str(axis_name), 'axis_value': str(axis_value)}
         endpoint = 'v2/move'
-        time.sleep(1)
         try:
           r = requests.post('http://{}:{}/{}'.format(IP_ADDRESS, PORT, endpoint),
             timeout=0.1,
