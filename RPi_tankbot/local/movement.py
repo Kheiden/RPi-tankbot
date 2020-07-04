@@ -101,8 +101,7 @@ class Movement():
       else:
         # Between -1*0.10 and 0.10
         # Stop all motors
-        self.p1.start(0)
-        self.p2.start(0)
+        self.speed_percentage = 0
 
       # Update the PWM signal to the dc motor controllwer which will in turn
       # update the dc motors
