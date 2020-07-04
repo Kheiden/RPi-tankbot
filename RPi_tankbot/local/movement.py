@@ -81,10 +81,9 @@ class Movement():
           self.stop()
 
     def move_robot(self, axis_name, axis_value):
-      output = ""
       if axis_name == "Axis 0":
         motor_position = 'left motor'
-        self.motor = self.DIG1
+        self.motor = self.DIG2
       elif axis_name == "Axis 1":
         motor_position = 'right motor'
         self.motor = self.DIG2
@@ -95,12 +94,13 @@ class Movement():
       # This is useful due to the difficulty of achieving 0 in a continuum.
       deadzone_threshold = 0.40
       if axis_value > deadzone_threshold:
+        # GPIO.LOW is forwards
         self.signal = GPIO.LOW
-        output = output + str(self.signal)
         # speed_percentage goed from 0 to 100 while
         # axis_value goes from 0 - 1 and -1 to 0
         self.speed_percentage = (axis_value-deadzone_threshold)*100
       elif axis_value < (deadzone_threshold*-1):
+        # GPIO.HIGH is backwards
         self.signal = GPIO.HIGH
         output = output + str(self.signal)
         self.speed_percentage = (axis_value+deadzone_threshold)*(100)*-1
