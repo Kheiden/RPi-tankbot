@@ -26,6 +26,10 @@ class Movement():
       self.p1 = GPIO.PWM(self.AN1, 100)
       self.p2 = GPIO.PWM(self.AN2, 100)
 
+      # This will either be GPIO.HIGH or GPIO.LOW
+      # of the most recent inbound movement signal.
+      self.signal = None
+
     def motor_controller_movement_cycle(self):
       sleep(1)
       print("Forward")
@@ -83,12 +87,12 @@ class Movement():
       # This is useful due to the difficulty of achieving 0 in a continuum.
       deadzone_threshold = 0.10
       if axis_value > deadzone_threshold:
-        signal = GPIO.HIGH
+        self.signal = GPIO.HIGH
         # speed_percentage goed from 0 to 100 while
         # axis_value goes from 0 - 1 and -1 to 0
         speed_percentage = axis_value*100
       elif axis_value < (deadzone_threshold*-1):
-        signal = GPIO.LOW
+        self.signal = GPIO.LOW
         speed_percentage = axis_value*100*-1
       else:
         # Stop all motors
@@ -96,7 +100,7 @@ class Movement():
 
       # Update the PWM signal to the dc motor controllwer which will in turn
       # update the dc motors
-      GPIO.output(motor, signal)
+      GPIO.output(motor, self.signal)
       self.p1.start(speed_percentage)
 
     def forward(self, movement_time=500, speed_percentage=10):
