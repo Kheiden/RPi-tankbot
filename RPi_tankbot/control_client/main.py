@@ -87,9 +87,6 @@ class ControlWindow():
         """
         list_of_axis = ["Axis 0", "Axis 1"]
         if axis_name in list_of_axis:
-          self.request_previous['joystick_name'] = joystick_name
-          self.request_previous['axis_name'] = axis_name
-          self.request_previous['axis_value'] = axis_value
           self.tread_controller(axis_name=axis_name, axis_value=axis_value)
 
 
