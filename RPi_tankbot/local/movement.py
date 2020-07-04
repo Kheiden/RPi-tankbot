@@ -97,7 +97,7 @@ class Movement():
         self.signal = GPIO.LOW
         # speed_percentage goed from 0 to 100 while
         # axis_value goes from 0 - 1 and -1 to 0
-        self.speed_percentage = axis_value-deadzone_threshold)*100
+        self.speed_percentage = (axis_value-deadzone_threshold)*100
       elif axis_value < (deadzone_threshold*-1):
         self.signal = GPIO.HIGH
         self.speed_percentage = (axis_value-deadzone_threshold)*(100*-1) - deadzone_threshold
