@@ -103,7 +103,7 @@ class Movement():
       elif axis_value < (deadzone_threshold*-1):
         self.signal = GPIO.HIGH
         output = output + str(self.signal)
-        self.speed_percentage = (axis_value-deadzone_threshold)*(100*-1)
+        self.speed_percentage = (axis_value+deadzone_threshold)*(100)*-1
       else:
         # Between -1*0.10 and 0.10
         # Stop all motors
@@ -113,10 +113,10 @@ class Movement():
       # update the dc motors
       GPIO.output(self.motor, self.signal)
       if motor_position == 'left motor':
-        output = output + motor_position
+        output = output + motor_position + self.speed_percentage
         self.p1.start(self.speed_percentage)
       if motor_position == 'right motor':
-        output = output + motor_position
+        output = output + motor_position + self.speed_percentage
         self.p2.start(self.speed_percentage)
       return output
 
