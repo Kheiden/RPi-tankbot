@@ -127,12 +127,12 @@ class Movement():
           self.direction,
           self.speed_percentage)
       if motor_position == 'right motor':
+        self.p1.start(self.speed_percentage)
         output = "motor:{} signal:{} direction:{} speed_percentage:{}".format(
           self.motor,
           self.signal,
           self.direction,
           self.speed_percentage)
-          self.p1.start(self.speed_percentage)
       return output
 
     def forward(self, movement_time=500, speed_percentage=10, motors='both'):
