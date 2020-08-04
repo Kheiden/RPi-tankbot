@@ -106,7 +106,7 @@ class ControlWindow():
     pygame.init()
 
     # Set the width and height of the screen (width, height).
-    screen = pygame.display.set_mode((500, 700))
+    screen = pygame.display.set_mode((int(2560/2), 1440))
 
     pygame.display.set_caption("My Game")
 
@@ -225,7 +225,7 @@ class ControlWindow():
         pygame.display.flip()
 
         # Limit to 20 frames per second.
-        clock.tick(20)
+        clock.tick(144)
 
     # Close the window and quit.
     # If you forget this line, the program will 'hang'
