@@ -148,20 +148,23 @@ class Movement():
       # Update the PWM signal to the dc motor controllwer which will in turn
       # update the dc motors
       GPIO.output(self.motor, self.signal)
+      output = ''
       if motor_position == 'left motor':
         self.p2.start(self.speed_percentage)
-        output = "motor:{} signal:{} direction:{} speed_percentage:{}".format(
+        output += "motor:{} signal:{} direction:{} speed_percentage:{}".format(
           self.motor,
           self.signal,
           self.direction,
           self.speed_percentage)
       if motor_position == 'right motor':
         self.p1.start(self.speed_percentage)
-        output = "motor:{} signal:{} direction:{} speed_percentage:{}".format(
+        output += "motor:{} signal:{} direction:{} speed_percentage:{}".format(
           self.motor,
           self.signal,
           self.direction,
           self.speed_percentage)
+
+      return output
 
     def move_robot(self, axis_name, axis_value, controller_type):
       output = None
