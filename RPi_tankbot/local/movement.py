@@ -168,11 +168,11 @@ class Movement():
 
     def move_robot(self, axis_name, axis_value, controller_type):
       output = None
-      if controller_type == 1:
+      if controller_type == '1':
         output = self.move_robot_joystick(axis_name,
                                           axis_value,
                                           controller_type)
-      elif controller_type == 2:
+      elif controller_type == '2':
         output = self.move_robot_throttle(axis_name,
                                           axis_value,
                                           controller_type)
