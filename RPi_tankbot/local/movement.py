@@ -25,6 +25,11 @@ class Movement():
       GPIO.setup(self.DIG1, GPIO.OUT)
       self.p1 = GPIO.PWM(self.AN1, 100)
       self.p2 = GPIO.PWM(self.AN2, 100)
+      # The deadzone threshold is the area where the motors are off.
+      # This is useful due to the difficulty of achieving 0 in a continuum.
+      # We have a deadzone in the forwards direction and in the backwards
+      # direction. Each is half the size of the deadzone_threshold.
+      self.deadzone_threshold = 0.40
 
       # This will either be GPIO.HIGH or GPIO.LOW
       # of the most recent inbound movement signal.
@@ -81,7 +86,37 @@ class Movement():
           sleep(movement_time)
           self.stop()
 
-    def move_robot(self, axis_name, axis_value):
+    def move_robot_joystick(axis_name, axis_value, controller_type):
+      self.left_motor = self.DIG2
+      self.right_motor = self.DIG1
+      self.signal_forwards = GPIO.LOW
+      self.signal_backwards = GPIO.HIGH
+      self.speed_percentage = (axis_value-self.deadzone_threshold)*100
+      if axis_name == "Axis 0":
+        # Axis 0 negative is translate left, positive is translate right
+        pass
+      elif axis_name == "Axis 1":
+        # Axis 1 negative is forwards, positive is backwards
+        if axis_value < self.deadzone_threshold:
+          GPIO.output(self.left_motor, self.signal_forwards)
+          GPIO.output(self.right_motor, self.signal_forwards)
+        elif axis_value < (self.deadzone_threshold*-1):
+          GPIO.output(self.left_motor, self.signal_backwards)
+          GPIO.output(self.right_motor, self.signal_backwards)
+        else:
+          self.signal = GPIO.LOW
+          self.direction = 'None'
+          self.speed_percentage = 0
+        self.p2.start(self.speed_percentage)
+        self.p2.start(self.speed_percentage)
+      elif axis_name == "Axis 3":
+        # Axis 3 negative is rotate left, positive is rotate right
+        pass
+      # Update the PWM signal to the dc motor controllwer which will in turn
+      # update the dc motors
+
+
+    def move_robot_throttle(axis_name, axis_value, controller_type):
       if axis_name == "Axis 0":
         motor_position = 'left motor'
         self.motor = self.DIG2
@@ -91,23 +126,18 @@ class Movement():
       else:
         print("A New Axis has been moved.")
 
-      # The deadzone threshold is the area where the motors are off.
-      # This is useful due to the difficulty of achieving 0 in a continuum.
-      # We have a deadzone in the forwards direction and in the backwards
-      # direction. Each is half the size of the deadzone_threshold.
-      deadzone_threshold = 0.40
-      if axis_value > deadzone_threshold:
+      if axis_value > self.deadzone_threshold:
         # GPIO.LOW is forwards
         self.direction = 'forwards'
         self.signal = GPIO.LOW
         # speed_percentage goed from 0 to 100 while
         # axis_value goes from 0 - 1 and -1 to 0
-        self.speed_percentage = (axis_value-deadzone_threshold)*100
-      elif axis_value < (deadzone_threshold*-1):
+        self.speed_percentage = (axis_value-self.deadzone_threshold)*100
+      elif axis_value < (self.deadzone_threshold*-1):
         # GPIO.HIGH is backwards
         self.direction = 'backwards'
         self.signal = GPIO.HIGH
-        self.speed_percentage = (axis_value+deadzone_threshold)*(100)*-1
+        self.speed_percentage = (axis_value+self.deadzone_threshold)*(100)*-1
       else:
         # Between -1*0.10 and 0.10
         # Stop all motors
@@ -119,7 +149,6 @@ class Movement():
       # update the dc motors
       GPIO.output(self.motor, self.signal)
       if motor_position == 'left motor':
-        self.p2.stop()
         self.p2.start(self.speed_percentage)
         output = "motor:{} signal:{} direction:{} speed_percentage:{}".format(
           self.motor,
@@ -127,57 +156,23 @@ class Movement():
           self.direction,
           self.speed_percentage)
       if motor_position == 'right motor':
-        self.p1.stop()
         self.p1.start(self.speed_percentage)
         output = "motor:{} signal:{} direction:{} speed_percentage:{}".format(
           self.motor,
           self.signal,
           self.direction,
           self.speed_percentage)
-      return output
 
-    def forward(self, movement_time=500, speed_percentage=10, motors='both'):
-      '''
-      Args:
-        movement_time: the time in ms to travel at the given speed. If
-          movement_time is specified, then shut down motors after the amount
-          of time, otherwise continue spinning the motors ad infinitum
-        speed: percentage of maximum speed (values 0 - 100)
-      '''
-      if motors == 'left':
-        GPIO.output(self.DIG1, GPIO.LOW)
-        self.p1.start(speed_percentage)
-      elif motors == 'right':
-        GPIO.output(self.DIG2, GPIO.LOW)
-        self.p2.start(speed_percentage)
+    def move_robot(self, axis_name, axis_value, controller_type):
+      if controller_type == 1:
+        output = self.move_robot_joystick(axis_name,
+                                          axis_value,
+                                          controller_type)
+      elif controller_type == 2:
+        output = self.move_robot_throttle(axis_name,
+                                          axis_value,
+                                          controller_type)
       else:
-        GPIO.output(self.DIG2, GPIO.LOW)
-        self.p2.start(speed_percentage)
-        GPIO.output(self.DIG1, GPIO.LOW)
-        self.p1.start(speed_percentage)
-      time.sleep(movement_time)
+        print("A new controller has been moved.")
 
-    def backward(self, movement_time=500, speed_percentage=10):
-      '''
-      Args:
-        movement_time: the time in ms to travel at the given speed. If
-          movement_time is specified, then shut down motors after the amount
-          of time, otherwise continue spinning the motors ad infinitum
-        speed: percentage of maximum speed (values 0 - 100)
-      '''
-      GPIO.output(self.DIG1, GPIO.HIGH)
-      GPIO.output(self.DIG2, GPIO.HIGH)
-      self.p1.start(speed_percentage)
-      self.p2.start(speed_percentage)
-      time.sleep(movement_time)
-
-    def stop_motors(self):
-      self.p1.start(0)
-      self.p2.start(0)
-
-    def stop(self):
-      self.stop_motors()
-      state.stopped = True
-
-    def clear_gpio_motor_pins(self):
-      return GPIO.cleanup()
+      return output

@@ -5,9 +5,14 @@ import pygame
 #import protos.controllers_pb2
 
 class ControlWindow():
-  def __init__(self):
+  def __init__(self, controller_type):
     """Run when a new Control Window is instantiated."""
     #self.all_controllers = controllers_pb2.Controllers()
+    list_of_controller_types = ["1", "2"]
+    if controller_type not in list_of_controller_types:
+      raise Exception
+    else:
+      self.controller_type = controller_type
 
   def start_control_window(self):
     """Run when a new Control Window is instantiated."""
@@ -19,7 +24,6 @@ class ControlWindow():
 
     IP_ADDRESS = '192.168.1.16'
     PORT = '5000'
-
     # This is a simple class that will help us print to the screen.
     # It has nothing to do with the joysticks, just outputting the
     # information.
@@ -45,14 +49,10 @@ class ControlWindow():
             self.x -= 10
 
     class Callback (object):
-      def __init__(self):
+      def __init__(self, controller_type):
         self.connection_failure_count = 0
         self.connection_200_count = 0
-        self.request_previous = {
-          'joystick_name': 'DEFAULT joystick_name',
-          'axis_name': 'DEFAULT axis_name',
-          'axis_value': -1.321,
-        }
+        self.controller_type = controller_type
 
       def tread_controller(self, axis_name, axis_value):
         """
@@ -63,7 +63,11 @@ class ControlWindow():
           axis_value: 1 is full reverse, -1 is full forward, 0 is full stop
         """
         #print("Axis Updated to new value:", axis_value)
-        payload = {'axis_name': str(axis_name), 'axis_value': str(axis_value)}
+        payload = {
+          'axis_name': str(axis_name),
+          'axis_value': str(axis_value),
+          'controller_type': self.controller_type,
+        }
         endpoint = 'v2/move'
         #print("axis_name: {}, axis_value: {}"
         #  .format(axis_name,axis_value))
@@ -121,7 +125,7 @@ class ControlWindow():
 
     # Get ready to print data to screen
     textPrint = TextPrint()
-    callback = Callback()
+    callback = Callback(self.controller_type)
 
     # -------- Main Program Loop -----------
     while not done:
@@ -232,7 +236,7 @@ class ControlWindow():
     # on exit if running from IDLE.
     pygame.quit()
 
-  def get_current_joystick_position(self, joystick_name):
+  def get_current_joystick_position(self, joystick_name, controller_type):
     """
     Args:
       joystick_name: This is the name of the joystick
@@ -240,6 +244,13 @@ class ControlWindow():
     Joystick name: Saitek Pro Flight X-56 Rhino
     Axis 0 is left
     Axis 1 is right
+
+    Joystick name: Saitek Pro Flight X-56 Rhino Stick
+    Axis 0 negative is translate left, positive is translate right
+    Axis 1 negative is forwards, positive is backwards
+    Axis 2 UNRESPONSIVE (likely AUX translate left/right)
+    Axis 3 negative is rotate left, positive is rotate right
+    Axis 4 negative is AUX forwards, positive is backwards
 
     """
     pass
@@ -253,7 +264,8 @@ class Joystick():
   pass
 
 if __name__ == '__main__':
-  control_window = ControlWindow()
+  controller_type = input("Select input type: 1 for Joystick, 2 for Throttle > ")
+  control_window = ControlWindow(controller_type)
   control_window.start_control_window()
   IP_ADDRESS = '192.168.1.16'
   PORT = '5000'

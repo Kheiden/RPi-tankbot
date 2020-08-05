@@ -43,10 +43,12 @@ class Server():
       def move():
         axis_name = request.form['axis_name']
         axis_value = request.form['axis_value']
+        controller_type = request.form['controller_type']
 
         output = self.m.move_robot(
           axis_name=axis_name,
-          axis_value=float(axis_value))
+          axis_value=float(axis_value),
+          controller_type=controller_type)
         return make_response(output)
 
       @app.route("/backwards")
