@@ -14,5 +14,6 @@ class TestMovement(unittest.TestCase):
   def test_move_robot(self):
     axis_name = "Axis 0"
     axis_value = 0.45
-    controller_type = 
+    # Throttle
+    controller_type = 1
     self.m.move_robot(axis_name, axis_value, controller_type)
