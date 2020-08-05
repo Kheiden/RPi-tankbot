@@ -89,8 +89,8 @@ class Movement():
     def move_robot_joystick(self, axis_name, axis_value):
       self.left_motor = self.DIG2
       self.right_motor = self.DIG1
-      self.signal_forwards = GPIO.LOW
-      self.signal_backwards = GPIO.HIGH
+      self.signal_forwards = GPIO.HIGH
+      self.signal_backwards = GPIO.LOW
       self.speed_percentage = (axis_value-self.deadzone_threshold)*100
       if axis_name == "Axis 0":
         # Axis 0 negative is translate left, positive is translate right
