@@ -29,7 +29,8 @@ class Movement():
       # This is useful due to the difficulty of achieving 0 in a continuum.
       # We have a deadzone in the forwards direction and in the backwards
       # direction. Each is half the size of the deadzone_threshold.
-      self.deadzone_threshold = 0.40
+      # default: 0.40
+      self.deadzone_threshold = 0.05
 
       # This will either be GPIO.HIGH or GPIO.LOW
       # of the most recent inbound movement signal.
