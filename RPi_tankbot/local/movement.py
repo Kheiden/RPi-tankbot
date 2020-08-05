@@ -164,6 +164,7 @@ class Movement():
           self.speed_percentage)
 
     def move_robot(self, axis_name, axis_value, controller_type):
+      output = None
       if controller_type == 1:
         output = self.move_robot_joystick(axis_name,
                                           axis_value,
