@@ -97,7 +97,7 @@ class Movement():
         pass
       elif axis_name == "Axis 1":
         # Axis 1 negative is forwards, positive is backwards
-        if axis_value < self.deadzone_threshold:
+        if axis_value > self.deadzone_threshold:
           GPIO.output(self.left_motor, self.signal_forwards)
           GPIO.output(self.right_motor, self.signal_forwards)
         elif axis_value < (self.deadzone_threshold*-1):
@@ -107,7 +107,7 @@ class Movement():
           self.signal = GPIO.LOW
           self.direction = 'None'
           self.speed_percentage = 0
-        self.p2.start(self.speed_percentage)
+        self.p1.start(self.speed_percentage)
         self.p2.start(self.speed_percentage)
       elif axis_name == "Axis 3":
         # Axis 3 negative is rotate left, positive is rotate right
