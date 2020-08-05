@@ -92,17 +92,33 @@ class Movement():
       self.signal_forwards = GPIO.HIGH
       self.signal_backwards = GPIO.LOW
       self.speed_percentage = (axis_value-self.deadzone_threshold)*100
+      output = ''
       if axis_name == "Axis 0":
         # Axis 0 negative is translate left, positive is translate right
         pass
       elif axis_name == "Axis 1":
         # Axis 1 negative is forwards, positive is backwards
         if axis_value > self.deadzone_threshold:
+          self.direction = 'forwards'
+          self.speed_percentage = (axis_value-self.deadzone_threshold)*100
           GPIO.output(self.left_motor, self.signal_forwards)
           GPIO.output(self.right_motor, self.signal_forwards)
+          output += "motor:{} signal:{} direction:{} speed_percentage:{}".format(
+            (self.left_motor, self.right_motor),
+            self.signal_forwards,
+            self.direction,
+            self.speed_percentage)
         elif axis_value < (self.deadzone_threshold*-1):
+          self.direction = 'backwards'
+          self.speed_percentage = (axis_value+self.deadzone_threshold)*(100)*-1
           GPIO.output(self.left_motor, self.signal_backwards)
           GPIO.output(self.right_motor, self.signal_backwards)
+          output += "motor:{} signal:{} direction:{} speed_percentage:{}".format(
+            (self.left_motor, self.right_motor),
+            self.signal_backwards,
+            self.direction,
+            self.speed_percentage)
+
         else:
           self.signal = GPIO.LOW
           self.direction = 'None'
