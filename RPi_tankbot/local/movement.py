@@ -86,7 +86,7 @@ class Movement():
           sleep(movement_time)
           self.stop()
 
-    def move_robot_joystick(axis_name, axis_value, controller_type):
+    def move_robot_joystick(self, axis_value):
       self.left_motor = self.DIG2
       self.right_motor = self.DIG1
       self.signal_forwards = GPIO.LOW
@@ -116,7 +116,7 @@ class Movement():
       # update the dc motors
 
 
-    def move_robot_throttle(axis_name, axis_value, controller_type):
+    def move_robot_throttle(self, axis_value):
       if axis_name == "Axis 0":
         motor_position = 'left motor'
         self.motor = self.DIG2
@@ -170,12 +170,10 @@ class Movement():
       output = None
       if controller_type == '1':
         output = self.move_robot_joystick(axis_name,
-                                          axis_value,
-                                          controller_type)
+                                          axis_value)
       elif controller_type == '2':
         output = self.move_robot_throttle(axis_name,
-                                          axis_value,
-                                          controller_type)
+                                          axis_value)
       else:
         print("A new controller has been moved.")
 
