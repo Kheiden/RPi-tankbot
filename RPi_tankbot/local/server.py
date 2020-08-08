@@ -28,8 +28,8 @@ class Server():
 
       @app.route("/stop")
       def stop():
-          self.m.stop()
-          return "ok"
+        output = self.m.stop()
+        return "ok"
 
       @app.route("/forwards")
       def go_forwards():
@@ -46,7 +46,7 @@ class Server():
           axis_name=axis_name,
           axis_value=float(axis_value),
           controller_type=controller_type)
-        return make_response(output)
+        return Response(output, mimetype='text/HTML')
 
       @app.route("/backwards")
       def go_backwards():

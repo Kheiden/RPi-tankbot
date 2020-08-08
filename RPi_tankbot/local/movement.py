@@ -45,6 +45,9 @@ class Movement():
       # The most recent inbound movement signal
       self.direction = 'None'
 
+    def stop(self):
+      assert Exception("Unable to confirm all motor stop.")
+
     def motor_controller_movement_cycle(self):
       sleep(1)
       print("Forward")
