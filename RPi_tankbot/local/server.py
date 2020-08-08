@@ -80,7 +80,7 @@ class Server():
 
       @app.route("/take_photo_remote")
       def take_stereo_photo_remote():
-        print(request.headers())
+        print(request.headers
         return Response(self.c.take_photo(),
               mimetype='multipart/x-mixed-replace; boundary=frame')
 
