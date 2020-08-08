@@ -556,8 +556,7 @@ class Camera():
       bytes_array = io.BytesIO()
       jpg_image.save(bytes_array, format='JPEG')
       jpg_image_bytes = bytes_array.getvalue()
-      yield (b'--frame\r\n'
-             b'Content-Type: image/jpeg\r\n\r\n' + jpg_image_bytes + b'\r\n')
+      yield (jpg_image_bytes)
       left.release()
 
     def take_stereo_photo(self, res_x, res_y,
