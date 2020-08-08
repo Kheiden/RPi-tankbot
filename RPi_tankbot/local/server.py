@@ -38,6 +38,7 @@ class Server():
 
       @app.route("/v2/move", methods=['POST'])
       def move():
+        print(request.headers)
         axis_name = request.form['axis_name']
         axis_value = request.form['axis_value']
         controller_type = request.form['controller_type']
@@ -80,7 +81,6 @@ class Server():
 
       @app.route("/take_photo_remote")
       def take_stereo_photo_remote():
-        print(request.headers)
         return Response(self.c.take_photo(),
               mimetype='multipart/x-mixed-replace; boundary=frame')
 
@@ -112,4 +112,3 @@ if __name__ == '__main__':
     print("Interrupt Signal Sent.")
   finally:
     print("Shutting down server...")
-    s.clear_gpio_motor_pins()
