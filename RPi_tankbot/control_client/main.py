@@ -23,7 +23,7 @@ class ControlWindow():
     WHITE = pygame.Color('white')
 
     IP_ADDRESS = '192.168.1.16'
-    PORT = '5000'
+    PORT = '5500'
     # This is a simple class that will help us print to the screen.
     # It has nothing to do with the joysticks, just outputting the
     # information.
@@ -74,14 +74,16 @@ class ControlWindow():
 
         try:
           r = requests.post('http://{}:{}/{}'.format(IP_ADDRESS, PORT, endpoint),
-            timeout=0.1,
+            timeout=0.025,
             data=payload)
           if r.status_code == 200:
             self.connection_200_count += 1
-            print(r.text)
         except:
           self.connection_failure_count += 1
+        if (self.connection_failure_count % 100 == 0) and (self.connection_failure_count > 0):
           print("Current Connection Failure Count:", self.connection_failure_count)
+        if (self.connection_200_count % 100 == 0) and (self.connection_200_count > 0):
+          print("Current Connection Success Count:", self.connection_200_count)
 
       def axis_update(self, joystick_name, axis_name, axis_value):
         """
@@ -272,7 +274,7 @@ if __name__ == '__main__':
   endpoint = 'stop'
   try:
     r = requests.get('http://{}:{}/{}'.format(IP_ADDRESS, PORT, endpoint),
-      timeout=90.0)
+      timeout=0.01)
     if r.status_code == 200:
       print("ALL STOP")
   except:
